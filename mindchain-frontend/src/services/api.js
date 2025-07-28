@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = window.location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:3001/api'
+    : 'http://localhost:3001/api';
 
 class MindChainAPI {
     async get(endpoint) {

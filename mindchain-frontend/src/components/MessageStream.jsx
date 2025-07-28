@@ -24,7 +24,7 @@ const MessageStream = ({ messages = [] }) => {
             <h3 className="text-xl font-semibold mb-4 text-white">System Messages</h3>
             <div className="space-y-2 max-h-64 overflow-y-auto">
                 {messages.map((msg, index) => (
-                    <div 
+                    <div
                         key={index}
                         className={`p-3 rounded-lg border-l-4 ${getMessageStyle(msg.type)}`}
                     >

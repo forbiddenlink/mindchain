@@ -16,13 +16,16 @@ export default function App() {
   const [connectionHealth, setConnectionHealth] = useState('checking');
 
   // WebSocket connection
-  const { connectionStatus, lastMessage, messages } = useWebSocket('ws://localhost:3001');
+  const wsUrl = window.location.hostname === '127.0.0.1'
+    ? 'ws://127.0.0.1:3001'
+    : 'ws://localhost:3001';
+  const { connectionStatus, lastMessage, messages } = useWebSocket(wsUrl);
 
   // Handle incoming WebSocket messages
   useEffect(() => {
     if (lastMessage) {
       const { type, ...data } = lastMessage;
-      
+
       switch (type) {
         case 'new_message':
           setDebateMessages(prev => [...prev, {
@@ -32,7 +35,7 @@ export default function App() {
             text: data.message,
             timestamp: data.timestamp
           }]);
-          
+
           if (data.factCheck) {
             setFactChecks(prev => [...prev.slice(-4), {
               id: Date.now(),
@@ -43,7 +46,7 @@ export default function App() {
             }]);
           }
           break;
-          
+
         case 'debate_started':
           setSystemMessages(prev => [...prev, {
             type: 'success',
@@ -51,7 +54,7 @@ export default function App() {
             timestamp: new Date().toLocaleTimeString()
           }]);
           break;
-          
+
         case 'debate_ended':
           setSystemMessages(prev => [...prev, {
             type: 'info',
@@ -59,14 +62,14 @@ export default function App() {
             timestamp: new Date().toLocaleTimeString()
           }]);
           break;
-          
+
         case 'agent_updated':
           setAgents(prev => ({
             ...prev,
             [data.agentId]: data.profile
           }));
           break;
-          
+
         case 'error':
           setSystemMessages(prev => [...prev, {
             type: 'error',
@@ -98,19 +101,26 @@ export default function App() {
         }]);
       }
     };
-    
+
     checkHealth();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <Header connectionStatus={connectionStatus} backendHealth={connectionHealth} />
-      <main className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <DebatePanel messages={debateMessages} />
-        <div className="space-y-6">
-          <MessageStream messages={systemMessages} />
-          <FactChecker factChecks={factChecks} />
-          <Controls />
+      <main className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          {/* Main Debate Panel - Takes up 2 columns on xl screens */}
+          <div className="xl:col-span-2">
+            <DebatePanel messages={debateMessages} />
+          </div>
+
+          {/* Sidebar with Controls and Info */}
+          <div className="xl:col-span-1 space-y-6">
+            <Controls />
+            <MessageStream messages={systemMessages} />
+            <FactChecker factChecks={factChecks} />
+          </div>
         </div>
       </main>
     </div>

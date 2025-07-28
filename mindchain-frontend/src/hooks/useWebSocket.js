@@ -8,7 +8,7 @@ const useWebSocket = (url) => {
 
     useEffect(() => {
         const ws = new WebSocket(url);
-        
+
         ws.onopen = () => {
             console.log('🔌 Connected to MindChain server');
             setConnectionStatus('Connected');
