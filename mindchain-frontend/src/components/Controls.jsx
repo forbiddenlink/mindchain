@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import api from '../services/api';
 import TopicSelector from './TopicSelector';
 import AgentConfig from './AgentConfig';
+import PerformanceDashboard from './PerformanceDashboard';
+import DebateHistoryBrowser from './DebateHistoryBrowser';
 
 const Controls = () => {
     const [topic, setTopic] = useState('climate change policy');
     const [isDebating, setIsDebating] = useState(false);
     const [showAgentConfig, setShowAgentConfig] = useState(false);
+    const [showPerformanceDashboard, setShowPerformanceDashboard] = useState(false);
+    const [showDebateHistory, setShowDebateHistory] = useState(false);
     const [selectedAgent, setSelectedAgent] = useState('senatorbot');
     const [loading, setLoading] = useState({
         start: false,
@@ -49,12 +53,15 @@ const Controls = () => {
         setLoading(prev => ({ ...prev, addFact: true }));
         try {
             const fact = prompt('Enter a new fact to add to the knowledge base:');
-            if (fact) {
-                // In a real implementation, we'd have an API endpoint to add facts
-                alert('Fact would be added to the knowledge base');
+            if (fact && fact.trim()) {
+                console.log('📝 Adding fact to knowledge base...');
+                const result = await api.addFact(fact.trim());
+                console.log('✅ Fact added successfully:', result);
+                alert(`Fact added successfully! ID: ${result.factId}`);
             }
         } catch (error) {
-            console.error('Failed to add fact:', error);
+            console.error('❌ Failed to add fact:', error);
+            alert('Failed to add fact. Check console for details.');
         } finally {
             setLoading(prev => ({ ...prev, addFact: false }));
         }
@@ -63,10 +70,37 @@ const Controls = () => {
     const handleSummarize = async () => {
         setLoading(prev => ({ ...prev, summarize: true }));
         try {
-            // In a real implementation, we'd call a summarization endpoint
-            alert('Debate summary would be generated');
+            console.log('📊 Generating debate summary...');
+            const result = await api.generateSummary('live_debate', 20);
+            console.log('✅ Summary generated:', result);
+            
+            if (result.success) {
+                // Create a simple modal to show the summary
+                const summaryWindow = window.open('', '_blank', 'width=800,height=600');
+                summaryWindow.document.write(`
+                    <html>
+                        <head><title>Debate Summary</title></head>
+                        <body style="font-family: Arial, sans-serif; padding: 20px; background: #1e293b; color: white;">
+                            <h1>🧠 MindChain Debate Summary</h1>
+                            <div style="background: #334155; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                                <h2>Key Points</h2>
+                                <pre style="white-space: pre-wrap; background: #475569; padding: 15px; border-radius: 5px;">${result.summary}</pre>
+                            </div>
+                            <div style="background: #334155; padding: 20px; border-radius: 10px;">
+                                <h2>Metadata</h2>
+                                <p><strong>Messages Analyzed:</strong> ${result.metadata?.messageCount || 'N/A'}</p>
+                                <p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
+                            </div>
+                        </body>
+                    </html>
+                `);
+                summaryWindow.document.close();
+            } else {
+                alert('Failed to generate summary: ' + (result.error || 'Unknown error'));
+            }
         } catch (error) {
-            console.error('Failed to generate summary:', error);
+            console.error('❌ Failed to generate summary:', error);
+            alert('Failed to generate summary. Check console for details.');
         } finally {
             setLoading(prev => ({ ...prev, summarize: false }));
         }
@@ -216,6 +250,32 @@ const Controls = () => {
                                 <span>{loading.summarize ? 'Generating...' : 'Summary'}</span>
                             </button>
                         </div>
+
+                        {/* Performance Dashboard Button */}
+                        <button
+                            onClick={() => setShowPerformanceDashboard(true)}
+                            className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+                        >
+                            <span>
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            </span>
+                            <span>🚀 Redis Performance Dashboard</span>
+                        </button>
+
+                        {/* Debate History Browser */}
+                        <button
+                            onClick={() => setShowDebateHistory(true)}
+                            className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+                        >
+                            <span>
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
+                                </svg>
+                            </span>
+                            <span>📜 Debate History Browser</span>
+                        </button>
                     </div>
 
                     {/* Status Display */}
@@ -247,6 +307,18 @@ const Controls = () => {
                 isVisible={showAgentConfig}
                 onClose={() => setShowAgentConfig(false)}
                 agentId={selectedAgent}
+            />
+            
+            {/* Performance Dashboard Modal */}
+            <PerformanceDashboard
+                isVisible={showPerformanceDashboard}
+                onClose={() => setShowPerformanceDashboard(false)}
+            />
+
+            {/* Debate History Browser Modal */}
+            <DebateHistoryBrowser
+                isVisible={showDebateHistory}
+                onClose={() => setShowDebateHistory(false)}
             />
         </>
     );

@@ -55,6 +55,21 @@ class MindChainAPI {
     async getHealth() {
         return this.get('/health');
     }
+
+    // Redis performance stats
+    async getRedisStats() {
+        return this.get('/stats/redis');
+    }
+
+    // Add fact to knowledge base
+    async addFact(fact, source = 'user', category = 'general') {
+        return this.post('/facts/add', { fact, source, category });
+    }
+
+    // Generate debate summary
+    async generateSummary(debateId, maxMessages = 20) {
+        return this.post(`/debate/${debateId}/summarize`, { maxMessages });
+    }
 }
 
 export default new MindChainAPI();
