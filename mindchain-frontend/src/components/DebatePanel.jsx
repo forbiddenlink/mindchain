@@ -38,7 +38,7 @@ const DebatePanel = ({ messages = [] }) => {
                     bgColor: 'bg-gradient-to-r from-gray-500 to-gray-600',
                     avatar: (
                         <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
                         </svg>
                     ),
                     name: 'Agent'
@@ -71,19 +71,19 @@ const DebatePanel = ({ messages = [] }) => {
             </div>
 
             {/* Messages Area */}
-            <div className="h-96 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-slate-900/20 to-slate-900/40">
+            <div className="h-[500px] lg:h-[600px] overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-slate-900/20 to-slate-900/40">
                 {messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
-                        <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mb-4">
-                            <svg className="w-8 h-8 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                        <div className="w-20 h-20 bg-slate-700/50 rounded-full flex items-center justify-center mb-6">
+                            <svg className="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                             </svg>
                         </div>
-                        <h3 className="text-lg font-semibold text-slate-300 mb-2">
+                        <h3 className="text-xl font-semibold text-white mb-3">
                             Ready for Debate
                         </h3>
-                        <p className="text-slate-400 text-sm max-w-sm">
-                            Click "Start Debate" in the controls panel to watch AI agents engage in real-time discussion
+                        <p className="text-slate-400 max-w-md leading-relaxed">
+                            Select a topic and click "Start Debate" to watch AI agents engage in real-time political discussion with fact-checking and memory formation.
                         </p>
                     </div>
                 ) : (
@@ -97,16 +97,16 @@ const DebatePanel = ({ messages = [] }) => {
                                     key={msg.id || index}
                                     className={`flex ${isLeft ? 'justify-start' : 'justify-end'}`}
                                 >
-                                    <div className={`flex items-start space-x-3 max-w-2xl ${!isLeft ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                                    <div className={`flex items-start space-x-3 max-w-3xl ${!isLeft ? 'flex-row-reverse space-x-reverse' : ''}`}>
                                         {/* Avatar */}
-                                        <div className={`w-10 h-10 ${agentStyle.bgColor} rounded-full flex items-center justify-center shadow-lg flex-shrink-0`}>
+                                        <div className={`w-12 h-12 ${agentStyle.bgColor} rounded-full flex items-center justify-center shadow-lg flex-shrink-0`}>
                                             {agentStyle.avatar}
                                         </div>
 
                                         {/* Message Bubble */}
-                                        <div className={`relative px-4 py-3 rounded-2xl shadow-lg ${isLeft
-                                                ? 'bg-slate-700/80 rounded-tl-sm'
-                                                : 'bg-gradient-to-r from-blue-600 to-purple-600 rounded-tr-sm'
+                                        <div className={`relative px-5 py-4 rounded-2xl shadow-lg ${isLeft
+                                            ? 'bg-slate-700/80 rounded-tl-sm'
+                                            : 'bg-gradient-to-r from-blue-600 to-purple-600 rounded-tr-sm'
                                             }`}>
                                             {/* Agent Name and Timestamp */}
                                             <div className="flex items-center justify-between mb-2">

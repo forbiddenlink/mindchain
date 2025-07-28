@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import DebatePanel from './components/DebatePanel';
-import MessageStream from './components/MessageStream';
 import FactChecker from './components/FactChecker';
 import Controls from './components/Controls';
 import useWebSocket from './hooks/useWebSocket';
@@ -10,7 +9,6 @@ import api from './services/api';
 
 export default function App() {
   const [debateMessages, setDebateMessages] = useState([]);
-  const [systemMessages, setSystemMessages] = useState([]);
   const [agents, setAgents] = useState({});
   const [factChecks, setFactChecks] = useState([]);
   const [connectionHealth, setConnectionHealth] = useState('checking');
@@ -48,27 +46,15 @@ export default function App() {
           break;
 
         case 'debate_started':
-          setSystemMessages(prev => [...prev, {
-            type: 'success',
-            content: `Debate started: ${data.topic}`,
-            timestamp: new Date().toLocaleTimeString()
-          }]);
+          // Could add visual feedback here if needed
           break;
 
         case 'debate_stopped':
-          setSystemMessages(prev => [...prev, {
-            type: 'warning',
-            content: 'Debate was stopped',
-            timestamp: new Date().toLocaleTimeString()
-          }]);
+          // Could add visual feedback here if needed
           break;
 
         case 'debate_ended':
-          setSystemMessages(prev => [...prev, {
-            type: 'info',
-            content: 'Debate session ended',
-            timestamp: new Date().toLocaleTimeString()
-          }]);
+          // Could add visual feedback here if needed
           break;
 
         case 'agent_updated':
@@ -79,11 +65,7 @@ export default function App() {
           break;
 
         case 'error':
-          setSystemMessages(prev => [...prev, {
-            type: 'error',
-            content: data.message,
-            timestamp: new Date().toLocaleTimeString()
-          }]);
+          console.error('WebSocket error:', data.message);
           break;
       }
     }
@@ -95,18 +77,9 @@ export default function App() {
       try {
         await api.getHealth();
         setConnectionHealth('healthy');
-        setSystemMessages(prev => [...prev, {
-          type: 'success',
-          content: 'Connected to MindChain backend',
-          timestamp: new Date().toLocaleTimeString()
-        }]);
       } catch (error) {
         setConnectionHealth('error');
-        setSystemMessages(prev => [...prev, {
-          type: 'error',
-          content: 'Failed to connect to backend',
-          timestamp: new Date().toLocaleTimeString()
-        }]);
+        console.error('Backend health check failed:', error);
       }
     };
 
@@ -114,19 +87,27 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col">
       <Header connectionStatus={connectionStatus} backendHealth={connectionHealth} />
-      <main className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          {/* Main Debate Panel - Takes up 2 columns on xl screens */}
-          <div className="xl:col-span-2">
+      
+      {/* Compact Controls Bar - Fixed at top */}
+      <div className="flex-shrink-0 border-b border-slate-700/50">
+        <div className="container mx-auto px-4 py-2 max-w-7xl">
+          <Controls />
+        </div>
+      </div>
+
+      {/* Main Content - Takes remaining space */}
+      <main className="flex-1 container mx-auto px-4 py-4 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
+          {/* Primary Debate Panel - Takes center stage */}
+          <div className="lg:col-span-3 order-1">
             <DebatePanel messages={debateMessages} />
           </div>
 
-          {/* Sidebar with Controls and Info */}
-          <div className="xl:col-span-1 space-y-6">
-            <Controls />
-            <MessageStream messages={systemMessages} />
+          {/* Right Sidebar - Monitoring & Info */}
+          <div className="lg:col-span-1 order-2 space-y-4">
+            {/* Live Fact Checking - Most important secondary info */}
             <FactChecker factChecks={factChecks} />
           </div>
         </div>

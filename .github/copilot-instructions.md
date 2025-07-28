@@ -10,8 +10,9 @@ MindChain is a real-time multi-agent AI debate engine built for the Redis AI Cha
 - ✅ AI agent simulation with GPT-4 and OpenAI embeddings
 - ✅ Real-time fact-checking pipeline
 - ✅ Interactive debate controls and monitoring
-- ✅ **FIXED: Topic selection system** - Agents now discuss selected topics properly
-- ✅ **FIXED: Stop button functionality** - Properly stops debates via API
+- ✅ **OPTIMIZED: Compact control layout** - Clean single-row controls with dropdown topic selection
+- ✅ **ENHANCED: Custom topic input** - Users can create custom debate topics inline
+- ✅ **STREAMLINED: UI layout** - Removed duplicate status displays, optimized for debate focus
 - ✅ **ENHANCED: 8+ predefined topics + custom topic creation**
 - ✅ **ENHANCED: Performance dashboard with Redis metrics**
 - ✅ **ENHANCED: Debate history browser with Streams navigation**
@@ -74,7 +75,10 @@ const vector = Buffer.from(new Float32Array(embedding).buffer);
 ### Frontend (React + Vite)
 - Located in `mindchain-frontend/`
 - Uses Tailwind CSS with dark theme (bg-gray-950)
-- Components follow pattern: Header, DebatePanel, MessageStream, FactChecker, Controls
+- **✅ OPTIMIZED LAYOUT**: Compact controls, debate-focused UI, streamlined information hierarchy
+- **✅ TOPIC SELECTION**: Dropdown with 8+ predefined topics + inline custom topic creation
+- **✅ CLEAN STATUS**: Connection status in header, debate status in controls, no duplicates
+- Components: Header, DebatePanel, FactChecker, Controls (AgentConfig, PerformanceDashboard, DebateHistoryBrowser)
 - Run with `npm run dev` (port 5173)
 - **✅ CONNECTED TO BACKEND** - Real-time WebSocket integration complete
 - **✅ INTERACTIVE CONTROLS** - Start debates, view live messages, fact-checking
