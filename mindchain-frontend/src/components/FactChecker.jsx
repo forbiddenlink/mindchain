@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FactChecker = ({ factChecks = [] }) => {
+const FactChecker = ({factChecks = []}) => {
     const getFactCheckStyle = (score) => {
         if (score >= 0.8) {
             return {
@@ -24,12 +24,15 @@ const FactChecker = ({ factChecks = [] }) => {
     };
 
     return (
-        <section className="bg-neutral-900 rounded-lg p-4 border border-neutral-700">
-            <h3 className="text-lg font-semibold mb-3 text-white flex items-center">
-                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <section className="bg-gradient-to-br from-neutral-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50 h-full">
+            <h3 className="text-lg font-semibold mb-4 text-white flex items-center">
+                <svg className="w-5 h-5 mr-2 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                Live Fact-Check
+                🔍 Fact Checker
+                <span className="ml-2 text-xs bg-blue-500/20 px-2 py-1 rounded-full text-blue-400">
+                    {factChecks.length} checks
+                </span>
             </h3>
 
             {factChecks.length === 0 ? (

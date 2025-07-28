@@ -74,6 +74,40 @@ class MindChainAPI {
     async generateSummary(debateId, maxMessages = 20) {
         return this.post(`/debate/${debateId}/summarize`, { maxMessages });
     }
+
+    // 🆕 MULTI-DEBATE API METHODS
+
+    // Get enhanced metrics for multi-debate dashboard
+    async getEnhancedMetrics() {
+        return this.get('/metrics/enhanced');
+    }
+
+    // Get all active debates
+    async getActiveDebates() {
+        return this.get('/debates/active');
+    }
+
+    // Start multiple debates simultaneously
+    async startMultipleDebates(topics) {
+        return this.post('/debates/start-multiple', { topics });
+    }
+
+    // 🆕 MULTI-DEBATE METHODS (Contest Features)
+
+    // Get all active debates
+    async getActiveDebates() {
+        return this.get('/debates/active');
+    }
+
+    // Start multiple debates simultaneously
+    async startMultipleDebates(topics, agents = ['senatorbot', 'reformerbot']) {
+        return this.post('/debates/start-multiple', { topics, agents });
+    }
+
+    // Get enhanced metrics
+    async getEnhancedMetrics() {
+        return this.get('/metrics/enhanced');
+    }
 }
 
 export default new MindChainAPI();
