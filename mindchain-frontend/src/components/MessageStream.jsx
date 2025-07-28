@@ -1,12 +1,6 @@
 import React from 'react';
 
-const MessageStream = () => {
-    const messages = [
-        { type: 'system', content: 'Debate session initialized', timestamp: '14:32' },
-        { type: 'info', content: 'Loading reformer profiles...', timestamp: '14:32' },
-        { type: 'success', content: 'Connected to MindChain engine', timestamp: '14:33' },
-        { type: 'warning', content: 'Fact-checking service running slowly', timestamp: '14:33' },
-    ];
+const MessageStream = ({ messages = [] }) => {
 
     const getMessageStyle = (type) => {
         switch (type) {
