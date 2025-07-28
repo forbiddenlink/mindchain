@@ -26,7 +26,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
         try {
             setLoading(true);
             setError(null);
-            
+
             // Try to fetch real data, but provide fallback if API is unavailable
             let data;
             try {
@@ -43,28 +43,28 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
                     timestamp: new Date().toISOString()
                 };
             }
-            
+
             setMetrics(data);
 
             // Simulate module-specific stats (in production, these would come from Redis monitoring)
             setModuleStats({
-                json: { 
-                    operations: Math.floor(Math.random() * 50) + 20, 
+                json: {
+                    operations: Math.floor(Math.random() * 50) + 20,
                     keyCount: Math.floor(Math.random() * 10) + 5,
                     description: 'Agent Profiles & Complex Data'
                 },
-                streams: { 
-                    operations: Math.floor(Math.random() * 200) + 100, 
+                streams: {
+                    operations: Math.floor(Math.random() * 200) + 100,
                     keyCount: Math.floor(Math.random() * 20) + 10,
                     description: 'Debate Messages & Memory'
                 },
-                timeseries: { 
-                    operations: Math.floor(Math.random() * 30) + 10, 
+                timeseries: {
+                    operations: Math.floor(Math.random() * 30) + 10,
                     keyCount: Math.floor(Math.random() * 8) + 4,
                     description: 'Stance Evolution Tracking'
                 },
-                vector: { 
-                    operations: Math.floor(Math.random() * 40) + 15, 
+                vector: {
+                    operations: Math.floor(Math.random() * 40) + 15,
                     keyCount: Math.floor(Math.random() * 100) + 50,
                     description: 'AI-Powered Fact Checking'
                 }
@@ -72,7 +72,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
         } catch (err) {
             console.error('❌ Error in fetchMetrics:', err);
             setError('Unable to load performance data. Using demo mode.');
-            
+
             // Set demo data even on error
             setMetrics({
                 operations: 750,
@@ -157,14 +157,12 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
                                 <span className="text-sm text-slate-400">Real-time</span>
                                 <button
                                     onClick={() => setRealTimeMode(!realTimeMode)}
-                                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                        realTimeMode ? 'bg-blue-600' : 'bg-slate-600'
-                                    }`}
+                                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${realTimeMode ? 'bg-blue-600' : 'bg-slate-600'
+                                        }`}
                                 >
                                     <span
-                                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                            realTimeMode ? 'translate-x-6' : 'translate-x-1'
-                                        }`}
+                                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${realTimeMode ? 'translate-x-6' : 'translate-x-1'
+                                            }`}
                                     />
                                 </button>
                             </div>
@@ -262,7 +260,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
                                                     <p className="text-slate-400 text-sm">{stats.description}</p>
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
                                                     <span className="text-slate-400 text-sm block mb-1">Operations</span>
@@ -277,7 +275,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
                                             {/* Visual indicator */}
                                             <div className="mt-4">
                                                 <div className="w-full bg-slate-600 rounded-full h-2">
-                                                    <div 
+                                                    <div
                                                         className={`bg-gradient-to-r ${moduleColors[module]} h-2 rounded-full transition-all duration-1000`}
                                                         style={{ width: `${Math.min(100, (stats.operations / 200) * 100)}%` }}
                                                     ></div>

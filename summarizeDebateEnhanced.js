@@ -6,14 +6,14 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function summarizeDebate(debateId, maxMessages = 20) {
     const client = createClient({ url: process.env.REDIS_URL });
-    
+
     try {
         await client.connect();
         console.log(`📊 Generating summary for debate: ${debateId}`);
 
         // Get recent debate messages
         const messages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: maxMessages });
-        
+
         if (messages.length === 0) {
             return {
                 success: false,
@@ -26,14 +26,14 @@ export async function summarizeDebate(debateId, maxMessages = 20) {
             const agentId = entry.message.agent_id;
             const message = entry.message.message;
             const timestamp = new Date(parseInt(entry.id.split('-')[0]));
-            
+
             return `[${timestamp.toLocaleTimeString()}] ${agentId}: ${message}`;
         }).join('\n');
 
         // Get agent profiles for context
         const agentProfiles = new Map();
         const uniqueAgents = [...new Set(messages.map(m => m.message.agent_id))];
-        
+
         for (const agentId of uniqueAgents) {
             try {
                 const profile = await client.json.get(`agent:${agentId}:profile`);
@@ -120,14 +120,14 @@ Keep the summary concise but informative (200-400 words).
 // Helper function to get all summaries for a debate
 export async function getDebateSummaries(debateId) {
     const client = createClient({ url: process.env.REDIS_URL });
-    
+
     try {
         await client.connect();
-        
+
         // Find all summary keys for this debate
         const summaryKeys = await client.keys(`debate:${debateId}:summary:*`);
         const summaries = [];
-        
+
         for (const key of summaryKeys) {
             try {
                 const summary = await client.json.get(key);
@@ -138,16 +138,16 @@ export async function getDebateSummaries(debateId) {
                 console.log(`⚠️ Could not fetch summary from ${key}`);
             }
         }
-        
+
         // Sort by generation time (newest first)
         summaries.sort((a, b) => new Date(b.generatedAt) - new Date(a.generatedAt));
-        
+
         return {
             success: true,
             summaries,
             count: summaries.length
         };
-        
+
     } catch (error) {
         console.error('❌ Error fetching debate summaries:', error);
         return {

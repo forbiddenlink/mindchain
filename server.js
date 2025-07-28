@@ -300,11 +300,11 @@ app.post('/api/facts/add', async (req, res) => {
         }
 
         console.log(`📝 Adding new fact: "${fact}"`);
-        
+
         // Temporary simple implementation without enhanced functions
         const factId = Math.random().toString(36).substring(2, 15);
         const factKey = `fact:${factId}`;
-        
+
         // Store basic fact info
         await client.hSet(factKey, {
             id: factId,
@@ -344,7 +344,7 @@ app.post('/api/facts/add', async (req, res) => {
 app.get('/api/stats/redis', async (req, res) => {
     try {
         console.log('📊 Redis stats requested');
-        
+
         // Get basic Redis info
         const info = await client.info();
         const keyCount = await client.dbSize();
@@ -369,10 +369,10 @@ app.get('/api/stats/redis', async (req, res) => {
         res.json(stats);
     } catch (error) {
         console.error('❌ Error fetching Redis stats:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             status: 'error',
             error: 'Failed to fetch Redis statistics',
-            message: error.message 
+            message: error.message
         });
     }
 });
@@ -384,10 +384,10 @@ app.post('/api/debate/:id/summarize', async (req, res) => {
         const { maxMessages = 20 } = req.body;
 
         console.log(`📊 Generating summary for debate: ${id}`);
-        
+
         // Temporary simple implementation
         const messages = await client.xRevRange(`debate:${id}:messages`, '+', '-', { COUNT: maxMessages });
-        
+
         if (messages.length === 0) {
             return res.status(404).json({
                 success: false,

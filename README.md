@@ -7,7 +7,17 @@
 - Verifying statements semantically (Redis Vector Search)
 - Communicating via shared debates (Streams)
 
-**🏆 Contest Status: FULLY FUNCTIONAL** - Real-time WebSocket integration complete!
+**🏆 Contest Status: FULLY FUNCTIONAL & ENHANCED** - All major features complete!
+
+**Latest Updates:**
+- ✅ **Topic Selection Fixed** - Agents now properly discuss selected topics (8+ predefined + custom)
+- ✅ **Stop Button Fixed** - Properly terminates debates via API calls
+- ✅ **Performance Dashboard** - Live Redis metrics across all 4 modules
+- ✅ **Debate History Browser** - Navigate past debates with Redis Streams
+- ✅ **Enhanced UI** - Complete interactive control system
+- ✅ **Codebase Cleaned** - Organized structure with archived legacy files
+
+📁 **[View Complete Project Structure](docs/PROJECT-STRUCTURE.md)**
 
 ---
 
@@ -166,6 +176,32 @@ OPENAI_API_KEY=sk-proj-...
 - **Memory Context**: Multi-turn conversation awareness across sessions
 - **Dynamic Adaptation**: Real-time stance evolution with TimeSeries tracking
 - **Knowledge Base**: Expandable fact database with user contributions
+
+---
+
+## 📁 Project Organization
+
+The codebase has been cleaned and organized for optimal development:
+
+**🔧 Core Files (Root)**
+- `server.js` - Main backend server with WebSocket support
+- `generateMessage.js` - AI message generation with topic handling  
+- `factChecker.js` - Vector-based fact verification system
+- `vectorsearch.js` - Redis vector index initialization
+
+**🎨 Frontend (`mindchain-frontend/`)**
+- Complete React application with real-time WebSocket integration
+- 10+ specialized components for debate management and monitoring
+- Tailwind CSS styling with responsive design
+
+**📚 Documentation (`docs/`)**
+- `PROJECT-STRUCTURE.md` - Complete file organization guide
+- `ENHANCEMENT-SUMMARY.md` - Feature development history
+- `LATEST-FIXES.md` - Recent updates and bug fixes
+
+**🗄️ Archive (`archive/`)**
+- Legacy files safely preserved for reference
+- Old documentation versions and superseded implementations
 
 ---
 

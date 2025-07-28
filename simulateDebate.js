@@ -7,10 +7,11 @@ const client = createClient({ url: process.env.REDIS_URL });
 await client.connect();
 
 const debateId = 'climatebill2025';
+const testTopic = 'Climate Policy'; // Explicit topic for simulation
 const agents = ['senatorbot', 'reformerbot'];
 
 for (const agent of agents) {
-    const message = await generateMessage(agent, debateId); // ✅ include debateId
+    const message = await generateMessage(agent, debateId, testTopic); // Include topic parameter
 
     console.log(`🗣️ ${agent}: ${message}`);
 

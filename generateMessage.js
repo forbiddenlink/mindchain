@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export async function generateMessage(agentId, debateId) {
+export async function generateMessage(agentId, debateId, topic = 'general policy') {
     const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();
 
@@ -13,7 +13,7 @@ export async function generateMessage(agentId, debateId) {
 
     const memoryStreamKey = `debate:${debateId}:agent:${agentId}:memory`;
 
-    // ⏪ Step 1: Get last 3 entries from this agent’s private memory
+    // ⏪ Step 1: Get last 3 entries from this agent's private memory
     const memories = await client.xRevRange(memoryStreamKey, '+', '-', { COUNT: 3 });
 
     const memoryContext = memories
@@ -22,16 +22,17 @@ export async function generateMessage(agentId, debateId) {
         .map((msg, i) => `Memory ${i + 1}: ${msg}`)
         .join('\n');
 
-    // 🧠 Step 2: Construct prompt with memory + profile
+    // 🧠 Step 2: Construct prompt with memory + profile + dynamic topic
     const prompt = `
 You are ${profile.name}, a ${profile.tone} ${profile.role}.
 You believe in ${profile.biases.join(', ')}.
-Debate topic: Climate Policy.
+Debate topic: ${topic}.
 
 ${memoryContext
             ? `Previously, you said:\n${memoryContext}\n\n`
             : ''
-        }Reply with a short statement (1–2 sentences) to continue the debate.
+        }Reply with a short statement (1–2 sentences) to continue the debate on "${topic}".
+Stay focused on this specific topic and maintain your character's perspective.
 `;
 
     // 💬 Step 3: Generate AI message
@@ -39,7 +40,7 @@ ${memoryContext
         model: 'gpt-4',
         messages: [
             { role: 'system', content: prompt },
-            { role: 'user', content: 'What’s your next response?' },
+            { role: 'user', content: `What's your perspective on "${topic}"? Keep it brief and in character.` },
         ],
     });
 

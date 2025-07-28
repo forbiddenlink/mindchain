@@ -18,7 +18,7 @@ export async function addFactToDatabase(factContent, source = 'user', category =
 
         // Generate embedding for the fact
         const embedding = await embeddings.embedQuery(factContent);
-        
+
         // Create unique ID for the fact
         const factId = crypto.randomBytes(8).toString('hex');
         const factKey = `fact:${factId}`;
@@ -58,7 +58,7 @@ export async function addFactToDatabase(factContent, source = 'user', category =
 // Helper function to add multiple facts
 export async function addMultipleFacts(facts) {
     const results = [];
-    
+
     for (const fact of facts) {
         if (typeof fact === 'string') {
             const result = await addFactToDatabase(fact);
@@ -67,11 +67,11 @@ export async function addMultipleFacts(facts) {
             const result = await addFactToDatabase(fact.content, fact.source, fact.category);
             results.push(result);
         }
-        
+
         // Small delay to avoid rate limiting
         await new Promise(resolve => setTimeout(resolve, 100));
     }
-    
+
     return results;
 }
 

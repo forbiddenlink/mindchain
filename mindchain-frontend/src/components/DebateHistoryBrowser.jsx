@@ -52,11 +52,11 @@ const DebateHistoryBrowser = ({ isVisible, onClose }) => {
             console.log(`📜 Loading messages for debate: ${debateId}`);
             const debateMessages = await api.getDebateMessages(debateId, 50);
             setMessages(debateMessages);
-            
+
             // Load agent memories for this debate
             const memories = {};
             const agents = ['senatorbot', 'reformerbot'];
-            
+
             for (const agentId of agents) {
                 try {
                     const agentMemory = await api.getAgentMemory(agentId, debateId, 10);
@@ -66,10 +66,10 @@ const DebateHistoryBrowser = ({ isVisible, onClose }) => {
                     memories[agentId] = [];
                 }
             }
-            
+
             setAgentMemories(memories);
             console.log('✅ Debate data loaded successfully');
-            
+
         } catch (error) {
             console.error('❌ Failed to load debate:', error);
             setMessages([]);
@@ -139,15 +139,14 @@ const DebateHistoryBrowser = ({ isVisible, onClose }) => {
                             <h3 className="font-semibold text-white mb-2">Recent Debates</h3>
                             <p className="text-xs text-slate-400">Powered by Redis Streams</p>
                         </div>
-                        
+
                         <div className="flex-1 overflow-y-auto">
                             {debateHistory.map((debate) => (
                                 <button
                                     key={debate.id}
                                     onClick={() => selectDebate(debate)}
-                                    className={`w-full p-4 text-left border-b border-slate-600/50 hover:bg-slate-600/30 transition-colors ${
-                                        selectedDebate?.id === debate.id ? 'bg-slate-600/50 border-l-4 border-l-blue-500' : ''
-                                    }`}
+                                    className={`w-full p-4 text-left border-b border-slate-600/50 hover:bg-slate-600/30 transition-colors ${selectedDebate?.id === debate.id ? 'bg-slate-600/50 border-l-4 border-l-blue-500' : ''
+                                        }`}
                                 >
                                     <div className="space-y-2">
                                         <h4 className="font-medium text-white text-sm">{debate.topic}</h4>
@@ -166,17 +165,16 @@ const DebateHistoryBrowser = ({ isVisible, onClose }) => {
                                                 {formatTimestamp(debate.startTime)}
                                             </div>
                                         </div>
-                                        <div className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                                            debate.status === 'completed' 
-                                                ? 'bg-green-500/20 text-green-400' 
+                                        <div className={`inline-block px-2 py-1 rounded text-xs font-medium ${debate.status === 'completed'
+                                                ? 'bg-green-500/20 text-green-400'
                                                 : 'bg-yellow-500/20 text-yellow-400'
-                                        }`}>
+                                            }`}>
                                             {debate.status}
                                         </div>
                                     </div>
                                 </button>
                             ))}
-                            
+
                             {debateHistory.length === 0 && (
                                 <div className="p-4 text-center text-slate-400">
                                     <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="currentColor" viewBox="0 0 20 20">
@@ -201,11 +199,10 @@ const DebateHistoryBrowser = ({ isVisible, onClose }) => {
                                                 <button
                                                     key={mode}
                                                     onClick={() => setViewMode(mode)}
-                                                    className={`px-3 py-1 text-sm font-medium rounded-lg transition-colors ${
-                                                        viewMode === mode
+                                                    className={`px-3 py-1 text-sm font-medium rounded-lg transition-colors ${viewMode === mode
                                                             ? 'bg-blue-500 text-white'
                                                             : 'text-slate-400 hover:text-white hover:bg-slate-600'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {mode.charAt(0).toUpperCase() + mode.slice(1)}
                                                 </button>

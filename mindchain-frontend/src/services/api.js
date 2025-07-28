@@ -47,6 +47,10 @@ class MindChainAPI {
         return this.post('/debate/start', config);
     }
 
+    async stopDebate(debateId) {
+        return this.post(`/debate/${debateId}/stop`, {});
+    }
+
     async getDebateMessages(debateId, limit = 10) {
         return this.get(`/debate/${debateId}/messages?limit=${limit}`);
     }

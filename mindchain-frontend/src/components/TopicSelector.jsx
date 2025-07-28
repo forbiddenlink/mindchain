@@ -85,11 +85,10 @@ const TopicSelector = ({ onTopicChange, currentTopic, disabled }) => {
                             key={topic.id}
                             onClick={() => handleTopicSelect(topic)}
                             disabled={disabled}
-                            className={`p-4 rounded-xl border text-left transition-all duration-200 transform hover:scale-[1.02] ${
-                                currentTopic === topic.name
+                            className={`p-4 rounded-xl border text-left transition-all duration-200 transform hover:scale-[1.02] ${currentTopic === topic.name
                                     ? 'bg-gradient-to-r from-blue-500 to-blue-600 border-blue-400 text-white shadow-lg'
                                     : 'bg-slate-700/50 border-slate-600 text-slate-300 hover:bg-slate-600/50 hover:border-blue-500/50'
-                            } ${disabled ? 'opacity-50 cursor-not-allowed transform-none' : ''}`}
+                                } ${disabled ? 'opacity-50 cursor-not-allowed transform-none' : ''}`}
                         >
                             <div className="flex items-center space-x-3 mb-2">
                                 <span className="text-2xl">{topic.emoji}</span>

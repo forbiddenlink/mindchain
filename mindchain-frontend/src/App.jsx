@@ -55,6 +55,14 @@ export default function App() {
           }]);
           break;
 
+        case 'debate_stopped':
+          setSystemMessages(prev => [...prev, {
+            type: 'warning',
+            content: 'Debate was stopped',
+            timestamp: new Date().toLocaleTimeString()
+          }]);
+          break;
+
         case 'debate_ended':
           setSystemMessages(prev => [...prev, {
             type: 'info',

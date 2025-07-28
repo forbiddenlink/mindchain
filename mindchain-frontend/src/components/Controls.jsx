@@ -8,6 +8,7 @@ import DebateHistoryBrowser from './DebateHistoryBrowser';
 const Controls = () => {
     const [topic, setTopic] = useState('climate change policy');
     const [isDebating, setIsDebating] = useState(false);
+    const [currentDebateId, setCurrentDebateId] = useState(null);
     const [showAgentConfig, setShowAgentConfig] = useState(false);
     const [showPerformanceDashboard, setShowPerformanceDashboard] = useState(false);
     const [showDebateHistory, setShowDebateHistory] = useState(false);
@@ -29,12 +30,14 @@ const Controls = () => {
         setLoading(prev => ({ ...prev, start: true }));
         try {
             console.log('🚀 Calling API to start debate...');
+            const debateId = `debate_${Date.now()}`;
             const result = await api.startDebate({
-                debateId: `debate_${Date.now()}`,
+                debateId: debateId,
                 topic,
                 agents: ['senatorbot', 'reformerbot']
             });
             console.log('✅ Debate started successfully:', result);
+            setCurrentDebateId(debateId);
             setIsDebating(true);
         } catch (error) {
             console.error('❌ Failed to start debate:', error);
@@ -44,9 +47,29 @@ const Controls = () => {
         }
     };
 
-    const handleStopDebate = () => {
-        setIsDebating(false);
-        // Note: In a real implementation, we'd send a stop signal to the backend
+    const handleStopDebate = async () => {
+        if (!currentDebateId) {
+            console.warn('⚠️ No active debate to stop');
+            setIsDebating(false);
+            return;
+        }
+
+        console.log('🛑 Stop Debate clicked!');
+        setLoading(prev => ({ ...prev, stop: true }));
+        try {
+            console.log(`🚀 Calling API to stop debate: ${currentDebateId}...`);
+            const result = await api.stopDebate(currentDebateId);
+            console.log('✅ Debate stopped successfully:', result);
+            setIsDebating(false);
+            setCurrentDebateId(null);
+        } catch (error) {
+            console.error('❌ Failed to stop debate:', error);
+            alert('Failed to stop debate. Check console for details.');
+            // Still set to false in case of API error to prevent UI getting stuck
+            setIsDebating(false);
+        } finally {
+            setLoading(prev => ({ ...prev, stop: false }));
+        }
     };
 
     const handleAddFact = async () => {
@@ -73,7 +96,7 @@ const Controls = () => {
             console.log('📊 Generating debate summary...');
             const result = await api.generateSummary('live_debate', 20);
             console.log('✅ Summary generated:', result);
-            
+
             if (result.success) {
                 // Create a simple modal to show the summary
                 const summaryWindow = window.open('', '_blank', 'width=800,height=600');
@@ -142,7 +165,7 @@ const Controls = () => {
                         <label className="block text-sm font-semibold text-slate-300 mb-3">
                             <div className="flex items-center space-x-2">
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <span>Configure AI Agents</span>
                             </div>
@@ -199,15 +222,22 @@ const Controls = () => {
                             </button>
                             <button
                                 onClick={handleStopDebate}
-                                disabled={!isDebating}
+                                disabled={!isDebating || loading.stop}
                                 className="flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-slate-600 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
                             >
                                 <span>
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 012 0v4a1 1 0 11-2 0V7zM12 9a1 1 0 000 2v2a1 1 0 002 0V9a1 1 0 00-2 0z" clipRule="evenodd" />
-                                    </svg>
+                                    {loading.stop ? (
+                                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                    ) : (
+                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 012 0v4a1 1 0 11-2 0V7zM12 9a1 1 0 000 2v2a1 1 0 002 0V9a1 1 0 00-2 0z" clipRule="evenodd" />
+                                        </svg>
+                                    )}
                                 </span>
-                                <span>Stop Debate</span>
+                                <span>{loading.stop ? 'Stopping...' : 'Stop Debate'}</span>
                             </button>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
@@ -224,7 +254,7 @@ const Controls = () => {
                                         </svg>
                                     ) : (
                                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
                                         </svg>
                                     )}
                                 </span>
@@ -283,8 +313,8 @@ const Controls = () => {
                         <div className="flex items-center justify-between mb-3">
                             <span className="text-sm font-medium text-slate-300">System Status</span>
                             <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium ${isDebating
-                                    ? 'bg-emerald-500/20 text-emerald-400'
-                                    : 'bg-slate-600/50 text-slate-400'
+                                ? 'bg-emerald-500/20 text-emerald-400'
+                                : 'bg-slate-600/50 text-slate-400'
                                 }`}>
                                 <div className={`w-2 h-2 rounded-full ${isDebating ? 'bg-emerald-400 animate-pulse' : 'bg-slate-400'
                                     }`}></div>
@@ -308,7 +338,7 @@ const Controls = () => {
                 onClose={() => setShowAgentConfig(false)}
                 agentId={selectedAgent}
             />
-            
+
             {/* Performance Dashboard Modal */}
             <PerformanceDashboard
                 isVisible={showPerformanceDashboard}
