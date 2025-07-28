@@ -1,6 +1,5 @@
 // Enhanced Controls - Single interface for both standard and multi-debate modes
 import { useState } from 'react';
-import TopicSelector from './TopicSelector';
 import api from '../services/api';
 
 const DEBATE_TOPICS = [

@@ -38,15 +38,12 @@ mindchain-frontend/
     ├── 🏠 App.jsx                 # Main React application
     ├── 🎯 main.jsx                # React entry point
     ├── components/
-    │   ├── 🎛️  Controls.jsx       # Debate controls & topic selection
-    │   ├── 🗣️  DebatePanel.jsx    # Live debate message display
-    │   ├── 📊 PerformanceDashboard.jsx # Redis metrics dashboard
-    │   ├── 📚 DebateHistoryBrowser.jsx # Stream navigation
-    │   ├── 🏷️  TopicSelector.jsx   # 8+ topics + custom creation
-    │   ├── 👤 AgentConfig.jsx     # Live agent personality editor
-    │   ├── ✅ FactChecker.jsx     # Fact verification display
-    │   ├── 💬 MessageStream.jsx   # System messages
-    │   └── 🏠 Header.jsx          # Application header
+    │   ├── 🎛️  EnhancedControls.jsx   # Unified debate controls & topic selection
+    │   ├── 🗣️  DebatePanel.jsx        # Live debate message display
+    │   ├── 📊 EnhancedPerformanceDashboard.jsx # Advanced Redis metrics
+    │   ├── 🎭 TrueMultiDebateViewer.jsx # Multi-debate concurrent display
+    │   ├── ✅ FactChecker.jsx         # Fact verification display
+    │   └── 🏠 Header.jsx              # Application header with status
     ├── hooks/
     │   └── 🔌 useWebSocket.js     # WebSocket connection management
     └── services/
