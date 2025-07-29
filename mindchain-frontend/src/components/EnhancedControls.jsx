@@ -13,7 +13,7 @@ const DEBATE_TOPICS = [
     { id: 'space', name: '🚀 Space Exploration', description: 'Space colonization and research funding' }
 ];
 
-export default function EnhancedControls({ viewMode, activeDebates, onMetricsUpdate }) {
+export default function EnhancedControls({ viewMode, activeDebates, currentDebateId, onMetricsUpdate, onStopCurrentDebate, onDebateStarted }) {
     const [selectedTopics, setSelectedTopics] = useState(['climate']);
     const [customTopic, setCustomTopic] = useState('');
     const [isStarting, setIsStarting] = useState(false);
@@ -81,8 +81,13 @@ export default function EnhancedControls({ viewMode, activeDebates, onMetricsUpd
             } else {
                 // Standard mode: single debate
                 const topic = DEBATE_TOPICS.find(t => t.id === selectedTopics[0])?.description || selectedTopics[0];
-                await api.startDebate({ topic });
+                const response = await api.startDebate({ topic });
                 console.log(`🎯 Started single debate: ${topic}`);
+                
+                // Notify parent of the new debate ID
+                if (onDebateStarted && response.debateId) {
+                    onDebateStarted(response.debateId);
+                }
             }
 
             if (onMetricsUpdate) {
@@ -124,7 +129,19 @@ export default function EnhancedControls({ viewMode, activeDebates, onMetricsUpd
                              viewMode === 'analytics' ? '📊 Analytics Dashboard' : 
                              '🎯 Single Debate'}
                         </h2>
-                        {activeDebates.size > 0 && (
+                        {viewMode === 'standard' && currentDebateId ? (
+                            <div className="flex items-center gap-2">
+                                <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-sm border border-green-500/20">
+                                    Active
+                                </span>
+                                <button
+                                    onClick={onStopCurrentDebate}
+                                    className="px-2 py-1 bg-red-600/20 border border-red-500/20 rounded text-red-300 hover:bg-red-600/30 transition-colors text-sm"
+                                >
+                                    ⏹️ Stop
+                                </button>
+                            </div>
+                        ) : viewMode === 'multi-debate' && activeDebates.size > 0 ? (
                             <div className="flex items-center gap-2">
                                 <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-sm border border-green-500/20">
                                     {activeDebates.size} Active
@@ -136,7 +153,7 @@ export default function EnhancedControls({ viewMode, activeDebates, onMetricsUpd
                                     ⏹️ Stop All
                                 </button>
                             </div>
-                        )}
+                        ) : null}
                     </div>
                 </div>
 
@@ -233,10 +250,10 @@ export default function EnhancedControls({ viewMode, activeDebates, onMetricsUpd
                         {viewMode !== 'analytics' ? (
                             <button
                                 onClick={startDebates}
-                                disabled={selectedTopics.length === 0 || isStarting}
+                                disabled={selectedTopics.length === 0 || isStarting || (viewMode === 'standard' && currentDebateId)}
                                 className={`
                     w-full px-3 py-2 rounded-lg font-semibold transition-all text-sm
-                    ${selectedTopics.length > 0 && !isStarting
+                    ${selectedTopics.length > 0 && !isStarting && !(viewMode === 'standard' && currentDebateId)
                                         ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
                                         : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                                     }
@@ -244,6 +261,8 @@ export default function EnhancedControls({ viewMode, activeDebates, onMetricsUpd
                             >
                                 {isStarting ? (
                                     <>⏳ Starting...</>
+                                ) : viewMode === 'standard' && currentDebateId ? (
+                                    <>⏸️ Debate Active</>
                                 ) : viewMode === 'multi-debate' ? (
                                     <>🚀 Start {selectedTopics.length}</>
                                 ) : (

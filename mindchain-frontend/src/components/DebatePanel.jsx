@@ -47,9 +47,9 @@ const DebatePanel = ({ messages = [] }) => {
     };
 
     return (
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 shadow-2xl overflow-hidden">
+        <div className="h-full flex flex-col bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl border border-neutral-600/50 overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-slate-700 to-slate-800 px-6 py-4 border-b border-slate-600/50">
+            <div className="flex-shrink-0 bg-gradient-to-r from-slate-800/80 to-slate-700/80 px-6 py-4 border-b border-slate-600/50">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
@@ -71,19 +71,15 @@ const DebatePanel = ({ messages = [] }) => {
             </div>
 
             {/* Messages Area */}
-            <div className="h-[500px] lg:h-[600px] overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-slate-900/20 to-slate-900/40">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 min-h-0 bg-gradient-to-b from-slate-900/20 to-slate-900/40">
                 {messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
-                        <div className="w-20 h-20 bg-slate-700/50 rounded-full flex items-center justify-center mb-6">
-                            <svg className="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-                            </svg>
-                        </div>
+                        <div className="text-4xl mb-4">💭</div>
                         <h3 className="text-xl font-semibold text-white mb-3">
                             Ready for Debate
                         </h3>
-                        <p className="text-slate-400 max-w-md leading-relaxed">
-                            Select a topic and click "Start Debate" to watch AI agents engage in real-time political discussion with fact-checking and memory formation.
+                        <p className="text-slate-400 max-w-md leading-relaxed text-sm">
+                            Select a topic and click "Start Debate" to watch AI agents engage in real-time discussion with fact-checking and memory formation.
                         </p>
                     </div>
                 ) : (
@@ -97,16 +93,16 @@ const DebatePanel = ({ messages = [] }) => {
                                     key={msg.id || index}
                                     className={`flex ${isLeft ? 'justify-start' : 'justify-end'}`}
                                 >
-                                    <div className={`flex items-start space-x-3 max-w-3xl ${!isLeft ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                                    <div className={`flex items-start space-x-3 max-w-4xl ${!isLeft ? 'flex-row-reverse space-x-reverse' : ''}`}>
                                         {/* Avatar */}
-                                        <div className={`w-12 h-12 ${agentStyle.bgColor} rounded-full flex items-center justify-center shadow-lg flex-shrink-0`}>
+                                        <div className={`w-10 h-10 ${agentStyle.bgColor} rounded-full flex items-center justify-center shadow-lg flex-shrink-0`}>
                                             {agentStyle.avatar}
                                         </div>
 
                                         {/* Message Bubble */}
-                                        <div className={`relative px-5 py-4 rounded-2xl shadow-lg ${isLeft
-                                            ? 'bg-slate-700/80 rounded-tl-sm'
-                                            : 'bg-gradient-to-r from-blue-600 to-purple-600 rounded-tr-sm'
+                                        <div className={`relative px-4 py-3 rounded-lg shadow-lg ${isLeft
+                                            ? 'bg-slate-700/80 border border-slate-600/50'
+                                            : 'bg-gradient-to-r from-blue-600/80 to-purple-600/80 border border-blue-500/30'
                                             }`}>
                                             {/* Agent Name and Timestamp */}
                                             <div className="flex items-center justify-between mb-2">
@@ -124,6 +120,14 @@ const DebatePanel = ({ messages = [] }) => {
                                             <p className="text-white text-sm leading-relaxed">
                                                 {msg.text}
                                             </p>
+
+                                            {/* Fact Check Indicator */}
+                                            {msg.factCheck && (
+                                                <div className="mt-2 p-2 bg-green-900/30 border border-green-500/30 rounded text-xs">
+                                                    <div className="text-green-400 font-medium">✅ Fact Check</div>
+                                                    <div className="text-green-200 mt-1">{msg.factCheck.fact}</div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

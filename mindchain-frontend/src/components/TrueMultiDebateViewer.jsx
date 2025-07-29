@@ -46,16 +46,16 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
     };
 
     return (
-        <div className={`flex flex-col h-full border rounded-xl p-4 ${getDebateColor()}`}>
+        <div className={`flex flex-col h-full border rounded-xl p-3 ${getDebateColor()} min-h-0 overflow-hidden`}>
             {/* Debate Header */}
-            <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-600">
-                <div>
-                    <h3 className="font-bold text-slate-200 text-sm">{debate.topic}</h3>
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-600 flex-shrink-0">
+                <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-slate-200 text-sm truncate">{debate.topic}</h3>
                     <div className="text-xs text-slate-400">
                         {debateMessages.length} messages • {debate.status}
                     </div>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1 flex-shrink-0">
                     <button
                         onClick={() => setIsChangingTopic(!isChangingTopic)}
                         className="text-xs bg-blue-600/20 px-2 py-1 rounded border border-blue-500/20 text-blue-300 hover:bg-blue-600/30 transition-colors"
@@ -73,7 +73,7 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
 
             {/* Topic Change Interface */}
             {isChangingTopic && (
-                <div className="mb-3 p-2 bg-slate-800/50 rounded border border-slate-600">
+                <div className="mb-2 p-2 bg-slate-800/50 rounded border border-slate-600 flex-shrink-0">
                     <div className="text-xs text-slate-300 mb-2">Change Topic:</div>
                     <select
                         value={selectedTopic}
@@ -151,7 +151,7 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
             </div>
 
             {/* Status Footer */}
-            <div className="mt-2 pt-2 border-t border-gray-600 text-center">
+            <div className="mt-2 pt-2 border-t border-gray-600 text-center flex-shrink-0">
                 <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
                     Live • {debate.messageCount || 0} total
@@ -217,9 +217,9 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
     };
 
     return (
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col max-w-full overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <h2 className="text-xl font-bold text-slate-200 flex items-center gap-2">
                     🎭 Multi-Debate Arena
                     <span className="text-xs bg-purple-500/20 px-2 py-1 rounded-full text-purple-400">
@@ -247,7 +247,7 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
             </div>
 
             {/* Multi-Debate Grid */}
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 overflow-hidden">
                 {activeDebatesArray.length === 0 ? (
                     <div className="h-full flex items-center justify-center text-slate-400">
                         <div className="text-center">
@@ -264,11 +264,11 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
                     </div>
                 ) : (
                     <div className={`
-            grid gap-4 h-full
+            grid gap-3 h-full overflow-hidden
             ${activeDebatesArray.length === 1 ? 'grid-cols-1' :
-                            activeDebatesArray.length === 2 ? 'grid-cols-2' :
-                                activeDebatesArray.length <= 4 ? 'grid-cols-2 grid-rows-2' :
-                                    'grid-cols-3 grid-rows-2'}
+                            activeDebatesArray.length === 2 ? 'grid-cols-1 lg:grid-cols-2' :
+                                activeDebatesArray.length <= 4 ? 'grid-cols-1 lg:grid-cols-2' :
+                                    'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'}
           `}>
                         {activeDebatesArray.map((debate, index) => (
                             <DebateColumn

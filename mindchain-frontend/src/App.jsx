@@ -17,6 +17,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState('standard'); // 'standard', 'multi-debate', or 'analytics'
   const [metricsUpdateTrigger, setMetricsUpdateTrigger] = useState(0);
   const [activeDebates, setActiveDebates] = useState(new Map()); // Track multiple debates
+  const [currentDebateId, setCurrentDebateId] = useState(null); // Track current single debate
 
   // WebSocket connection
   const wsUrl = window.location.hostname === '127.0.0.1'
@@ -85,15 +86,42 @@ export default function App() {
               });
               return updated;
             });
+            
+            // If this is a single debate (standard mode), set it as current
+            if (viewMode === 'standard') {
+              setCurrentDebateId(data.debateId);
+            }
           }
           break;
 
         case 'debate_stopped':
-          // Could add visual feedback here if needed
+          if (data.debateId) {
+            setActiveDebates(prev => {
+              const updated = new Map(prev);
+              updated.delete(data.debateId);
+              return updated;
+            });
+            
+            // If this was the current single debate, clear it
+            if (currentDebateId === data.debateId) {
+              setCurrentDebateId(null);
+            }
+          }
           break;
 
         case 'debate_ended':
-          // Could add visual feedback here if needed
+          if (data.debateId) {
+            setActiveDebates(prev => {
+              const updated = new Map(prev);
+              updated.delete(data.debateId);
+              return updated;
+            });
+            
+            // If this was the current single debate, clear it
+            if (currentDebateId === data.debateId) {
+              setCurrentDebateId(null);
+            }
+          }
           break;
 
         case 'multi_debates_started':
@@ -140,11 +168,35 @@ export default function App() {
     setMetricsUpdateTrigger(prev => prev + 1);
   };
 
+  // Helper function to stop current debate
+  const handleStopCurrentDebate = async () => {
+    if (currentDebateId) {
+      try {
+        await api.stopDebate(currentDebateId);
+        setCurrentDebateId(null);
+      } catch (error) {
+        console.error('Failed to stop current debate:', error);
+      }
+    }
+  };
+
+  // Get messages for current view mode
+  const getFilteredMessages = () => {
+    if (viewMode === 'standard' && currentDebateId) {
+      // In standard mode, only show messages from current debate
+      return debateMessages.filter(msg => msg.debateId === currentDebateId);
+    } else if (viewMode === 'multi-debate') {
+      // In multi-debate mode, show all messages
+      return debateMessages;
+    }
+    return [];
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col">
       <Header connectionStatus={connectionStatus} backendHealth={connectionHealth} />
 
-      {/* Optimized Controls Bar - Full Width Layout */}
+      {/* Enhanced Controls Bar - Full Width Layout */}
       <div className="flex-shrink-0 border-b border-slate-700/50 bg-slate-800/30">
         <div className="container mx-auto px-4 py-3 max-w-7xl">
           <div className="flex flex-col gap-4">
@@ -153,7 +205,14 @@ export default function App() {
               <EnhancedControls
                 viewMode={viewMode}
                 activeDebates={activeDebates}
+                currentDebateId={currentDebateId}
                 onMetricsUpdate={handleMetricsUpdate}
+                onStopCurrentDebate={handleStopCurrentDebate}
+                onDebateStarted={(debateId) => {
+                  if (viewMode === 'standard') {
+                    setCurrentDebateId(debateId);
+                  }
+                }}
               />
             </div>
 
@@ -225,20 +284,20 @@ export default function App() {
       {/* Dynamic Main Content Based on View Mode */}
       <main className="flex-1 container mx-auto px-4 py-4 max-w-7xl">
         {viewMode === 'standard' ? (
-          /* Standard Single-Debate Layout */
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
-            <div className="lg:col-span-3 order-1">
-              <DebatePanel messages={debateMessages} />
+          /* Standard Single-Debate Layout - Improved */
+          <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-200px)]">
+            <div className="flex-1 min-w-0">
+              <DebatePanel messages={getFilteredMessages()} />
             </div>
-            <div className="lg:col-span-1 order-2 space-y-4">
-              <FactChecker factChecks={factChecks} />
+            <div className="w-full lg:w-72 flex-shrink-0">
+              <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
             </div>
           </div>
         ) : viewMode === 'multi-debate' ? (
-          /* Multi-Debate Layout - Debate-Focused */
-          <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 h-[calc(100vh-200px)]">
-            {/* Main: Multi-Debate Viewer - Primary focus */}
-            <div className="xl:col-span-4">
+          /* Multi-Debate Layout - Full Width for Debates */
+          <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-200px)]">
+            {/* Main: Multi-Debate Viewer - Full Focus */}
+            <div className="flex-1 min-w-0">
               <TrueMultiDebateViewer
                 messages={debateMessages}
                 activeDebates={activeDebates}
@@ -246,44 +305,9 @@ export default function App() {
               />
             </div>
 
-            {/* Side Panel: Fact Checker + Compact Analytics */}
-            <div className="xl:col-span-1 space-y-4">
+            {/* Side Panel: Just Fact Checker - Minimal */}
+            <div className="w-full lg:w-72 flex-shrink-0">
               <FactChecker factChecks={factChecks} />
-              
-              {/* Compact Analytics Summary */}
-              <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
-                <h3 className="text-sm font-semibold mb-3 text-white flex items-center">
-                  📊 System Stats
-                </h3>
-                <div className="space-y-2 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Active Debates:</span>
-                    <span className="text-blue-400 font-medium">{activeDebates.size}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Total Messages:</span>
-                    <span className="text-green-400 font-medium">{debateMessages.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Fact Checks:</span>
-                    <span className="text-purple-400 font-medium">{factChecks.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Connection:</span>
-                    <span className={`font-medium ${connectionStatus === 'connected' ? 'text-green-400' : 'text-red-400'}`}>
-                      {connectionStatus}
-                    </span>
-                  </div>
-                </div>
-                
-                {/* Switch to Full Analytics */}
-                <button
-                  onClick={() => setViewMode('analytics')}
-                  className="w-full mt-3 px-3 py-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/20 rounded-lg text-xs text-green-300 transition-colors"
-                >
-                  📈 View Full Analytics
-                </button>
-              </div>
             </div>
           </div>
         ) : (
