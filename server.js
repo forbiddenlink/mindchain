@@ -291,15 +291,49 @@ app.get('/api/agent/:id/stance/:debateId/:topic', async (req, res) => {
     }
 });
 
-// Health check
-app.get('/api/health', (req, res) => {
+// Enhanced Health check with Redis connectivity
+app.get('/api/health', async (req, res) => {
     console.log(`Health check from origin: ${req.get('Origin')}`);
-    res.json({
+    
+    const health = {
         status: 'healthy',
         timestamp: new Date().toISOString(),
         server: 'MindChain API',
-        version: '1.0.0'
-    });
+        version: '1.0.0',
+        services: {
+            redis: 'unknown',
+            websocket: 'unknown',
+            openai: 'unknown'
+        },
+        metrics: {
+            uptime: Math.floor(process.uptime()),
+            memoryUsage: Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'MB',
+            activeConnections: connections.size,
+            activeDebates: activeDebates.size
+        }
+    };
+
+    // Test Redis connectivity
+    try {
+        await client.ping();
+        const keyCount = await client.dbSize();
+        health.services.redis = 'connected';
+        health.metrics.redisKeys = keyCount;
+    } catch (error) {
+        health.services.redis = 'error';
+        health.status = 'degraded';
+    }
+
+    // Test WebSocket status
+    health.services.websocket = connections.size > 0 ? 'active' : 'ready';
+
+    // Test OpenAI (basic check)
+    health.services.openai = process.env.OPENAI_API_KEY ? 'configured' : 'missing';
+    if (!process.env.OPENAI_API_KEY) {
+        health.status = 'degraded';
+    }
+
+    res.json(health);
 });
 
 // � Contest Analytics Endpoint
