@@ -14,6 +14,9 @@ export async function generateEnhancedMessage(agentId, debateId, topic = 'genera
     try {
         const profile = await client.json.get(`agent:${agentId}:profile`);
         
+        // Convert topic to stance key
+        const stanceKey = topicToStanceKey(topic);
+        
         // Get conversation context from multiple agents (not just own memory)
         const debateMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 5 });
         const recentContext = debateMessages
@@ -22,7 +25,7 @@ export async function generateEnhancedMessage(agentId, debateId, topic = 'genera
             .join('\n');
 
         // Check for potential allies based on stance similarity
-        const allies = await findPotentialAllies(client, agentId, debateId, topic);
+        const allies = await findPotentialAllies(client, agentId, debateId, stanceKey);
         
         // Generate contextually aware response
         const emotionalState = determineEmotionalState(profile, recentContext);
@@ -149,14 +152,94 @@ function extractReferences(message, recentContext) {
     return references.join(', ');
 }
 
-// 📊 Advanced stance evolution based on debate dynamics
+// � Convert debate topic to stance key for profile lookup
+function topicToStanceKey(topic) {
+    const topicMappings = {
+        // Frontend topic descriptions
+        'environmental regulations and green energy': 'climate_policy',
+        'climate policy': 'climate_policy',
+        'climate change': 'climate_policy',
+        
+        'artificial intelligence governance and ethics': 'ai_policy',
+        'ai regulation': 'ai_policy',
+        
+        'universal healthcare and medical access': 'healthcare_policy',
+        'healthcare reform': 'healthcare_policy',
+        'healthcare': 'healthcare_policy',
+        
+        'border security and refugee assistance': 'immigration_policy',
+        'immigration policy': 'immigration_policy',
+        'immigration': 'immigration_policy',
+        
+        'public education and student debt': 'education_policy',
+        'education reform': 'education_policy',
+        'education': 'education_policy',
+        
+        'progressive taxation and wealth redistribution': 'tax_policy',
+        'tax policy': 'tax_policy',
+        'taxation': 'tax_policy',
+        
+        'data protection and surveillance': 'privacy_policy',
+        'digital privacy': 'privacy_policy',
+        'privacy': 'privacy_policy',
+        
+        'space colonization and research funding': 'space_policy',
+        'space exploration': 'space_policy',
+        'space': 'space_policy',
+        
+        // Legacy mappings
+        'foreign policy': 'foreign_policy',
+        'defense': 'defense_policy'
+    };
+    
+    // Convert to lowercase for matching
+    const lowerTopic = topic.toLowerCase();
+    
+    // Direct match
+    if (topicMappings[lowerTopic]) {
+        return topicMappings[lowerTopic];
+    }
+    
+    // Partial match for key words
+    if (lowerTopic.includes('climate') || lowerTopic.includes('environment')) {
+        return 'climate_policy';
+    }
+    if (lowerTopic.includes('healthcare') || lowerTopic.includes('medical')) {
+        return 'healthcare_policy';
+    }
+    if (lowerTopic.includes('education') || lowerTopic.includes('school')) {
+        return 'education_policy';
+    }
+    if (lowerTopic.includes('immigration') || lowerTopic.includes('border')) {
+        return 'immigration_policy';
+    }
+    if (lowerTopic.includes('tax') || lowerTopic.includes('wealth')) {
+        return 'tax_policy';
+    }
+    if (lowerTopic.includes('ai') || lowerTopic.includes('artificial')) {
+        return 'ai_policy';
+    }
+    if (lowerTopic.includes('privacy') || lowerTopic.includes('data')) {
+        return 'privacy_policy';
+    }
+    if (lowerTopic.includes('space')) {
+        return 'space_policy';
+    }
+    
+    // Default fallback to climate policy
+    console.log(`⚠️ Unknown topic "${topic}", defaulting to climate_policy`);
+    return 'climate_policy';
+}
+
+// �📊 Advanced stance evolution based on debate dynamics
 export async function updateStanceBasedOnDebate(agentId, debateId, topic) {
     const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();
     
     try {
         const profile = await client.json.get(`agent:${agentId}:profile`);
-        const currentStance = profile.stance?.[topic] || 0.5;
+        const stanceKey = topicToStanceKey(topic);
+        const currentStance = profile.stance?.[stanceKey] || 0.5;
         
         // Analyze recent debate messages for influence
         const recentMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 10 });
@@ -199,12 +282,12 @@ export async function updateStanceBasedOnDebate(agentId, debateId, topic) {
         const newStance = Math.max(0, Math.min(1, currentStance + stanceShift));
         
         // Update profile
-        profile.stance[topic] = newStance;
+        profile.stance[stanceKey] = newStance;
         await client.json.set(`agent:${agentId}:profile`, '$', profile);
         
         // Store in TimeSeries
-        const stanceKey = `debate:${debateId}:agent:${agentId}:stance:${topic}`;
-        await client.ts.add(stanceKey, '*', newStance);
+        const tsKey = `debate:${debateId}:agent:${agentId}:stance:${stanceKey}`;
+        await client.ts.add(tsKey, '*', newStance);
         
         await client.quit();
         return { oldStance: currentStance, newStance, shift: stanceShift };

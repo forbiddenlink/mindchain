@@ -102,10 +102,9 @@ export default function App() {
               return updated;
             });
             
-            // If this was the current single debate, clear it
-            if (currentDebateId === data.debateId) {
-              setCurrentDebateId(null);
-            }
+            // Don't clear currentDebateId immediately to keep messages visible
+            // The user can manually start a new debate or switch modes
+            console.log(`⏹️ Debate ${data.debateId} stopped - messages remain visible`);
           }
           break;
 
@@ -117,10 +116,9 @@ export default function App() {
               return updated;
             });
             
-            // If this was the current single debate, clear it
-            if (currentDebateId === data.debateId) {
-              setCurrentDebateId(null);
-            }
+            // Don't clear currentDebateId immediately to keep messages visible
+            // The completed debate messages should remain visible
+            console.log(`🏁 Debate ${data.debateId} ended - messages remain visible`);
           }
           break;
 
@@ -173,7 +171,14 @@ export default function App() {
     if (currentDebateId) {
       try {
         await api.stopDebate(currentDebateId);
-        setCurrentDebateId(null);
+        
+        // In standard mode, when user explicitly stops a debate, 
+        // clear the currentDebateId and messages for a fresh start
+        if (viewMode === 'standard') {
+          setCurrentDebateId(null);
+          setDebateMessages([]); // Clear messages for fresh start
+          console.log(`🛑 Stopped debate and cleared messages for fresh start`);
+        }
       } catch (error) {
         console.error('Failed to stop current debate:', error);
       }
@@ -182,9 +187,19 @@ export default function App() {
 
   // Get messages for current view mode
   const getFilteredMessages = () => {
-    if (viewMode === 'standard' && currentDebateId) {
-      // In standard mode, only show messages from current debate
-      return debateMessages.filter(msg => msg.debateId === currentDebateId);
+    if (viewMode === 'standard') {
+      if (currentDebateId) {
+        // Show messages from the current active debate
+        return debateMessages.filter(msg => msg.debateId === currentDebateId);
+      } else {
+        // If no current debate but we have messages, show the most recent debate's messages
+        // This prevents messages from disappearing when a debate ends
+        if (debateMessages.length > 0) {
+          const latestDebateId = debateMessages[debateMessages.length - 1].debateId;
+          return debateMessages.filter(msg => msg.debateId === latestDebateId);
+        }
+        return debateMessages; // Show all messages if no debate ID filtering is possible
+      }
     } else if (viewMode === 'multi-debate') {
       // In multi-debate mode, show all messages
       return debateMessages;
@@ -210,7 +225,10 @@ export default function App() {
                 onStopCurrentDebate={handleStopCurrentDebate}
                 onDebateStarted={(debateId) => {
                   if (viewMode === 'standard') {
+                    // Clear previous messages when starting a new debate
+                    setDebateMessages([]);
                     setCurrentDebateId(debateId);
+                    console.log(`🚀 Started new debate ${debateId} - cleared previous messages`);
                   }
                 }}
               />
