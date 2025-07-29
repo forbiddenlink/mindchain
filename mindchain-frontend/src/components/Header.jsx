@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from './Icon';
 
 const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }) => {
     const getStatusColor = (status) => {
@@ -21,7 +22,7 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
                     {/* Logo and Title */}
                     <div className="flex items-center space-x-4">
                         <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <span className="text-white font-bold text-lg">🧠</span>
+                            <Icon name="brain" size={24} className="text-white" />
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">

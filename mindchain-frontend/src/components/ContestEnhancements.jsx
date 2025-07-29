@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
+import Icon from './Icon';
 
 // 🏆 Advanced Real-Time Dashboard Component
 export function ContestReadyDashboard() {
@@ -86,7 +87,10 @@ function RedisModuleVisualizer() {
 
     return (
         <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">🗄️ Redis Multi-Modal Real-Time Usage</h3>
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <Icon name="database" size={20} className="text-purple-400" />
+                Redis Multi-Modal Real-Time Usage
+            </h3>
             
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {Object.entries(moduleData).map(([module, data]) => (
@@ -144,7 +148,10 @@ function PerformanceTrendChart({ data = [] }) {
     if (data.length === 0) {
         return (
             <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">📈 Performance Trends</h3>
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <Icon name="trending" size={18} />
+                    Performance Trends
+                </h3>
                 <div className="text-center text-gray-400 py-8">
                     Collecting performance data...
                 </div>
@@ -154,7 +161,10 @@ function PerformanceTrendChart({ data = [] }) {
 
     return (
         <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">📈 Performance Trends</h3>
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <Icon name="trending" size={18} />
+                Performance Trends
+            </h3>
             
             {/* Simple ASCII-style chart for demo */}
             <div className="space-y-2">
@@ -183,12 +193,12 @@ function PerformanceTrendChart({ data = [] }) {
 // 🏆 Contest Highlights Component
 function ContestHighlights() {
     const highlights = [
-        { icon: '🗄️', title: 'Multi-Modal Redis', desc: 'All 4 modules actively demonstrated' },
-        { icon: '⚡', title: 'Real-Time Updates', desc: 'Sub-second WebSocket performance' },
-        { icon: '🤖', title: 'AI Integration', desc: 'GPT-4 + OpenAI embeddings' },
-        { icon: '📊', title: 'Live Analytics', desc: 'Professional monitoring dashboard' },
-        { icon: '🎭', title: 'Multi-Debate', desc: 'Concurrent processing showcase' },
-        { icon: '🔍', title: 'Fact Checking', desc: 'Vector similarity search' }
+        { icon: 'database', title: 'Multi-Modal Redis', desc: 'All 4 modules actively demonstrated' },
+        { icon: 'performance', title: 'Real-Time Updates', desc: 'Sub-second WebSocket performance' },
+        { icon: 'ai', title: 'AI Integration', desc: 'GPT-4 + OpenAI embeddings' },
+        { icon: 'analytics', title: 'Live Analytics', desc: 'Professional monitoring dashboard' },
+        { icon: 'multi-debate', title: 'Multi-Debate', desc: 'Concurrent processing showcase' },
+        { icon: 'search', title: 'Fact Checking', desc: 'Vector similarity search' }
     ];
 
     return (
@@ -200,7 +210,7 @@ function ContestHighlights() {
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                 {highlights.map((highlight, index) => (
                     <div key={index} className="flex items-start gap-3 p-3 bg-green-900/10 rounded-lg border border-green-500/10">
-                        <span className="text-2xl">{highlight.icon}</span>
+                        <Icon name={highlight.icon} size={32} className="text-blue-400" />
                         <div>
                             <div className="font-semibold text-green-200 text-sm">{highlight.title}</div>
                             <div className="text-xs text-green-400">{highlight.desc}</div>
@@ -211,7 +221,8 @@ function ContestHighlights() {
             
             <div className="mt-4 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
                 <div className="text-center text-green-300 font-semibold">
-                    🎯 Contest Ready - All Requirements Met
+                    <Icon name="target" size={16} className="mr-2 text-green-400" />
+                    Contest Ready - All Requirements Met
                 </div>
                 <div className="text-center text-xs text-green-400 mt-1">
                     Showcasing Redis beyond caching with real-time AI capabilities
@@ -253,12 +264,12 @@ export function ContestMultiDebateManager({ onStartDebates, activeDebates }) {
     const [isLaunching, setIsLaunching] = useState(false);
 
     const contestTopics = [
-        { id: 'ai_ethics', name: '🤖 AI Ethics & Regulation', category: 'Technology' },
-        { id: 'climate_action', name: '🌍 Climate Action Plans', category: 'Environment' },
-        { id: 'healthcare_ai', name: '🏥 AI in Healthcare', category: 'Health' },
-        { id: 'digital_privacy', name: '🔒 Digital Privacy Rights', category: 'Rights' },
-        { id: 'space_colonization', name: '🚀 Mars Colonization Ethics', category: 'Future' },
-        { id: 'gene_editing', name: '🧬 CRISPR Gene Editing', category: 'Biotech' }
+        { id: 'ai_ethics', name: 'AI Ethics & Regulation', category: 'Technology', icon: 'ai' },
+        { id: 'climate_action', name: 'Climate Action Plans', category: 'Environment', icon: 'climate' },
+        { id: 'healthcare_ai', name: 'AI in Healthcare', category: 'Health', icon: 'healthcare' },
+        { id: 'digital_privacy', name: 'Digital Privacy Rights', category: 'Rights', icon: 'privacy' },
+        { id: 'space_colonization', name: 'Mars Colonization Ethics', category: 'Future', icon: 'space' },
+        { id: 'gene_editing', name: 'CRISPR Gene Editing', category: 'Biotech', icon: 'ai-chip' }
     ];
 
     const launchMultipleDebates = async () => {
@@ -284,7 +295,8 @@ export function ContestMultiDebateManager({ onStartDebates, activeDebates }) {
     return (
         <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/20 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-purple-300 mb-4">
-                🎭 Contest Multi-Debate Launcher
+                <Icon name="multi-debate" size={16} className="mr-2 text-purple-400" />
+                Contest Multi-Debate Launcher
             </h3>
             
             {/* Topic Selection Grid */}
@@ -312,7 +324,10 @@ export function ContestMultiDebateManager({ onStartDebates, activeDebates }) {
                             }}
                             className="sr-only"
                         />
-                        <div className="font-medium text-sm">{topic.name}</div>
+                        <div className="flex items-center gap-2 font-medium text-sm">
+                            <Icon name={topic.icon} size={16} />
+                            {topic.name}
+                        </div>
                         <div className="text-xs text-purple-400">{topic.category}</div>
                     </label>
                 ))}
@@ -335,7 +350,17 @@ export function ContestMultiDebateManager({ onStartDebates, activeDebates }) {
                         }
                     `}
                 >
-                    {isLaunching ? '🚀 Launching...' : `🎭 Launch ${selectedTopics.length} Debates`}
+                    {isLaunching ? (
+                        <span className="flex items-center gap-2">
+                            <Icon name="play" size={16} />
+                            Launching...
+                        </span>
+                    ) : (
+                        <span className="flex items-center gap-2">
+                            <Icon name="multi-debate" size={16} />
+                            Launch {selectedTopics.length} Debates
+                        </span>
+                    )}
                 </button>
             </div>
         </div>

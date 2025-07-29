@@ -2,16 +2,17 @@
 import { useState, useMemo } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import api from '../services/api';
+import Icon from './Icon';
 
 const DEBATE_TOPICS = [
-    { id: 'climate', name: '🌍 Climate Policy', description: 'Environmental regulations and green energy' },
-    { id: 'ai', name: '🤖 AI Regulation', description: 'Artificial intelligence governance and ethics' },
-    { id: 'healthcare', name: '🏥 Healthcare Reform', description: 'Universal healthcare and medical access' },
-    { id: 'immigration', name: '🌐 Immigration Policy', description: 'Border security and refugee assistance' },
-    { id: 'education', name: '🎓 Education Reform', description: 'Public education and student debt' },
-    { id: 'taxation', name: '💰 Tax Policy', description: 'Progressive taxation and wealth redistribution' },
-    { id: 'privacy', name: '🔒 Digital Privacy', description: 'Data protection and surveillance' },
-    { id: 'space', name: '🚀 Space Exploration', description: 'Space colonization and research funding' }
+    { id: 'climate', name: 'Climate Policy', description: 'Environmental regulations and green energy', icon: 'climate' },
+    { id: 'ai', name: 'AI Regulation', description: 'Artificial intelligence governance and ethics', icon: 'ai' },
+    { id: 'healthcare', name: 'Healthcare Reform', description: 'Universal healthcare and medical access', icon: 'healthcare' },
+    { id: 'immigration', name: 'Immigration Policy', description: 'Border security and refugee assistance', icon: 'immigration' },
+    { id: 'education', name: 'Education Reform', description: 'Public education and student debt', icon: 'education' },
+    { id: 'taxation', name: 'Tax Policy', description: 'Progressive taxation and wealth redistribution', icon: 'taxation' },
+    { id: 'privacy', name: 'Digital Privacy', description: 'Data protection and surveillance', icon: 'privacy' },
+    { id: 'space', name: 'Space Exploration', description: 'Space colonization and research funding', icon: 'space' }
 ];
 
 function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
@@ -58,15 +59,15 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
                 <div className="flex gap-1 flex-shrink-0">
                     <button
                         onClick={() => setIsChangingTopic(!isChangingTopic)}
-                        className="text-xs bg-blue-600/20 px-2 py-1 rounded border border-blue-500/20 text-blue-300 hover:bg-blue-600/30 transition-colors"
+                        className="text-xs bg-blue-600/20 px-2 py-1 rounded border border-blue-500/20 text-blue-300 hover:bg-blue-600/30 transition-colors flex items-center"
                     >
-                        🔄
+                        <Icon name="settings" size={12} />
                     </button>
                     <button
                         onClick={() => onStop && onStop(debate.id)}
-                        className="text-xs bg-red-600/20 px-2 py-1 rounded border border-red-500/20 text-red-300 hover:bg-red-600/30 transition-colors"
+                        className="text-xs bg-red-600/20 px-2 py-1 rounded border border-red-500/20 text-red-300 hover:bg-red-600/30 transition-colors flex items-center"
                     >
-                        ⏹️
+                        <Icon name="stop" size={12} />
                     </button>
                 </div>
             </div>
@@ -107,7 +108,9 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
             <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
                 {recentMessages.length === 0 ? (
                     <div className="text-center text-slate-400 py-8">
-                        <div className="text-2xl mb-2">💭</div>
+                        <div className="w-12 h-12 bg-slate-700/50 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <Icon name="message" size={24} className="text-slate-500" />
+                        </div>
                         <div className="text-xs">No messages yet</div>
                     </div>
                 ) : (
@@ -123,8 +126,8 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
                                 </span>
                                 <div className="flex items-center gap-1">
                                     {msg.factCheck && (
-                                        <span className="text-xs bg-green-600/20 px-1 py-0.5 rounded text-green-400">
-                                            ✅
+                                        <span className="text-xs bg-green-600/20 px-1 py-0.5 rounded text-green-400 flex items-center gap-1">
+                                            <Icon name="success" size={10} />
                                         </span>
                                     )}
                                     <span className="text-xs text-slate-400">
@@ -221,7 +224,8 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
             {/* Header */}
             <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <h2 className="text-xl font-bold text-slate-200 flex items-center gap-2">
-                    🎭 Multi-Debate Arena
+                    <Icon name="multi-debate" size={20} className="mr-2 text-purple-400" />
+                    Multi-Debate Arena
                     <span className="text-xs bg-purple-500/20 px-2 py-1 rounded-full text-purple-400">
                         {activeDebatesArray.length} Active
                     </span>
@@ -239,9 +243,10 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
                     </select>
                     <button
                         onClick={startNewDebate}
-                        className="px-3 py-1 bg-green-600/20 border border-green-500/20 rounded text-green-300 text-xs hover:bg-green-600/30 transition-colors"
+                        className="px-3 py-1 bg-green-600/20 border border-green-500/20 rounded text-green-300 text-xs hover:bg-green-600/30 transition-colors flex items-center gap-1"
                     >
-                        ➕ New Debate
+                        <Icon name="add" size={14} />
+                        New Debate
                     </button>
                 </div>
             </div>
@@ -250,14 +255,17 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
             <div className="flex-1 min-h-0 overflow-hidden">
                 {activeDebatesArray.length === 0 ? (
                     <div className="h-full flex items-center justify-center text-slate-400">
-                        <div className="text-center">
-                            <div className="text-4xl mb-4">🎭</div>
+                        <div className="text-center max-w-md mx-auto">
+                            <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mb-4 mx-auto">
+                                <Icon name="multi-debate" size={32} className="text-purple-400" />
+                            </div>
                             <div className="text-lg mb-2">No Active Debates</div>
                             <div className="text-sm">Start multiple debates to see them here simultaneously</div>
                             <button
                                 onClick={startNewDebate}
-                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
                             >
+                                <Icon name="play" size={16} />
                                 Start First Debate
                             </button>
                         </div>

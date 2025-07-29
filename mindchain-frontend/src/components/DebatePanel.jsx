@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import Icon from './Icon';
 
 const DebatePanel = ({ messages = [] }) => {
     const messagesEndRef = useRef(null);
@@ -16,31 +17,19 @@ const DebatePanel = ({ messages = [] }) => {
             case 'senatorbot':
                 return {
                     bgColor: 'bg-gradient-to-r from-blue-500 to-blue-600',
-                    avatar: (
-                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clipRule="evenodd" />
-                        </svg>
-                    ),
+                    avatar: <Icon name="senator" size={20} className="text-white" />,
                     name: 'SenatorBot'
                 };
             case 'reformerbot':
                 return {
                     bgColor: 'bg-gradient-to-r from-orange-500 to-red-500',
-                    avatar: (
-                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clipRule="evenodd" />
-                        </svg>
-                    ),
+                    avatar: <Icon name="reformer" size={20} className="text-white" />,
                     name: 'ReformerBot'
                 };
             default:
                 return {
                     bgColor: 'bg-gradient-to-r from-gray-500 to-gray-600',
-                    avatar: (
-                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
-                        </svg>
-                    ),
+                    avatar: <Icon name="message" size={20} className="text-white" />,
                     name: 'Agent'
                 };
         }
@@ -53,9 +42,7 @@ const DebatePanel = ({ messages = [] }) => {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-                            </svg>
+                            <Icon name="message" size={20} className="text-white" />
                         </div>
                         <h2 className="text-xl font-bold text-white">Live Debate</h2>
                     </div>
@@ -74,7 +61,9 @@ const DebatePanel = ({ messages = [] }) => {
             <div className="flex-1 overflow-y-auto p-6 space-y-4 min-h-0 bg-gradient-to-b from-slate-900/20 to-slate-900/40">
                 {messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
-                        <div className="text-4xl mb-4">💭</div>
+                        <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mb-4">
+                            <Icon name="message" size={32} className="text-slate-400" />
+                        </div>
                         <h3 className="text-xl font-semibold text-white mb-3">
                             Ready for Debate
                         </h3>
@@ -124,7 +113,10 @@ const DebatePanel = ({ messages = [] }) => {
                                             {/* Fact Check Indicator */}
                                             {msg.factCheck && (
                                                 <div className="mt-2 p-2 bg-green-900/30 border border-green-500/30 rounded text-xs">
-                                                    <div className="text-green-400 font-medium">✅ Fact Check</div>
+                                                    <div className="text-green-400 font-medium flex items-center gap-1">
+                                                        <Icon name="success" size={12} />
+                                                        Fact Check
+                                                    </div>
                                                     <div className="text-green-200 mt-1">{msg.factCheck.fact}</div>
                                                 </div>
                                             )}

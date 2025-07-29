@@ -6,6 +6,7 @@ import FactChecker from './components/FactChecker';
 import EnhancedControls from './components/EnhancedControls';
 import EnhancedPerformanceDashboard from './components/EnhancedPerformanceDashboard';
 import TrueMultiDebateViewer from './components/TrueMultiDebateViewer';
+import Icon from './components/Icon';
 import useWebSocket from './hooks/useWebSocket';
 import api from './services/api';
 
@@ -266,7 +267,8 @@ export default function App() {
                       }
                     `}
                   >
-                    📝 Standard
+                    <Icon name="target" size={16} className="mr-1" />
+                    Standard
                   </button>
                   <button
                     onClick={() => setViewMode('multi-debate')}
@@ -278,7 +280,8 @@ export default function App() {
                       }
                     `}
                   >
-                    🎭 Multi-Debate
+                    <Icon name="multi-debate" size={16} className="mr-1" />
+                    Multi-Debate
                   </button>
                   <button
                     onClick={() => setViewMode('analytics')}
@@ -290,7 +293,8 @@ export default function App() {
                       }
                     `}
                   >
-                    📊 Analytics
+                    <Icon name="analytics" size={16} className="mr-1" />
+                    Analytics
                   </button>
                 </div>
               </div>
@@ -340,7 +344,10 @@ export default function App() {
             <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <h3 className="text-lg font-semibold text-white">📊 Performance Analytics</h3>
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    <Icon name="analytics" size={20} className="text-blue-400" />
+                    Performance Analytics
+                  </h3>
                   <div className="flex items-center gap-3 text-sm">
                     <div className="text-center">
                       <div className="text-lg font-bold text-blue-400">{activeDebates.size}</div>
@@ -362,7 +369,8 @@ export default function App() {
                     onClick={() => setViewMode('multi-debate')}
                     className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/20 rounded-lg text-sm text-purple-300 transition-colors"
                   >
-                    🎭 Back to Debates
+                    <Icon name="multi-debate" size={16} className="mr-1" />
+                    Back to Debates
                   </button>
                   <button
                     onClick={() => setViewMode('standard')}

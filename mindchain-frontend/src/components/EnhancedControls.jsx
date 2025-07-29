@@ -1,16 +1,17 @@
 // Enhanced Controls - Single interface for both standard and multi-debate modes
 import { useState } from 'react';
 import api from '../services/api';
+import Icon from './Icon';
 
 const DEBATE_TOPICS = [
-    { id: 'climate', name: '🌍 Climate Policy', description: 'Environmental regulations and green energy' },
-    { id: 'ai', name: '🤖 AI Regulation', description: 'Artificial intelligence governance and ethics' },
-    { id: 'healthcare', name: '🏥 Healthcare Reform', description: 'Universal healthcare and medical access' },
-    { id: 'immigration', name: '🌐 Immigration Policy', description: 'Border security and refugee assistance' },
-    { id: 'education', name: '🎓 Education Reform', description: 'Public education and student debt' },
-    { id: 'taxation', name: '💰 Tax Policy', description: 'Progressive taxation and wealth redistribution' },
-    { id: 'privacy', name: '🔒 Digital Privacy', description: 'Data protection and surveillance' },
-    { id: 'space', name: '🚀 Space Exploration', description: 'Space colonization and research funding' }
+    { id: 'climate', name: 'Climate Policy', description: 'Environmental regulations and green energy', icon: 'climate' },
+    { id: 'ai', name: 'AI Regulation', description: 'Artificial intelligence governance and ethics', icon: 'ai' },
+    { id: 'healthcare', name: 'Healthcare Reform', description: 'Universal healthcare and medical access', icon: 'healthcare' },
+    { id: 'immigration', name: 'Immigration Policy', description: 'Border security and refugee assistance', icon: 'immigration' },
+    { id: 'education', name: 'Education Reform', description: 'Public education and student debt', icon: 'education' },
+    { id: 'taxation', name: 'Tax Policy', description: 'Progressive taxation and wealth redistribution', icon: 'taxation' },
+    { id: 'privacy', name: 'Digital Privacy', description: 'Data protection and surveillance', icon: 'privacy' },
+    { id: 'space', name: 'Space Exploration', description: 'Space colonization and research funding', icon: 'space' }
 ];
 
 export default function EnhancedControls({ viewMode, activeDebates, currentDebateId, onMetricsUpdate, onStopCurrentDebate, onDebateStarted }) {
@@ -37,8 +38,9 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
         if (customTopic.trim()) {
             const customTopicObj = {
                 id: `custom_${Date.now()}`,
-                name: `💡 ${customTopic}`,
-                description: customTopic.trim()
+                name: customTopic,
+                description: customTopic.trim(),
+                icon: 'idea'
             };
 
             DEBATE_TOPICS.push(customTopicObj);
@@ -124,10 +126,23 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                 {/* Column 1: Mode & Status */}
                 <div className="lg:col-span-1">
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-lg font-bold text-slate-200">
-                            {viewMode === 'multi-debate' ? '🎭 Multi-Debate' : 
-                             viewMode === 'analytics' ? '📊 Analytics Dashboard' : 
-                             '🎯 Single Debate'}
+                        <h2 className="text-lg font-bold text-slate-200 flex items-center gap-2">
+                            {viewMode === 'multi-debate' ? (
+                                <>
+                                    <Icon name="multi-debate" size={20} className="text-purple-400" />
+                                    Multi-Debate
+                                </>
+                            ) : viewMode === 'analytics' ? (
+                                <>
+                                    <Icon name="analytics" size={20} className="text-blue-400" />
+                                    Analytics Dashboard
+                                </>
+                            ) : (
+                                <>
+                                    <Icon name="target" size={20} className="text-green-400" />
+                                    Single Debate
+                                </>
+                            )}
                         </h2>
                         {viewMode === 'standard' && currentDebateId ? (
                             <div className="flex items-center gap-2">
@@ -136,9 +151,10 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                                 </span>
                                 <button
                                     onClick={onStopCurrentDebate}
-                                    className="px-2 py-1 bg-red-600/20 border border-red-500/20 rounded text-red-300 hover:bg-red-600/30 transition-colors text-sm"
+                                    className="px-2 py-1 bg-red-600/20 border border-red-500/20 rounded text-red-300 hover:bg-red-600/30 transition-colors text-sm flex items-center gap-1"
                                 >
-                                    ⏹️ Stop
+                                    <Icon name="stop" size={14} />
+                                    Stop
                                 </button>
                             </div>
                         ) : viewMode === 'multi-debate' && activeDebates.size > 0 ? (
@@ -148,9 +164,10 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                                 </span>
                                 <button
                                     onClick={stopAllDebates}
-                                    className="px-2 py-1 bg-red-600/20 border border-red-500/20 rounded text-red-300 hover:bg-red-600/30 transition-colors text-sm"
+                                    className="px-2 py-1 bg-red-600/20 border border-red-500/20 rounded text-red-300 hover:bg-red-600/30 transition-colors text-sm flex items-center gap-1"
                                 >
-                                    ⏹️ Stop All
+                                    <Icon name="stop" size={14} />
+                                    Stop All
                                 </button>
                             </div>
                         ) : null}
@@ -169,9 +186,19 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                         </h3>
                         <button
                             onClick={() => setIsAddingTopic(!isAddingTopic)}
-                            className="text-xs bg-blue-600/20 px-2 py-1 rounded border border-blue-500/20 text-blue-300 hover:bg-blue-600/30 transition-colors"
+                            className="text-xs bg-blue-600/20 px-2 py-1 rounded border border-blue-500/20 text-blue-300 hover:bg-blue-600/30 transition-colors flex items-center gap-1"
                         >
-                            {isAddingTopic ? '❌' : '➕ Custom'}
+                            {isAddingTopic ? (
+                                <>
+                                    <Icon name="remove" size={12} />
+                                    Cancel
+                                </>
+                            ) : (
+                                <>
+                                    <Icon name="add" size={12} />
+                                    Custom
+                                </>
+                            )}
                         </button>
                     </div>
 
@@ -219,7 +246,10 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                                     onChange={() => handleTopicToggle(topic.id)}
                                     className="sr-only"
                                 />
-                                <span className="font-medium text-center">{topic.name}</span>
+                                <span className="flex items-center gap-2 font-medium text-center">
+                                    <Icon name={topic.icon} size={16} className="flex-shrink-0" />
+                                    <span className="truncate">{topic.name}</span>
+                                </span>
                             </label>
                         ))}
                     </div>
@@ -237,8 +267,9 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                             <div>• Debate engine statistics and agent interactions</div>
                             <div>• System health and connection monitoring</div>
                         </div>
-                        <div className="mt-2 text-xs text-blue-400">
-                            💡 Switch to Standard or Multi-Debate mode to start new debates
+                        <div className="mt-2 text-xs text-blue-400 flex items-center gap-1">
+                            <Icon name="idea" size={14} />
+                            Switch to Standard or Multi-Debate mode to start new debates
                         </div>
                     </div>
                 </div>
@@ -252,7 +283,7 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                                 onClick={startDebates}
                                 disabled={selectedTopics.length === 0 || isStarting || (viewMode === 'standard' && currentDebateId)}
                                 className={`
-                    w-full px-3 py-2 rounded-lg font-semibold transition-all text-sm
+                    w-full px-3 py-2 rounded-lg font-semibold transition-all text-sm flex items-center justify-center
                     ${selectedTopics.length > 0 && !isStarting && !(viewMode === 'standard' && currentDebateId)
                                         ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
                                         : 'bg-gray-600 text-gray-400 cursor-not-allowed'
@@ -260,18 +291,31 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                   `}
                             >
                                 {isStarting ? (
-                                    <>⏳ Starting...</>
+                                    <>
+                                        <Icon name="loading" size={16} className="animate-spin mr-2" />
+                                        Starting...
+                                    </>
                                 ) : viewMode === 'standard' && currentDebateId ? (
-                                    <>⏸️ Debate Active</>
+                                    <>
+                                        <Icon name="pause" size={16} className="mr-2" />
+                                        Debate Active
+                                    </>
                                 ) : viewMode === 'multi-debate' ? (
-                                    <>🚀 Start {selectedTopics.length}</>
+                                    <>
+                                        <Icon name="play" size={16} className="mr-2" />
+                                        Start {selectedTopics.length}
+                                    </>
                                 ) : (
-                                    <>🎯 Start Debate</>
+                                    <>
+                                        <Icon name="target" size={16} className="mr-2" />
+                                        Start Debate
+                                    </>
                                 )}
                             </button>
                         ) : (
-                            <div className="w-full px-3 py-2 rounded-lg bg-slate-700/50 border border-slate-600 text-center text-sm text-slate-400">
-                                📊 Analytics View Active
+                            <div className="w-full px-3 py-2 rounded-lg bg-slate-700/50 border border-slate-600 text-center text-sm text-slate-400 flex items-center justify-center gap-2">
+                                <Icon name="analytics" size={16} />
+                                Analytics View Active
                             </div>
                         )}
 

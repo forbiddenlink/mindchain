@@ -1,6 +1,7 @@
 // Enhanced Performance Dashboard - Contest Showcase Feature
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import Icon from './Icon';
 
 export default function EnhancedPerformanceDashboard() {
     const [metrics, setMetrics] = useState(null);
@@ -110,7 +111,10 @@ export default function EnhancedPerformanceDashboard() {
         return (
             <div className="bg-gradient-to-br from-blue-900/20 to-cyan-900/20 backdrop-blur-sm border border-blue-500/20 rounded-xl p-6">
                 <div className="flex items-center justify-center h-40">
-                    <div className="text-blue-400">⏳ Loading enhanced metrics...</div>
+                    <div className="text-blue-400 flex items-center gap-2">
+                        <Icon name="loading" size={16} className="animate-spin" />
+                        Loading enhanced metrics...
+                    </div>
                 </div>
             </div>
         );
@@ -119,12 +123,16 @@ export default function EnhancedPerformanceDashboard() {
     if (error) {
         return (
             <div className="bg-gradient-to-br from-red-900/20 to-orange-900/20 backdrop-blur-sm border border-red-500/20 rounded-xl p-4">
-                <div className="text-red-400 text-center">❌ {error}</div>
+                <div className="text-red-400 text-center flex items-center justify-center gap-2">
+                    <Icon name="error" size={16} />
+                    {error}
+                </div>
                 <button
                     onClick={fetchEnhancedMetrics}
                     className="mt-2 w-full px-3 py-1 bg-red-600/20 border border-red-500 rounded text-red-300 hover:bg-red-600/30 transition-colors"
                 >
-                    🔄 Retry
+                    <Icon name="settings" size={16} className="mr-1" />
+                    Retry
                 </button>
             </div>
         );
@@ -136,7 +144,8 @@ export default function EnhancedPerformanceDashboard() {
         <div className="bg-gradient-to-br from-blue-900/20 to-cyan-900/20 backdrop-blur-sm border border-blue-500/20 rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-blue-300 flex items-center gap-2">
-                    📊 Enhanced Analytics Dashboard
+                    <Icon name="analytics" size={20} className="mr-2 text-blue-400" />
+                    Enhanced Analytics Dashboard
                     <span className="text-xs bg-green-500/20 px-2 py-1 rounded-full text-green-400">
                         LIVE
                     </span>
@@ -155,7 +164,7 @@ export default function EnhancedPerformanceDashboard() {
                         onClick={fetchEnhancedMetrics}
                         className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
-                        🔄
+                        <Icon name="settings" size={14} className="animate-spin" />
                     </button>
                 </div>
             </div>
@@ -227,7 +236,8 @@ export default function EnhancedPerformanceDashboard() {
             {/* Redis Multi-Modal Usage - Enhanced Display */}
             <div className="mb-4">
                 <h3 className="text-sm font-semibold text-cyan-300 mb-3 flex items-center gap-2">
-                    🗄️ Redis Multi-Modal Usage
+                    <Icon name="database" size={18} className="mr-2 text-purple-400" />
+                    Redis Multi-Modal Usage
                     <span className="text-xs bg-cyan-500/20 px-2 py-1 rounded-full">
                         Contest Feature
                     </span>
@@ -340,7 +350,10 @@ export default function EnhancedPerformanceDashboard() {
             {/* Active Debates List */}
             {metrics.debate?.activeDebates && Object.keys(metrics.debate.activeDebates).length > 0 && (
                 <div className="border-t border-gray-600 pt-4 mt-4">
-                    <h3 className="text-sm font-semibold text-cyan-300 mb-2">🎯 Active Debates</h3>
+                    <h3 className="text-sm font-semibold text-cyan-300 mb-2 flex items-center gap-1">
+                        <Icon name="target" size={14} />
+                        Active Debates
+                    </h3>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                         {Object.entries(metrics.debate.activeDebates).map(([id, info]) => (
                             <div

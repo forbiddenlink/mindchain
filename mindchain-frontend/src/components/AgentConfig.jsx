@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Icon from './Icon';
 import api from '../services/api';
 
 const AgentConfig = ({ isVisible, onClose, agentId = 'senatorbot' }) => {
@@ -108,8 +109,8 @@ const AgentConfig = ({ isVisible, onClose, agentId = 'senatorbot' }) => {
                 <div className="overflow-y-auto max-h-[calc(90vh-5rem)]">
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-12">
-                            <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center mb-4 animate-pulse">
-                                <span className="text-xl">⏳</span>
+                            <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center mb-4">
+                                <Icon name="loading" size={20} className="animate-spin text-slate-400" />
                             </div>
                             <p className="text-slate-400">Loading agent profile...</p>
                         </div>
@@ -163,7 +164,7 @@ const AgentConfig = ({ isVisible, onClose, agentId = 'senatorbot' }) => {
                             {/* Stances */}
                             <div>
                                 <h3 className="text-lg font-bold text-white mb-4 flex items-center space-x-2">
-                                    <span>📊</span>
+                                    <Icon name="analytics" size={18} />
                                     <span>Policy Stances</span>
                                 </h3>
                                 <div className="space-y-4">
@@ -187,9 +188,18 @@ const AgentConfig = ({ isVisible, onClose, agentId = 'senatorbot' }) => {
                                                 className="w-full h-3 bg-slate-600 rounded-lg appearance-none cursor-pointer slider"
                                             />
                                             <div className="flex justify-between text-xs text-slate-400 mt-2">
-                                                <span>🔴 Against</span>
-                                                <span>⚪ Neutral</span>
-                                                <span>🔵 Support</span>
+                                                <span className="flex items-center gap-1">
+                                                    <Icon name="against" size={12} className="text-red-400" />
+                                                    Against
+                                                </span>
+                                                <span className="flex items-center gap-1">
+                                                    <Icon name="neutral" size={12} className="text-gray-400" />
+                                                    Neutral
+                                                </span>
+                                                <span className="flex items-center gap-1">
+                                                    <Icon name="support" size={12} className="text-green-400" />
+                                                    Support
+                                                </span>
                                             </div>
                                         </div>
                                     ))}
@@ -216,7 +226,7 @@ const AgentConfig = ({ isVisible, onClose, agentId = 'senatorbot' }) => {
                     ) : (
                         <div className="flex flex-col items-center justify-center py-12">
                             <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
-                                <span className="text-xl text-red-400">❌</span>
+                                <Icon name="error" size={20} className="text-red-400" />
                             </div>
                             <p className="text-red-400 font-medium">Failed to load agent profile</p>
                             <p className="text-slate-400 text-sm mt-2">Check console for details</p>
@@ -233,7 +243,11 @@ const AgentConfig = ({ isVisible, onClose, agentId = 'senatorbot' }) => {
                                 disabled={saving}
                                 className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-slate-600 disabled:to-slate-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg flex items-center justify-center space-x-2"
                             >
-                                <span>{saving ? '⏳' : '💾'}</span>
+                                {saving ? (
+                                    <Icon name="loading" size={16} className="animate-spin" />
+                                ) : (
+                                    <Icon name="save" size={16} />
+                                )}
                                 <span>{saving ? 'Saving Changes...' : 'Save Changes'}</span>
                             </button>
                             <button
