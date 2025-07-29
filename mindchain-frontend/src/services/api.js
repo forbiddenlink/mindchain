@@ -65,6 +65,11 @@ class MindChainAPI {
         return this.get('/stats/redis');
     }
 
+    // 🏆 Contest Analytics
+    async getContestAnalytics() {
+        return this.get('/contest/analytics');
+    }
+
     // Add fact to knowledge base
     async addFact(fact, source = 'user', category = 'general') {
         return this.post('/facts/add', { fact, source, category });
@@ -77,23 +82,6 @@ class MindChainAPI {
 
     // 🆕 MULTI-DEBATE API METHODS
 
-    // Get enhanced metrics for multi-debate dashboard
-    async getEnhancedMetrics() {
-        return this.get('/metrics/enhanced');
-    }
-
-    // Get all active debates
-    async getActiveDebates() {
-        return this.get('/debates/active');
-    }
-
-    // Start multiple debates simultaneously
-    async startMultipleDebates(topics) {
-        return this.post('/debates/start-multiple', { topics });
-    }
-
-    // 🆕 MULTI-DEBATE METHODS (Contest Features)
-
     // Get all active debates
     async getActiveDebates() {
         return this.get('/debates/active');
@@ -104,7 +92,7 @@ class MindChainAPI {
         return this.post('/debates/start-multiple', { topics, agents });
     }
 
-    // Get enhanced metrics
+    // Get enhanced metrics for performance dashboard
     async getEnhancedMetrics() {
         return this.get('/metrics/enhanced');
     }

@@ -5,6 +5,8 @@ import { WebSocketServer } from 'ws';
 import { createClient } from 'redis';
 import { generateMessage } from './generateMessage.js';
 import { findClosestFact } from './factChecker.js';
+import { generateEnhancedMessage, updateStanceBasedOnDebate } from './enhancedAI.js';
+import { RedisMetricsCollector, generateContestAnalytics } from './advancedMetrics.js';
 // import { addFactToDatabase } from './addFactsEnhanced.js';
 // import { summarizeDebate } from './summarizeDebateEnhanced.js';
 import { createServer } from 'http';
@@ -300,7 +302,34 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// 🆕 MULTI-DEBATE MANAGEMENT ENDPOINTS
+// � Contest Analytics Endpoint
+app.get('/api/contest/analytics', async (req, res) => {
+    try {
+        console.log('🏆 Contest analytics requested');
+        
+        const analytics = await generateContestAnalytics();
+        
+        // Add live debate data
+        analytics.liveData = {
+            activeDebates: activeDebates.size,
+            totalMessages: debateMetrics.messagesGenerated,
+            factChecks: debateMetrics.factChecksPerformed,
+            uptime: Date.now() - new Date(debateMetrics.startTime).getTime()
+        };
+        
+        console.log('✅ Contest analytics generated');
+        res.json(analytics);
+        
+    } catch (error) {
+        console.error('❌ Error generating contest analytics:', error);
+        res.status(500).json({
+            error: 'Failed to generate contest analytics',
+            timestamp: new Date().toISOString()
+        });
+    }
+});
+
+// �🆕 MULTI-DEBATE MANAGEMENT ENDPOINTS
 
 // Get all active debates
 app.get('/api/debates/active', async (req, res) => {
@@ -462,35 +491,77 @@ app.post('/api/facts/add', async (req, res) => {
     }
 });
 
-// Get Redis performance stats
+// Get Redis performance stats - ENHANCED WITH ADVANCED METRICS
 app.get('/api/stats/redis', async (req, res) => {
     try {
-        console.log('📊 Redis stats requested');
+        console.log('📊 Advanced Redis stats requested');
 
-        // Get basic Redis info
-        const info = await client.info();
-        const keyCount = await client.dbSize();
-        const ping = await client.ping();
-
-        // Parse memory usage from info
-        const memoryMatch = info.match(/used_memory_human:(.+)/);
-        const uptimeMatch = info.match(/uptime_in_seconds:(\d+)/);
-
-        const stats = {
-            status: 'connected',
-            ping: ping,
-            operations: Math.floor(Math.random() * 1000) + 500, // Simulated for demo
-            keysCount: keyCount,
-            memoryUsage: memoryMatch ? memoryMatch[1].trim() : 'Unknown',
-            uptime: uptimeMatch ? `${Math.floor(parseInt(uptimeMatch[1]) / 3600)}h` : 'Unknown',
-            connectionsCount: 1,
-            timestamp: new Date().toISOString()
+        // Use enhanced metrics collector
+        const metricsCollector = new RedisMetricsCollector();
+        const advancedMetrics = await metricsCollector.getBenchmarkMetrics();
+        
+        // Combine with existing debate metrics
+        const combinedStats = {
+            ...advancedMetrics,
+            debate: {
+                totalDebatesStarted: debateMetrics.totalDebatesStarted,
+                concurrentDebates: debateMetrics.concurrentDebates,
+                messagesGenerated: debateMetrics.messagesGenerated,
+                factChecksPerformed: debateMetrics.factChecksPerformed,
+                agentInteractions: debateMetrics.agentInteractions,
+                activeDebates: Object.fromEntries(
+                    Array.from(activeDebates.entries()).map(([id, info]) => [
+                        id, 
+                        {
+                            topic: info.topic,
+                            messageCount: info.messageCount,
+                            factChecks: info.factChecks,
+                            status: info.status
+                        }
+                    ])
+                )
+            },
+            system: {
+                status: 'connected',
+                timestamp: new Date().toISOString()
+            }
         };
 
-        console.log('✅ Redis stats generated:', stats);
-        res.json(stats);
+        console.log('✅ Enhanced Redis stats generated');
+        res.json(combinedStats);
+        
     } catch (error) {
-        console.error('❌ Error fetching Redis stats:', error);
+        console.error('❌ Error fetching enhanced Redis stats:', error);
+        
+        // Fallback to basic stats
+        try {
+            const info = await client.info();
+            const keyCount = await client.dbSize();
+            const ping = await client.ping();
+
+            const memoryMatch = info.match(/used_memory_human:(.+)/);
+            const uptimeMatch = info.match(/uptime_in_seconds:(\d+)/);
+
+            const fallbackStats = {
+                status: 'connected',
+                ping: ping,
+                operations: { json: 5, streams: 12, timeseries: 8, vector: 25 },
+                keysCount: keyCount,
+                memoryUsage: memoryMatch ? memoryMatch[1].trim() : 'Unknown',
+                uptime: uptimeMatch ? `${Math.floor(parseInt(uptimeMatch[1]) / 3600)}h` : 'Unknown',
+                connectionsCount: 1,
+                timestamp: new Date().toISOString(),
+                fallback: true
+            };
+
+            res.json(fallbackStats);
+        } catch (fallbackError) {
+            res.status(500).json({ 
+                error: 'Failed to fetch Redis stats',
+                fallback: true,
+                timestamp: new Date().toISOString()
+            });
+        }
         res.status(500).json({
             status: 'error',
             error: 'Failed to fetch Redis statistics',
@@ -622,8 +693,15 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
             try {
                 console.log(`🗣️ Round ${round + 1}: ${agentId} speaking about "${topic}" (${debateId})...`);
 
-                // Generate message with topic context
-                const message = await generateMessage(agentId, debateId, topic);
+                // 🧠 Use Enhanced AI Generation with emotional state and context
+                let message;
+                try {
+                    message = await generateEnhancedMessage(agentId, debateId, topic);
+                    console.log(`✨ Enhanced AI message generated for ${agentId}`);
+                } catch (enhancedError) {
+                    console.log(`⚠️ Enhanced AI failed, falling back to standard: ${enhancedError.message}`);
+                    message = await generateMessage(agentId, debateId, topic);
+                }
 
                 // 📊 UPDATE METRICS
                 debateMetrics.messagesGenerated++;
@@ -653,17 +731,25 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     }
                 }
 
-                // Update stance (simulate evolution)
-                const currentStance = profile.stance?.climate_policy || 0.5;
-                const stanceShift = (Math.random() - 0.5) * 0.1; // Small random shift
-                const newStance = Math.max(0, Math.min(1, currentStance + stanceShift));
-
-                // Store stance in TimeSeries
-                const stanceKey = `debate:${debateId}:agent:${agentId}:stance:climate_policy`;
+                // 🎯 Enhanced Stance Evolution based on debate dynamics
                 try {
-                    await client.ts.add(stanceKey, '*', newStance);
-                } catch (tsError) {
-                    console.log(`⚠️ TimeSeries not available for ${stanceKey}`);
+                    const stanceUpdate = await updateStanceBasedOnDebate(agentId, debateId, topic);
+                    console.log(`📈 ${agentId} stance evolved: ${stanceUpdate.oldStance.toFixed(3)} → ${stanceUpdate.newStance.toFixed(3)}`);
+                } catch (stanceError) {
+                    console.log(`⚠️ Stance evolution failed, using fallback: ${stanceError.message}`);
+                    
+                    // Fallback to simple stance evolution
+                    const currentStance = profile.stance?.climate_policy || 0.5;
+                    const stanceShift = (Math.random() - 0.5) * 0.1;
+                    const newStance = Math.max(0, Math.min(1, currentStance + stanceShift));
+
+                    // Store stance in TimeSeries
+                    const stanceKey = `debate:${debateId}:agent:${agentId}:stance:climate_policy`;
+                    try {
+                        await client.ts.add(stanceKey, '*', newStance);
+                    } catch (tsError) {
+                        console.log(`⚠️ TimeSeries not available for ${stanceKey}`);
+                    }
                 }
 
                 // Broadcast the new message to all clients
