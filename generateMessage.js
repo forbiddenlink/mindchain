@@ -42,6 +42,7 @@ Stay focused on this specific topic and maintain your character's perspective.
             { role: 'system', content: prompt },
             { role: 'user', content: `What's your perspective on "${topic}"? Keep it brief and in character.` },
         ],
+        temperature: 0.8, // Add some randomness to prevent repetition
     });
 
     const message = chatResponse.choices[0].message.content.trim();

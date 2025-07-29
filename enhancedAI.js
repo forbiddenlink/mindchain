@@ -6,6 +6,30 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// 🔍 Check message similarity to prevent repetition
+function checkMessageSimilarity(newMessage, recentMessages) {
+    if (!newMessage || !recentMessages.length) return 0;
+    
+    const newWords = newMessage.toLowerCase().split(/\s+/);
+    let maxSimilarity = 0;
+    
+    for (const oldMessage of recentMessages) {
+        const oldWords = oldMessage.toLowerCase().split(/\s+/);
+        
+        // Simple word overlap similarity
+        const commonWords = newWords.filter(word => 
+            word.length > 3 && oldWords.includes(word)
+        );
+        
+        const similarity = commonWords.length / Math.max(newWords.length, oldWords.length);
+        maxSimilarity = Math.max(maxSimilarity, similarity);
+    }
+    
+    return maxSimilarity;
+}
+
+// 🔄 Convert debate topic to stance key for profile lookup apiKey: process.env.OPENAI_API_KEY });
+
 // 🧠 Enhanced AI generation with emotional state and coalition building
 export async function generateEnhancedMessage(agentId, debateId, topic = 'general policy') {
     const client = createClient({ url: process.env.REDIS_URL });
@@ -18,11 +42,17 @@ export async function generateEnhancedMessage(agentId, debateId, topic = 'genera
         const stanceKey = topicToStanceKey(topic);
         
         // Get conversation context from multiple agents (not just own memory)
-        const debateMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 5 });
+        const debateMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 10 });
         const recentContext = debateMessages
             .reverse()
             .map(entry => `${entry.message.agent_id}: ${entry.message.message}`)
             .join('\n');
+
+        // Check recent messages from this agent to avoid repetition
+        const recentAgentMessages = debateMessages
+            .filter(entry => entry.message.agent_id === agentId)
+            .slice(-3) // Last 3 messages from this agent
+            .map(entry => entry.message.message);
 
         // Check for potential allies based on stance similarity
         const allies = await findPotentialAllies(client, agentId, debateId, stanceKey);
@@ -40,12 +70,17 @@ ${recentContext}
 
 ${allies.length > 0 ? `Potential allies who share similar views: ${allies.join(', ')}` : ''}
 
+Your recent statements (DO NOT repeat these):
+${recentAgentMessages.map((msg, i) => `- "${msg}"`).join('\n')}
+
 Instructions:
 - Reference specific points made by other participants
 - Show character development based on the conversation
 - Consider building on allies' arguments or respectfully countering opponents
 - Keep responses engaging and authentic to your character
 - Maintain focus on ${topic}
+- IMPORTANT: Do not repeat your previous statements - bring new perspectives or arguments
+- Add variety to your responses even when making similar points
 `;
 
         const response = await openai.chat.completions.create({
@@ -54,11 +89,32 @@ Instructions:
                 { role: 'system', content: enhancedPrompt },
                 { role: 'user', content: `Continue the debate on "${topic}" considering the recent discussion.` }
             ],
-            temperature: 0.8, // Add more personality variation
+            temperature: 0.9, // Increased for more variety
             max_tokens: 150
         });
 
-        const message = response.choices[0].message.content.trim();
+        let message = response.choices[0].message.content.trim();
+
+        // Check for similarity with recent messages and regenerate if too similar
+        if (recentAgentMessages.length > 0) {
+            const similarity = checkMessageSimilarity(message, recentAgentMessages);
+            if (similarity > 0.7) {
+                console.log(`⚠️ ${agentId} generated similar message, regenerating...`);
+                
+                // Regenerate with higher temperature and explicit instructions
+                const retryResponse = await openai.chat.completions.create({
+                    model: 'gpt-4',
+                    messages: [
+                        { role: 'system', content: enhancedPrompt },
+                        { role: 'user', content: `Create a completely different response about "${topic}". Your previous response was too similar to earlier statements. Approach this from a new angle or focus on different aspects.` }
+                    ],
+                    temperature: 1.0, // Maximum creativity
+                    max_tokens: 150
+                });
+                
+                message = retryResponse.choices[0].message.content.trim();
+            }
+        }
 
         // Store enhanced metadata
         await client.xAdd(`debate:${debateId}:messages`, '*', {
