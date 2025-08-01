@@ -450,6 +450,15 @@ export default function App() {
                       ANALYTICS
                     </button>
                     <button
+                      onClick={() => setViewMode('business')}
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 font-mono ${viewMode === 'business'
+                          ? 'bg-emerald-600/30 border-emerald-500/30 text-emerald-300 shadow-lg shadow-emerald-500/20'
+                          : 'bg-gray-900/50 border-green-500/30 text-green-300 hover:bg-emerald-600/20 hover:border-emerald-500/30'
+                        }`}
+                    >
+                      BUSINESS
+                    </button>
+                    <button
                       onClick={() => setViewMode('contest-showcase')}
                       className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 font-mono ${viewMode === 'contest-showcase'
                           ? 'bg-gradient-to-r from-yellow-600/30 to-orange-600/30 border-yellow-500/30 text-yellow-300 shadow-lg shadow-yellow-500/20'
