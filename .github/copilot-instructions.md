@@ -13,6 +13,7 @@ MindChain is a **production-ready multi-agent AI debate engine** built for the R
 - ✅ **Advanced Fact-Checking** - Multi-source verification with AI-powered cross-validation
 - ✅ **Contest Metrics Engine** - Live scoring aligned with Redis Challenge judging criteria
 - ✅ **Business Intelligence Dashboard** - ROI tracking, cost savings, enterprise scaling projections
+- ✅ **Live Performance Metrics Overlay** - Mission control dashboard with real-time Redis operations monitoring
 - ✅ **Professional UI System** - 47+ Lucide React icons, responsive design, contest-ready presentation
 
 ## Redis Architecture (All 4 Modules)
@@ -158,6 +159,7 @@ cd mindchain-frontend && pnpm dev  # Frontend (port 5173)
 **Frontend Core:**
 - `App.jsx` - Main React app with 4-mode navigation and WebSocket integration
 - `ContestShowcaseDashboard.jsx` - Premium demonstration interface for contest judges
+- `LivePerformanceOverlay.jsx` - Mission control dashboard with real-time Redis operations monitoring
 - `StanceEvolutionChart.jsx` - Real-time stance visualization with Recharts
 - `EnhancedPerformanceDashboard.jsx` - Advanced Redis and cache metrics dashboard
 - `TrueMultiDebateViewer.jsx` - Concurrent debate management interface

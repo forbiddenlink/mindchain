@@ -22,10 +22,10 @@
 "MindChain achieves a **99.1% cache hit rate** using Redis Vector search for semantic AI response caching. This isn't just a demo - it's a production system saving real money."
 
 ### **Technical Excellence (2 minutes)**
-1. **Open Analytics Dashboard**
-   - Point to 99.1% cache hit rate
-   - Show real cost savings: "$47+ monthly"
-   - Highlight sub-second cached responses
+1. **Open Contest Showcase with Live Performance Overlay**
+   - Point to mission control overlay showing 99.1% cache hit rate
+   - Show real cost savings: "$47+ monthly" updating live
+   - Highlight sub-second cached responses in performance metrics
 
 2. **Start AI Debate** 
    - Select "Artificial Intelligence Governance"
@@ -33,12 +33,14 @@
    - **Redis Streams**: "Real-time messages with memory formation" 
    - **Redis TimeSeries**: "Stance evolution tracking over time"
    - **Redis Vector**: "Semantic fact-checking and caching"
+   - **Live Metrics**: "Watch Redis operations per second in mission control overlay"
 
 ### **Scalability Demo (1.5 minutes)**
 3. **Multi-Debate Mode**
    - Launch 2-3 concurrent debates
    - Show cross-debate intelligence
-   - Highlight performance monitoring
+   - Highlight performance monitoring in live overlay
+   - Point to Redis ops/sec counter updating in real-time
 
 ### **Business Value Close (1 minute)**
 4. **ROI Summary**

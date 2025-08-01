@@ -57,7 +57,8 @@ mindchain-frontend/
     │   ├── 🗣️  DebatePanel.jsx        # Live debate message display
     │   ├── 📊 StanceEvolutionChart.jsx # Real-time stance visualization with Recharts
     │   ├── 📊 EnhancedPerformanceDashboard.jsx # Advanced Redis + Cache metrics
-    │   ├── 🎭 TrueMultiDebateViewer.jsx # Multi-debate concurrent display
+    │   ├── � LivePerformanceOverlay.jsx # Mission control dashboard with live metrics
+    │   ├── �🎭 TrueMultiDebateViewer.jsx # Multi-debate concurrent display
     │   ├── ✅ FactChecker.jsx         # Fact verification display
     │   ├── 🏠 Header.jsx              # Application header with status
     │   └── 🎨 Icon.jsx                # Centralized professional icon system

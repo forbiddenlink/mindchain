@@ -1,6 +1,7 @@
 // System Showcase Dashboard - Premium Analytics and Demonstrations
 import { useState, useEffect } from 'react';
 import Icon from './Icon';
+import LivePerformanceOverlay from './LivePerformanceOverlay';
 
 export default function SystemShowcaseDashboard() {
     const [showcaseData, setShowcaseData] = useState(null);
@@ -82,7 +83,14 @@ export default function SystemShowcaseDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white p-6">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white p-6 relative">
+            {/* Live Performance Metrics Overlay */}
+            <LivePerformanceOverlay 
+                position="top-right" 
+                size="large"
+                className="animate-in slide-in-from-right-2 duration-500"
+            />
+
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">

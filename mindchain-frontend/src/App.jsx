@@ -53,6 +53,11 @@ export default function App() {
 
           setDebateMessages(prev => [...prev, newMessage]);
 
+          // Dispatch custom event for LivePerformanceOverlay
+          window.dispatchEvent(new CustomEvent('websocket-message', {
+            detail: { type: 'new_message', ...data }
+          }));
+
           // Extract stance data from new_message and create stance update
           if (data.stance && data.agentId && data.debateId) {
             console.log('📊 Extracting stance from new_message:', data.stance);
@@ -184,6 +189,11 @@ export default function App() {
         case 'metrics_updated':
           // Trigger metrics refresh in dashboard
           setMetricsUpdateTrigger(prev => prev + 1);
+          
+          // Dispatch custom event for LivePerformanceOverlay
+          window.dispatchEvent(new CustomEvent('websocket-message', {
+            detail: { type: 'metrics_updated', ...data }
+          }));
           break;
 
         case 'agent_updated':
@@ -247,6 +257,16 @@ export default function App() {
           // Dispatch custom event for KeyMomentsPanel to listen to
           window.dispatchEvent(new CustomEvent('websocket-message', {
             detail: { type: 'key_moment_created', ...data }
+          }));
+          break;
+
+        case 'live_performance_update':
+          // Handle live performance metrics for mission control overlay
+          console.log('⚡ Live performance update:', data.metrics);
+
+          // Dispatch custom event for LivePerformanceOverlay
+          window.dispatchEvent(new CustomEvent('websocket-message', {
+            detail: { type: 'live_performance_update', ...data }
           }));
           break;
       }
