@@ -190,71 +190,71 @@ export default function EnhancedControls({
     };
 
     return (
-        <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-slate-600/50 rounded-xl p-4">
+        <div className="bg-gradient-to-r from-black/90 to-gray-900/90 backdrop-blur-sm border border-green-500/30 rounded-xl p-4 shadow-lg shadow-green-500/10">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
 
                 {/* Column 1: Mode & Status */}
                 <div className="lg:col-span-1">
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-lg font-bold text-slate-200 flex items-center gap-2">
+                        <h2 className="text-lg font-bold text-green-300 flex items-center gap-2 font-mono tracking-wide">
                             {viewMode === 'multi-debate' ? (
                                 <>
-                                    <Icon name="multi-debate" size={20} className="text-purple-400" />
-                                    Multi-Debate
+                                    <Icon name="multi-debate" size={20} className="text-green-400" />
+                                    MULTI-DEBATE
                                 </>
                             ) : viewMode === 'analytics' ? (
                                 <>
-                                    <Icon name="analytics" size={20} className="text-blue-400" />
-                                    Analytics Dashboard
+                                    <Icon name="analytics" size={20} className="text-green-400" />
+                                    ANALYTICS DASHBOARD
                                 </>
                             ) : (
                                 <>
                                     <Icon name="target" size={20} className="text-green-400" />
-                                    Single Debate
+                                    SINGLE DEBATE
                                 </>
                             )}
                         </h2>
                         {viewMode === 'standard' && currentDebateId ? (
                             <div className="flex items-center gap-2">
-                                <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-sm border border-green-500/20">
-                                    Active
+                                <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-sm border border-green-500/30 font-mono">
+                                    ACTIVE
                                 </span>
                                 <button
                                     onClick={onStopCurrentDebate}
-                                    className="px-2 py-1 bg-red-600/20 border border-red-500/20 rounded text-red-300 hover:bg-red-600/30 transition-colors text-sm flex items-center gap-1"
+                                    className="px-2 py-1 bg-red-600/20 border border-red-500/30 rounded text-red-300 hover:bg-red-600/30 transition-colors text-sm flex items-center gap-1 font-mono"
                                 >
                                     <Icon name="stop" size={14} />
-                                    Stop
+                                    STOP
                                 </button>
                                 {debateMessages.length > 0 && (
                                     <button
                                         onClick={onClearConversation}
-                                        className="px-2 py-1 bg-slate-600/20 border border-slate-500/20 rounded text-slate-300 hover:bg-slate-600/30 transition-colors text-sm flex items-center gap-1"
+                                        className="px-2 py-1 bg-black/60 border border-green-500/30 rounded text-green-300 hover:bg-green-900/20 transition-colors text-sm flex items-center gap-1 font-mono"
                                     >
                                         <Icon name="trash" size={14} />
-                                        Clear
+                                        CLEAR
                                     </button>
                                 )}
                             </div>
                         ) : viewMode === 'multi-debate' && activeDebates.size > 0 ? (
                             <div className="flex items-center gap-2">
-                                <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-sm border border-green-500/20">
-                                    {activeDebates.size} Active
+                                <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-sm border border-green-500/30 font-mono">
+                                    {activeDebates.size} ACTIVE
                                 </span>
                                 <button
                                     onClick={stopAllDebates}
-                                    className="px-2 py-1 bg-red-600/20 border border-red-500/20 rounded text-red-300 hover:bg-red-600/30 transition-colors text-sm flex items-center gap-1"
+                                    className="px-2 py-1 bg-red-600/20 border border-red-500/30 rounded text-red-300 hover:bg-red-600/30 transition-colors text-sm flex items-center gap-1 font-mono"
                                 >
                                     <Icon name="stop" size={14} />
-                                    Stop All
+                                    STOP ALL
                                 </button>
                                 {debateMessages.length > 0 && (
                                     <button
                                         onClick={onClearConversation}
-                                        className="px-2 py-1 bg-slate-600/20 border border-slate-500/20 rounded text-slate-300 hover:bg-slate-600/30 transition-colors text-sm flex items-center gap-1"
+                                        className="px-2 py-1 bg-black/60 border border-green-500/30 rounded text-green-300 hover:bg-green-900/20 transition-colors text-sm flex items-center gap-1 font-mono"
                                     >
                                         <Icon name="trash" size={14} />
-                                        Clear All
+                                        CLEAR ALL
                                     </button>
                                 )}
                             </div>
@@ -266,25 +266,25 @@ export default function EnhancedControls({
                 {viewMode !== 'analytics' && (
                 <div className="lg:col-span-2">
                     <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-sm font-semibold text-slate-300">
+                        <h3 className="text-sm font-bold text-green-300 font-mono tracking-wide">
                             {viewMode === 'multi-debate'
-                                ? `Topics (${selectedTopics.length} selected):`
-                                : 'Select Topic:'
+                                ? `TOPICS (${selectedTopics.length} SELECTED):`
+                                : 'SELECT TOPIC:'
                             }
                         </h3>
                         <button
                             onClick={() => setIsAddingTopic(!isAddingTopic)}
-                            className="text-xs bg-blue-600/20 px-2 py-1 rounded border border-blue-500/20 text-blue-300 hover:bg-blue-600/30 transition-colors flex items-center gap-1"
+                            className="text-xs bg-green-600/20 px-2 py-1 rounded border border-green-500/30 text-green-300 hover:bg-green-600/30 transition-colors flex items-center gap-1 font-mono tracking-wide"
                         >
                             {isAddingTopic ? (
                                 <>
                                     <Icon name="remove" size={12} />
-                                    Cancel
+                                    CANCEL
                                 </>
                             ) : (
                                 <>
                                     <Icon name="add" size={12} />
-                                    Custom
+                                    CUSTOM
                                 </>
                             )}
                         </button>
@@ -298,18 +298,18 @@ export default function EnhancedControls({
                                 value={customTopic}
                                 onChange={(e) => setCustomTopic(e.target.value)}
                                 placeholder="Enter custom debate topic..."
-                                className="flex-1 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm"
+                                className="flex-1 px-2 py-1 bg-black/80 border border-green-500/30 rounded text-green-300 text-sm placeholder-green-400/50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-400 font-mono"
                                 onKeyPress={(e) => e.key === 'Enter' && addCustomTopic()}
                             />
                             <button
                                 onClick={addCustomTopic}
                                 disabled={!customTopic.trim()}
-                                className={`px-2 py-1 rounded text-xs font-medium transition-colors ${customTopic.trim()
-                                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                className={`px-2 py-1 rounded text-xs font-bold transition-colors font-mono tracking-wide ${customTopic.trim()
+                                        ? 'bg-green-600 text-black hover:bg-green-500'
                                         : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                                     }`}
                             >
-                                Add
+                                ADD
                             </button>
                         </div>
                     )}
@@ -320,10 +320,10 @@ export default function EnhancedControls({
                             <label
                                 key={topic.id}
                                 className={`
-                  flex items-center justify-center p-2 sm:p-3 rounded-lg border cursor-pointer transition-all text-xs sm:text-sm
+                  flex items-center justify-center p-2 sm:p-3 rounded-lg border cursor-pointer transition-all text-xs sm:text-sm font-mono tracking-wide shadow-lg
                   ${selectedTopics.includes(topic.id)
-                                        ? 'bg-blue-500/20 border-blue-400 text-blue-200'
-                                        : 'bg-slate-800/50 border-slate-600 text-slate-300 hover:border-blue-500'
+                                        ? 'bg-green-500/20 border-green-400 text-green-200 shadow-green-500/30'
+                                        : 'bg-black/60 border-green-500/30 text-green-300 hover:border-green-400 hover:bg-green-900/20'
                                     }
                 `}
                             >
@@ -334,9 +334,9 @@ export default function EnhancedControls({
                                     onChange={() => handleTopicToggle(topic.id)}
                                     className="sr-only"
                                 />
-                                <span className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 font-medium text-center min-w-0">
-                                    <Icon name={topic.icon} size={14} className="flex-shrink-0 sm:size-4" />
-                                    <span className="truncate text-xs sm:text-sm leading-tight">{topic.name}</span>
+                                <span className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 font-bold text-center min-w-0">
+                                    <Icon name={topic.icon} size={14} className="flex-shrink-0 sm:size-4 text-green-400" />
+                                    <span className="truncate text-xs sm:text-sm leading-tight">{topic.name.toUpperCase()}</span>
                                 </span>
                             </label>
                         ))}
@@ -347,17 +347,17 @@ export default function EnhancedControls({
                 {/* Analytics Mode Info Panel */}
                 {viewMode === 'analytics' && (
                 <div className="lg:col-span-2">
-                    <div className="bg-slate-800/50 border border-slate-600 rounded-lg p-3">
-                        <h3 className="text-sm font-semibold text-slate-300 mb-2">Performance Monitoring</h3>
-                        <div className="text-xs text-slate-400 space-y-1">
-                            <div>• Real-time Redis metrics and operations</div>
-                            <div>• Multi-model database performance (JSON, Streams, TimeSeries, Vector)</div>
-                            <div>• Debate engine statistics and agent interactions</div>
-                            <div>• System health and connection monitoring</div>
+                    <div className="bg-black/60 border border-green-500/30 rounded-lg p-3 shadow-lg">
+                        <h3 className="text-sm font-bold text-green-300 mb-2 font-mono tracking-wide">PERFORMANCE MONITORING</h3>
+                        <div className="text-xs text-green-200/80 space-y-1 font-mono">
+                            <div>• REAL-TIME REDIS METRICS AND OPERATIONS</div>
+                            <div>• MULTI-MODEL DATABASE PERFORMANCE (JSON, STREAMS, TIMESERIES, VECTOR)</div>
+                            <div>• DEBATE ENGINE STATISTICS AND AGENT INTERACTIONS</div>
+                            <div>• SYSTEM HEALTH AND CONNECTION MONITORING</div>
                         </div>
-                        <div className="mt-2 text-xs text-blue-400 flex items-center gap-1">
+                        <div className="mt-2 text-xs text-green-400 flex items-center gap-1 font-mono">
                             <Icon name="idea" size={14} />
-                            Switch to Standard or Multi-Debate mode to start new debates
+                            SWITCH TO STANDARD OR MULTI-DEBATE MODE TO START NEW DEBATES
                         </div>
                     </div>
                 </div>
@@ -371,9 +371,9 @@ export default function EnhancedControls({
                                 onClick={startDebates}
                                 disabled={selectedTopics.length === 0 || isStarting || (viewMode === 'standard' && isDebating)}
                                 className={`
-                    w-full px-3 py-2 rounded-lg font-semibold transition-all text-sm flex items-center justify-center
+                    w-full px-3 py-2 rounded-lg font-bold transition-all text-sm flex items-center justify-center font-mono tracking-wide shadow-lg
                     ${selectedTopics.length > 0 && !isStarting && !(viewMode === 'standard' && isDebating)
-                                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
+                                        ? 'bg-gradient-to-r from-green-600 to-green-500 text-black hover:from-green-500 hover:to-green-400 shadow-green-500/30'
                                         : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                                     }
                   `}
@@ -381,58 +381,58 @@ export default function EnhancedControls({
                                 {isStarting ? (
                                     <>
                                         <Icon name="loading" size={16} className="animate-spin mr-2" />
-                                        Starting...
+                                        STARTING...
                                     </>
                                 ) : viewMode === 'standard' && isDebating ? (
                                     <>
                                         <Icon name="pause" size={16} className="mr-2" />
-                                        Debate Active
+                                        DEBATE ACTIVE
                                     </>
                                 ) : viewMode === 'multi-debate' ? (
                                     <>
                                         <Icon name="play" size={16} className="mr-2" />
-                                        Start {selectedTopics.length}
+                                        START {selectedTopics.length}
                                     </>
                                 ) : (
                                     <>
                                         <Icon name="target" size={16} className="mr-2" />
-                                        Start Debate
+                                        START DEBATE
                                     </>
                                 )}
                             </button>
                         ) : (
-                            <div className="w-full px-3 py-2 rounded-lg bg-slate-700/50 border border-slate-600 text-center text-sm text-slate-400 flex items-center justify-center gap-2">
+                            <div className="w-full px-3 py-2 rounded-lg bg-black/60 border border-green-500/30 text-center text-sm text-green-400 flex items-center justify-center gap-2 font-mono tracking-wide">
                                 <Icon name="analytics" size={16} />
-                                Analytics View Active
+                                ANALYTICS VIEW ACTIVE
                             </div>
                         )}
 
                         {/* Cache Hit Demo Button - Showcase Semantic Caching Business Value */}
                         <button
                             onClick={triggerCacheHitDemo}
-                            className="w-full px-3 py-2 rounded-lg font-semibold transition-all text-sm flex items-center justify-center bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 border border-green-500/30"
+                            className="w-full px-3 py-2 rounded-lg font-bold transition-all text-sm flex items-center justify-center bg-gradient-to-r from-green-600 to-green-500 text-black hover:from-green-500 hover:to-green-400 border border-green-500/30 shadow-lg shadow-green-500/30 font-mono tracking-wide"
                         >
-                            <Icon name="target" size={16} className="mr-2" />
-                            🎯 Demo Cache Hit
+                            <Icon name="zap" size={16} className="mr-2" />
+                            DEMO CACHE HIT
                         </button>
 
                         {/* Active Debates Compact View */}
                         {activeDebates.size > 0 && (
                             <div className="mt-2">
-                                <div className="text-xs text-slate-400 mb-1">Active:</div>
+                                <div className="text-xs text-green-400 mb-1 font-mono tracking-wide">ACTIVE:</div>
                                 <div className="space-y-1 max-h-24 overflow-y-auto">
                                     {Array.from(activeDebates.entries()).slice(0, 4).map(([id, debate]) => (
                                         <div
                                             key={id}
-                                            className="text-xs bg-slate-700 px-2 py-1 rounded border border-slate-600 text-slate-300"
+                                            className="text-xs bg-black/60 px-2 py-1 rounded border border-green-500/30 text-green-300 font-mono"
                                         >
-                                            <div className="font-medium truncate">{debate.topic}</div>
-                                            <div className="text-slate-500">{debate.messageCount || 0} msgs</div>
+                                            <div className="font-bold truncate">{debate.topic.toUpperCase()}</div>
+                                            <div className="text-green-500">{debate.messageCount || 0} MSGS</div>
                                         </div>
                                     ))}
                                     {activeDebates.size > 4 && (
-                                        <div className="text-xs text-slate-400 text-center">
-                                            +{activeDebates.size - 4} more...
+                                        <div className="text-xs text-green-400 text-center font-mono">
+                                            +{activeDebates.size - 4} MORE...
                                         </div>
                                     )}
                                 </div>

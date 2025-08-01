@@ -2,8 +2,9 @@
 // Enhanced to showcase MindChain's Semantic Caching Business Value
 import { useState, useEffect, useRef } from 'react';
 import Icon from './Icon';
+import RedisMatrixStream from './RedisMatrixStream';
 
-export default function LivePerformanceOverlay({ position = 'top-right', size = 'normal', className = '' }) {
+export default function LivePerformanceOverlay({ position = 'top-right', size = 'normal', className = '', showMatrix = false }) {
     const [metrics, setMetrics] = useState({
         cacheHitRate: 99.1,
         costSavings: 47,
@@ -38,6 +39,7 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
+    const [showRedisMatrix, setShowRedisMatrix] = useState(showMatrix);
     const celebrationRef = useRef(null);
     const overlayRef = useRef(null);
 
@@ -239,7 +241,7 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
         }
     };
 
-    // Determine size classes - Increased sizes for better content display
+    // Determine size classes
     const getSizeClasses = () => {
         if (position === 'embedded') {
             return 'w-full'; // Full width for embedded mode
@@ -247,11 +249,11 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
         
         switch (size) {
             case 'small':
-                return 'w-96'; // Increased from w-80
+                return 'w-80';
             case 'large':
-                return 'w-[40rem]'; // Increased from w-[32rem]
+                return 'w-[32rem]';
             default:
-                return 'w-[36rem]'; // Increased from w-96
+                return 'w-96';
         }
     };
 
@@ -265,25 +267,25 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
 
     // Mission control metric component with enhanced styling
     const MetricDisplay = ({ label, value, unit, icon, color, trend, isLoading: metricLoading, pulse = false, celebration = false }) => (
-        <div className={`bg-black/80 border border-green-500/30 rounded-lg p-3 ${pulse ? 'animate-pulse' : ''} ${celebration ? 'animate-bounce border-green-400' : ''} hover:border-green-500/50 transition-all duration-300`}>
+        <div className={`bg-gray-900/80 border border-${color}-500/30 rounded-lg p-3 ${pulse ? 'animate-pulse' : ''} ${celebration ? 'animate-bounce border-green-400' : ''} hover:border-${color}-500/50 transition-all duration-300`}>
             <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
-                    <Icon name={icon} className={`w-4 h-4 text-green-400 ${pulse ? 'animate-bounce' : ''}`} />
-                    <span className="text-xs text-green-300 font-medium tracking-wide font-mono">{label}</span>
+                    <Icon name={icon} className={`w-4 h-4 text-${color}-400 ${pulse ? 'animate-bounce' : ''}`} />
+                    <span className="text-xs text-gray-300 font-medium tracking-wide">{label}</span>
                 </div>
             </div>
             {trend && (
-                <div className={`flex items-center gap-1 text-xs ${trend > 0 ? 'text-green-400' : 'text-green-300'} animate-pulse mb-2`}>
+                <div className={`flex items-center gap-1 text-xs ${trend > 0 ? 'text-green-400' : 'text-red-400'} animate-pulse mb-2`}>
                     <Icon name={trend > 0 ? 'trending-up' : 'trending-down'} className="w-3 h-3" />
-                    <span className="font-mono">{Math.abs(trend).toFixed(1)}%</span>
+                    <span>{Math.abs(trend).toFixed(1)}%</span>
                 </div>
             )}
             <div className="flex items-baseline gap-1">
                 {metricLoading ? (
-                    <div className="animate-pulse bg-green-700/30 h-6 w-16 rounded"></div>
+                    <div className="animate-pulse bg-gray-700 h-6 w-16 rounded"></div>
                 ) : (
                     <>
-                        <span className={`text-xl font-bold text-green-300 font-mono tracking-tight`}>
+                        <span className={`text-xl font-bold text-${color}-300 font-mono tracking-tight`}>
                             {typeof value === 'number' ? (
                                 unit === '%' ? value.toFixed(1) : 
                                 unit === '/mo' ? Math.floor(value) :
@@ -291,7 +293,7 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
                                 Math.floor(value).toLocaleString()
                             ) : value}
                         </span>
-                        <span className="text-xs text-gray-400 font-medium font-mono">{unit}</span>
+                        <span className="text-xs text-gray-400 font-medium">{unit}</span>
                     </>
                 )}
             </div>
@@ -303,14 +305,14 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
         showCelebration && (
             <div 
                 ref={celebrationRef}
-                className="fixed top-48 right-4 bg-green-600/90 backdrop-blur-sm border border-green-400 rounded-lg p-3 z-[9999] animate-bounce shadow-lg shadow-green-500/30"
+                className="fixed top-48 right-4 bg-green-600/90 backdrop-blur-sm border border-green-400 rounded-lg p-3 z-[9999] animate-bounce shadow-lg"
             >
-                <div className="flex items-center gap-2 text-black font-bold">
+                <div className="flex items-center gap-2 text-white font-bold">
                     <span className="text-2xl">🎯</span>
                     <div>
-                        <div className="text-sm font-mono">CACHE HIT!</div>
-                        <div className="text-xs opacity-90 font-mono">
-                            SAVED ${cacheHits[cacheHits.length - 1]?.amount?.toFixed(3) || '0.002'} • {(lastSimilarity * 100).toFixed(1)}% MATCH
+                        <div className="text-sm">CACHE HIT!</div>
+                        <div className="text-xs opacity-90">
+                            Saved ${cacheHits[cacheHits.length - 1]?.amount?.toFixed(3) || '0.002'} • {(lastSimilarity * 100).toFixed(1)}% match
                         </div>
                     </div>
                 </div>
@@ -323,49 +325,49 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
         const traditionalCost = runningTotal * 2.5; // Assume 60% higher without caching
         
         return (
-            <div className="bg-black/80 border border-green-500/30 rounded-lg p-3 mt-2">
+            <div className="bg-gray-900/90 border border-blue-500/30 rounded-lg p-3 mt-2">
                 <div className="flex items-center gap-2 mb-2">
-                    <Icon name="bar-chart-3" className="w-4 h-4 text-green-400" />
-                    <span className="text-xs text-green-300 font-medium font-mono">COST COMPARISON</span>
+                    <Icon name="bar-chart-3" className="w-4 h-4 text-blue-400" />
+                    <span className="text-xs text-gray-300 font-medium">COST COMPARISON</span>
                 </div>
                 
                 <div className="space-y-2">
                     {/* Traditional AI Bar */}
                     <div className="flex items-center justify-between">
-                        <span className="text-xs text-green-200 font-mono">TRADITIONAL AI:</span>
+                        <span className="text-xs text-red-300">Traditional AI:</span>
                         <div className="flex items-center gap-2 flex-1 mx-2">
-                            <div className="bg-green-500/20 border border-green-500/30 rounded-full h-2 flex-1 relative">
-                                <div className="bg-green-500 h-2 rounded-full w-full"></div>
+                            <div className="bg-red-500/20 rounded-full h-2 flex-1 relative">
+                                <div className="bg-red-500 h-2 rounded-full w-full"></div>
                             </div>
-                            <span className="text-xs text-green-300 font-mono">${traditionalCost.toFixed(2)}</span>
+                            <span className="text-xs text-red-300 font-mono">${traditionalCost.toFixed(2)}</span>
                         </div>
                     </div>
                     
                     {/* MindChain AI Bar */}
                     <div className="flex items-center justify-between">
-                        <span className="text-xs text-green-400 font-mono">MINDCHAIN:</span>
+                        <span className="text-xs text-green-300">MindChain:</span>
                         <div className="flex items-center gap-2 flex-1 mx-2">
-                            <div className="bg-green-400/20 border border-green-400/30 rounded-full h-2 flex-1 relative">
+                            <div className="bg-green-500/20 rounded-full h-2 flex-1 relative">
                                 <div 
-                                    className="bg-green-400 h-2 rounded-full transition-all duration-1000" 
+                                    className="bg-green-500 h-2 rounded-full transition-all duration-1000" 
                                     style={{ width: `${(runningTotal / traditionalCost) * 100}%` }}
                                 ></div>
                             </div>
-                            <span className="text-xs text-green-400 font-mono">${runningTotal.toFixed(2)}</span>
+                            <span className="text-xs text-green-300 font-mono">${runningTotal.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>
                 
                 {/* Savings Display */}
-                <div className="mt-2 pt-2 border-t border-green-500/30">
+                <div className="mt-2 pt-2 border-t border-gray-600/30">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs text-green-300 font-medium font-mono">TOTAL SAVED:</span>
-                        <span className="text-sm text-green-400 font-bold font-mono">
+                        <span className="text-xs text-emerald-300 font-medium">TOTAL SAVED:</span>
+                        <span className="text-sm text-emerald-300 font-bold font-mono">
                             ${(traditionalCost - runningTotal).toFixed(2)}
                         </span>
                     </div>
-                    <div className="text-xs text-gray-400 mt-1 font-mono">
-                        {((1 - runningTotal / traditionalCost) * 100).toFixed(1)}% COST REDUCTION
+                    <div className="text-xs text-gray-400 mt-1">
+                        {((1 - runningTotal / traditionalCost) * 100).toFixed(1)}% cost reduction
                     </div>
                 </div>
             </div>
@@ -377,28 +379,41 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
             {/* Cache Hit Celebration Overlay */}
             <CacheHitCelebration />
             
-            {/* Matrix Mission Control Header */}
-            <div className="bg-gradient-to-r from-black/95 to-gray-900/95 backdrop-blur-sm border border-green-500/30 rounded-t-lg p-3 shadow-lg shadow-green-500/10">
+            {/* Mission Control Header */}
+            <div className="bg-gradient-to-r from-gray-900/95 to-blue-900/95 backdrop-blur-sm border border-blue-500/30 rounded-t-lg p-3 shadow-lg">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <h3 className="text-sm font-bold text-green-400 tracking-wide font-mono">SEMANTIC CACHE ENGINE</h3>
+                        <h3 className="text-sm font-bold text-white tracking-wide">SEMANTIC CACHE ENGINE</h3>
                         <div className="px-2 py-0.5 bg-green-600/20 border border-green-500/30 rounded text-xs text-green-300 font-mono">
                             ${runningTotal.toFixed(2)} SAVED
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-400 ml-4">
-                        <Icon name="refresh-cw" className="w-3 h-3 animate-spin" />
-                        <span className="font-mono">{lastUpdate.toLocaleTimeString()}</span>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setShowRedisMatrix(!showRedisMatrix)}
+                            className={`px-2 py-1 rounded text-xs font-bold transition-all ${
+                                showRedisMatrix 
+                                    ? 'bg-green-600/20 text-green-300 border border-green-500/30' 
+                                    : 'bg-gray-600/20 text-gray-300 border border-gray-500/30'
+                            }`}
+                            title="Toggle Redis Operations Matrix"
+                        >
+                            <Icon name="activity" className="w-3 h-3" />
+                            MATRIX
+                        </button>
+                        <div className="flex items-center gap-2 text-xs text-gray-300 ml-2">
+                            <Icon name="refresh-cw" className="w-3 h-3 animate-spin" />
+                            <span className="font-mono">{lastUpdate.toLocaleTimeString()}</span>
+                        </div>
                     </div>
-                    </div>
-                <div className="text-xs text-green-300 mt-1 font-medium font-mono">
-                    LIVE BUSINESS VALUE • {businessMetrics.current_usage.cache_efficiency} HIT RATE • {businessMetrics.performance_impact.system_efficiency}
+                <div className="text-xs text-blue-300 mt-1 font-medium">
+                    Live Business Value • {businessMetrics.current_usage.cache_efficiency} Hit Rate • {businessMetrics.performance_impact.system_efficiency}
                 </div>
             </div>
 
-            {/* Matrix Enhanced Metrics Grid - Responsive for embedded mode */}
-            <div className="bg-black/95 backdrop-blur-sm border-x border-b border-green-500/30 rounded-b-lg p-3 shadow-lg shadow-green-500/10">
+            {/* Enhanced Metrics Grid - Responsive for embedded mode */}
+            <div className="bg-gray-800/95 backdrop-blur-sm border-x border-b border-blue-500/30 rounded-b-lg p-3 shadow-lg">
                 {/* Primary Business Metrics - Responsive grid */}
                 <div className={`grid gap-2 ${position === 'embedded' ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-2'}`}>
                     <MetricDisplay
@@ -453,27 +468,27 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
 
                 {/* Compact Business Value Comparison for embedded mode */}
                 {position === 'embedded' ? (
-                    <div className="bg-black/80 border border-green-500/30 rounded-lg p-2 mt-2">
+                    <div className="bg-gray-900/60 border border-blue-500/30 rounded-lg p-2 mt-2">
                         <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-green-300 font-medium font-mono">COST COMPARISON</span>
-                            <span className="text-xs text-green-400 font-bold font-mono">
-                                {((1 - runningTotal / (runningTotal * 2.5)) * 100).toFixed(0)}% SAVED
+                            <span className="text-xs text-gray-300 font-medium">COST COMPARISON</span>
+                            <span className="text-xs text-emerald-300 font-bold">
+                                {((1 - runningTotal / (runningTotal * 2.5)) * 100).toFixed(0)}% saved
                             </span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="bg-green-500/20 border border-green-500/30 rounded-full h-1.5 flex-1 relative">
-                                <div className="bg-green-500 h-1.5 rounded-full w-full"></div>
+                            <div className="bg-red-500/20 rounded-full h-1.5 flex-1 relative">
+                                <div className="bg-red-500 h-1.5 rounded-full w-full"></div>
                             </div>
-                            <div className="bg-green-400/20 border border-green-400/30 rounded-full h-1.5 flex-1 relative">
+                            <div className="bg-green-500/20 rounded-full h-1.5 flex-1 relative">
                                 <div 
-                                    className="bg-green-400 h-1.5 rounded-full transition-all duration-1000" 
+                                    className="bg-green-500 h-1.5 rounded-full transition-all duration-1000" 
                                     style={{ width: `${(runningTotal / (runningTotal * 2.5)) * 100}%` }}
                                 ></div>
                             </div>
                         </div>
-                        <div className="flex justify-between text-xs text-gray-400 mt-1 font-mono">
-                            <span>TRADITIONAL AI</span>
-                            <span>MINDCHAIN</span>
+                        <div className="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>Traditional AI</span>
+                            <span>MindChain</span>
                         </div>
                     </div>
                 ) : (
@@ -482,20 +497,20 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
 
                 {/* Recent Cache Hits - Compact for embedded */}
                 {cacheHits.length > 0 && (
-                    <div className="bg-black/80 border border-green-500/30 rounded-lg p-2 mt-2">
+                    <div className="bg-gray-900/60 border border-green-500/30 rounded-lg p-2 mt-2">
                         <div className="flex items-center gap-2 mb-2">
                             <Icon name="activity" className="w-3 h-3 text-green-400" />
-                            <span className="text-xs text-green-300 font-medium font-mono">RECENT HITS</span>
+                            <span className="text-xs text-green-300 font-medium">RECENT HITS</span>
                         </div>
                         <div className="space-y-1 max-h-12 overflow-y-auto">
                             {cacheHits.slice(-2).map((hit) => (
                                 <div key={hit.id} className="flex items-center justify-between text-xs">
-                                    <span className="text-green-300 font-mono">
+                                    <span className="text-gray-300">
                                         {hit.timestamp.toLocaleTimeString()}
                                     </span>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-green-200 font-mono">{(hit.similarity * 100).toFixed(0)}%</span>
-                                        <span className="text-green-400 font-mono">${hit.amount.toFixed(3)}</span>
+                                        <span className="text-purple-300">{(hit.similarity * 100).toFixed(0)}%</span>
+                                        <span className="text-green-300 font-mono">${hit.amount.toFixed(3)}</span>
                                     </div>
                                 </div>
                             ))}
@@ -505,35 +520,42 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
 
                 {/* Enterprise Projection - Compact for embedded */}
                 {position !== 'embedded' && (
-                    <div className="bg-black/80 border border-green-500/30 rounded-lg p-2 mt-2">
+                    <div className="bg-gray-900/60 border border-blue-500/30 rounded-lg p-2 mt-2">
                         <div className="flex items-center gap-2 mb-1">
-                            <Icon name="trending-up" className="w-3 h-3 text-green-400" />
-                            <span className="text-xs text-green-300 font-medium font-mono">ENTERPRISE PROJECTION</span>
+                            <Icon name="trending-up" className="w-3 h-3 text-blue-400" />
+                            <span className="text-xs text-blue-300 font-medium">ENTERPRISE PROJECTION</span>
                         </div>
-                        <div className="text-xs text-green-200 font-mono">
-                            MEDIUM ENTERPRISE: <span className="text-green-400 font-bold">
-                                ${businessMetrics.enterprise_projections.medium_enterprise.annual_savings.toLocaleString()}/YEAR SAVINGS
+                        <div className="text-xs text-gray-300">
+                            Medium Enterprise: <span className="text-green-300 font-bold">
+                                ${businessMetrics.enterprise_projections.medium_enterprise.annual_savings.toLocaleString()}/year savings
                             </span>
                         </div>
                     </div>
                 )}
 
-                {/* Matrix System Status Indicators */}
-                <div className="flex items-center justify-between mt-3 pt-2 border-t border-green-500/30">
+                {/* System Status Indicators */}
+                <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-600/30">
                     <div className="flex items-center gap-2 text-xs">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-green-300 font-medium font-mono">VECTOR SEARCH</span>
+                        <span className="text-green-300 font-medium">Vector Search</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
-                        <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
-                        <span className="text-green-300 font-medium font-mono">CACHE ACTIVE</span>
+                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                        <span className="text-blue-300 font-medium">Cache Active</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
-                        <div className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse"></div>
-                        <span className="text-green-300 font-medium font-mono">OPTIMIZING</span>
+                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <span className="text-emerald-300 font-medium">Optimizing</span>
                     </div>
                 </div>
             </div>
+
+            {/* Redis Operations Matrix - Toggleable */}
+            {showRedisMatrix && (
+                <div className="mt-2">
+                    <RedisMatrixStream position="embedded" />
+                </div>
+            )}
         </div>
     );
 }

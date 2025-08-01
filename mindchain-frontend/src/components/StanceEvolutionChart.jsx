@@ -38,12 +38,12 @@ export default function StanceEvolutionChart({ stanceData = [] }) {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-slate-800/95 backdrop-blur-sm p-3 border border-slate-600/50 rounded-lg shadow-xl">
-                    <p className="text-sm font-medium text-white">{label}</p>
-                    <p className="text-xs text-slate-400 mb-2">Turn {data.turn}</p>
+                <div className="bg-black/95 backdrop-blur-sm p-3 border border-green-500/50 rounded-lg shadow-xl shadow-green-500/20">
+                    <p className="text-sm font-medium text-green-300 font-mono">{label}</p>
+                    <p className="text-xs text-gray-400 mb-2 font-mono">TURN {data.turn}</p>
                     {payload.map((entry, index) => (
-                        <p key={index} className="text-sm" style={{ color: entry.color }}>
-                            <span className="font-medium">{entry.dataKey === 'senatorbot' ? 'SenatorBot' : 'ReformerBot'}:</span> {entry.value.toFixed(2)}
+                        <p key={index} className="text-sm font-mono" style={{ color: entry.color }}>
+                            <span className="font-medium">{entry.dataKey === 'senatorbot' ? 'SENATORBOT' : 'REFORMERBOT'}:</span> {entry.value.toFixed(2)}
                         </p>
                     ))}
                 </div>
@@ -58,28 +58,28 @@ export default function StanceEvolutionChart({ stanceData = [] }) {
 
     if (chartData.length === 0) {
         return (
-            <div className="h-full flex flex-col bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl border border-neutral-600/50 overflow-hidden">
-                {/* Header */}
-                <div className="flex-shrink-0 bg-gradient-to-r from-slate-800/80 to-slate-700/80 px-6 py-4 border-b border-slate-600/50">
+            <div className="h-full flex flex-col bg-black/95 border border-green-500/30 rounded-xl shadow-2xl shadow-green-500/10 overflow-hidden">
+                {/* Matrix Header */}
+                <div className="flex-shrink-0 bg-gray-900/95 px-6 py-4 border-b border-green-500/30">
                     <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
-                            <Icon name="trending" className="w-5 h-5 text-white" />
+                        <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg shadow-green-500/30">
+                            <Icon name="trending" className="w-5 h-5 text-black" />
                         </div>
-                        <h3 className="text-xl font-bold text-white">Stance Evolution</h3>
-                        <span className="text-xs bg-purple-500/20 px-2 py-1 rounded-full text-purple-400">
-                            Election Night Style
+                        <h3 className="text-xl font-bold text-green-400 font-mono tracking-wide">STANCE EVOLUTION</h3>
+                        <span className="text-xs bg-green-500/20 border border-green-500/30 px-2 py-1 rounded-full text-green-400 font-mono">
+                            ELECTION NIGHT STYLE
                         </span>
                     </div>
                 </div>
 
-                {/* Empty State */}
+                {/* Matrix Empty State */}
                 <div className="flex-1 flex items-center justify-center p-6">
                     <div className="text-center">
-                        <div className="w-12 h-12 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <Icon name="analytics" className="w-6 h-6 text-slate-400" />
+                        <div className="w-12 h-12 bg-black/80 border border-green-500/30 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <Icon name="analytics" className="w-6 h-6 text-green-400" />
                         </div>
-                        <p className="text-slate-400 text-sm font-medium">Awaiting Stance Data</p>
-                        <p className="text-slate-500 text-xs mt-1">Chart will update as debate progresses</p>
+                        <p className="text-gray-400 text-sm font-medium font-mono">AWAITING STANCE DATA</p>
+                        <p className="text-gray-500 text-xs mt-1 font-mono">CHART WILL UPDATE AS DEBATE PROGRESSES</p>
                     </div>
                 </div>
             </div>
@@ -87,117 +87,118 @@ export default function StanceEvolutionChart({ stanceData = [] }) {
     }
 
     return (
-        <div className="h-full flex flex-col bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl border border-neutral-600/50 overflow-hidden">
-            {/* Header */}
-            <div className="flex-shrink-0 bg-gradient-to-r from-slate-800/80 to-slate-700/80 px-6 py-4 border-b border-slate-600/50">
+        <div className="h-full flex flex-col bg-black/95 border border-green-500/30 rounded-xl shadow-2xl shadow-green-500/10 overflow-hidden">
+            {/* Matrix Header */}
+            <div className="flex-shrink-0 bg-gray-900/95 px-6 py-4 border-b border-green-500/30">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
-                            <Icon name="trending" className="w-5 h-5 text-white" />
+                        <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg shadow-green-500/30">
+                            <Icon name="trending" className="w-5 h-5 text-black" />
                         </div>
-                        <h3 className="text-xl font-bold text-white">Stance Evolution</h3>
-                        <div className="flex items-center space-x-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-500/30">
-                            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                            <span className="text-emerald-400 text-xs font-medium">LIVE</span>
+                        <h3 className="text-xl font-bold text-green-400 font-mono tracking-wide">STANCE EVOLUTION</h3>
+                        <div className="flex items-center space-x-2 px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full">
+                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span className="text-green-400 text-xs font-medium font-mono">LIVE</span>
                         </div>
                     </div>
                     <button
                         onClick={toggleExpanded}
-                        className="p-2 hover:bg-slate-700/50 rounded-lg transition-colors border border-slate-600/30"
+                        className="p-2 hover:bg-green-700/50 rounded-lg transition-colors border border-green-500/30"
                         title={isExpanded ? 'Collapse chart' : 'Expand chart'}
                     >
                         <Icon
                             name={isExpanded ? "Minimize2" : "Maximize2"}
-                            className="w-4 h-4 text-slate-400"
+                            className="w-4 h-4 text-green-400"
                         />
                     </button>
                 </div>
 
-                {/* Agent Legend & Current Positions */}
+                {/* Matrix Agent Legend & Current Positions */}
                 <div className="mt-4 flex items-center justify-between">
                     <div className="flex items-center space-x-6">
                         <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
-                            <span className="text-sm text-slate-300 font-medium">SenatorBot</span>
+                            <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-green-500 rounded-full"></div>
+                            <span className="text-sm text-green-300 font-medium font-mono">SENATORBOT</span>
                             {chartData.length > 0 && (
-                                <span className="text-sm font-bold text-blue-400">
+                                <span className="text-sm font-bold text-green-400 font-mono">
                                     {chartData[chartData.length - 1].senatorbot.toFixed(2)}
                                 </span>
                             )}
                         </div>
                         <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
-                            <span className="text-sm text-slate-300 font-medium">ReformerBot</span>
+                            <div className="w-3 h-3 bg-gradient-to-r from-green-300 to-green-400 rounded-full"></div>
+                            <span className="text-sm text-green-200 font-medium font-mono">REFORMERBOT</span>
                             {chartData.length > 0 && (
-                                <span className="text-sm font-bold text-red-400">
+                                <span className="text-sm font-bold text-green-300 font-mono">
                                     {chartData[chartData.length - 1].reformerbot.toFixed(2)}
                                 </span>
                             )}
                         </div>
                     </div>
-                    <div className="text-xs text-slate-500">
-                        <span className="text-slate-400 font-medium">{chartData.length}</span> turns
+                    <div className="text-xs text-gray-500 font-mono">
+                        <span className="text-gray-400 font-medium">{chartData.length}</span> TURNS
                     </div>
                 </div>
             </div>
 
-            {/* Chart */}
-            <div className={`flex-1 p-6 ${isExpanded ? 'min-h-96' : 'min-h-64'}`}>
+            {/* Matrix Chart */}
+            <div className={`flex-1 p-6 bg-black/80 min-h-[240px] ${isExpanded ? 'min-h-96' : 'min-h-64'}`}>
                 <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
+                    <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 60 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#22c55e" opacity={0.2} />
                         <XAxis
                             dataKey="timeLabel"
-                            stroke="#94a3b8"
+                            stroke="#22c55e"
                             fontSize={12}
                             tickLine={false}
                             axisLine={false}
-                            tick={{ fill: '#94a3b8' }}
+                            tick={{ fill: '#22c55e', fontFamily: 'monospace' }}
                             angle={-45}
                             textAnchor="end"
-                            height={60}
+                            height={80}
+                            interval={0}
                         />
                         <YAxis
                             domain={['dataMin - 0.1', 'dataMax + 0.1']}
-                            stroke="#94a3b8"
+                            stroke="#22c55e"
                             fontSize={12}
                             tickLine={false}
                             axisLine={false}
-                            tick={{ fill: '#94a3b8' }}
+                            tick={{ fill: '#22c55e', fontFamily: 'monospace' }}
                             tickFormatter={(value) => value.toFixed(2)}
                         />
                         <Tooltip content={<CustomTooltip />} />
                         <Line
                             type="monotone"
                             dataKey="senatorbot"
-                            stroke="#3b82f6"
+                            stroke="#22c55e"
                             strokeWidth={3}
-                            dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-                            activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2, fill: '#1e40af' }}
-                            name="SenatorBot"
+                            dot={{ fill: '#22c55e', strokeWidth: 2, r: 4 }}
+                            activeDot={{ r: 6, stroke: '#22c55e', strokeWidth: 2, fill: '#16a34a' }}
+                            name="SENATORBOT"
                         />
                         <Line
                             type="monotone"
                             dataKey="reformerbot"
-                            stroke="#ef4444"
+                            stroke="#4ade80"
                             strokeWidth={3}
-                            dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
-                            activeDot={{ r: 6, stroke: '#ef4444', strokeWidth: 2, fill: '#dc2626' }}
-                            name="ReformerBot"
+                            dot={{ fill: '#4ade80', strokeWidth: 2, r: 4 }}
+                            activeDot={{ r: 6, stroke: '#4ade80', strokeWidth: 2, fill: '#22c55e' }}
+                            name="REFORMERBOT"
                         />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
 
-            {/* Election night style footer */}
-            <div className="flex-shrink-0 px-6 py-3 bg-gradient-to-r from-slate-800/60 to-slate-700/60 border-t border-slate-600/50">
-                <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-400">
+            {/* Matrix Election night style footer */}
+            <div className="flex-shrink-0 px-6 py-3 bg-gray-900/95 border-t border-green-500/30">
+                <div className="flex items-center justify-between text-xs font-mono">
+                    <span className="text-gray-400">
                         <Icon name="Activity" className="w-3 h-3 inline mr-1" />
-                        Real-time stance tracking
+                        REAL-TIME STANCE TRACKING
                     </span>
-                    <span className="flex items-center space-x-1 text-emerald-400">
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
+                    <span className="flex items-center space-x-1 text-green-400">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
                         <span className="font-medium">UPDATING</span>
                     </span>
                 </div>

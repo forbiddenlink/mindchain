@@ -36,9 +36,10 @@ ${memoryContext
 Stay focused on this specific topic and maintain your character's perspective.
 `;
 
-    // 🎯 Step 2.5: Check semantic cache for similar prompts
-    console.log('� Checking semantic cache for similar prompts...');
-    const cachedResult = await getCachedResponse(prompt, topic);
+    // 🎯 Step 2.5: Check semantic cache for similar prompts (agent-specific)
+    console.log(`🔍 Checking semantic cache for similar prompts (${agentId})...`);
+    const agentSpecificTopic = `${agentId}:${topic}:${profile.name}`; // Make cache agent-specific
+    const cachedResult = await getCachedResponse(prompt, agentSpecificTopic);
     
     let message;
     if (cachedResult) {
@@ -59,11 +60,11 @@ Stay focused on this specific topic and maintain your character's perspective.
 
         message = chatResponse.choices[0].message.content.trim();
         
-        // 💾 Cache the new response for future similarity searches
+        // 💾 Cache the new response for future similarity searches (agent-specific)
         await cacheNewResponse(prompt, message, {
             agentId,
             debateId,
-            topic,
+            topic: agentSpecificTopic, // Use agent-specific topic
             timestamp: new Date().toISOString(),
         });
         console.log('💾 Response cached for future similarity matching');

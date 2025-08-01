@@ -3,6 +3,135 @@
 
 ## 🔧 **Latest Updates - August 1, 2025**
 
+### **Agent Alternation & Semantic Cache Optimization - Debate Engine Reliability**
+*Critical improvements to debate flow, agent behavior, and caching system*
+
+**FIXED: Agent Double-Response Issue**
+- ✅ Resolved SenatorBot speaking twice before ReformerBot responds
+- ✅ Implemented `lastSpeakerPerDebate` tracking to enforce proper agent alternation
+- ✅ Added agent-specific semantic caching to prevent cross-agent response sharing
+- ✅ Increased message cooldown from 1 second to 2 seconds per agent for better pacing
+
+**ENHANCED: Semantic Cache Precision**
+- ✅ Raised similarity threshold from 85% to 95% to reduce aggressive caching
+- ✅ Implemented agent-specific cache keys (`${agentId}:${topic}:${profileName}`)
+- ✅ Ensures each agent maintains unique cached responses and personality
+- ✅ Prevents agents from sharing cached responses that could break character
+
+**IMPROVED: Debate Flow Control**
+- ✅ Added last speaker verification before message generation
+- ✅ Enhanced turn-based alternation system with proper enforcement
+- ✅ Improved timing controls to prevent rapid-fire duplicate messages
+- ✅ Better debug logging for tracking agent alternation and turn management
+
+**TECHNICAL ENHANCEMENTS:**
+```javascript
+// Agent alternation enforcement
+const lastSpeaker = lastSpeakerPerDebate.get(debateId);
+if (lastSpeaker === agentId) {
+    console.log(`⚠️ ${agentId} spoke last, enforcing alternation by skipping...`);
+    continue;
+}
+
+// Agent-specific caching
+const agentSpecificTopic = `${agentId}:${topic}:${profile.name}`;
+const cachedResult = await getCachedResponse(prompt, agentSpecificTopic);
+```
+
+**BUSINESS VALUE IMPROVEMENTS:**
+- **Reliability**: Consistent agent alternation creates more natural debate flow
+- **Personality Preservation**: Agent-specific caching maintains distinct AI personalities
+- **Demo Quality**: Eliminates confusing double-responses during live presentations
+- **User Experience**: Predictable debate patterns improve viewer engagement
+
+---
+
+### **UI Layout Enhancement - KeyMomentsPanel & Container Optimization**
+*Improved visibility and spacing for key moments display*
+
+**ENHANCED: KeyMomentsPanel Display**
+- ✅ Increased container height constraints from 280px-320px to 400px-500px
+- ✅ Improved individual moment card spacing and visual hierarchy
+- ✅ Enhanced hover effects with scale animations and better transitions
+- ✅ Larger icons and improved typography for better readability
+
+**IMPROVED: Container Layout System**
+- ✅ Increased overall container height from 600px to 800px for better content accommodation
+- ✅ Enhanced FactChecker container from 220px-260px to 300px-350px
+- ✅ Removed overflow constraints that were cutting off content
+- ✅ Better responsive grid layout with improved spacing
+
+**TECHNICAL IMPROVEMENTS:**
+```jsx
+// Enhanced moment card styling
+const getMomentStyle = (type, significance) => {
+    const base = 'relative p-4 rounded-lg border border-green-500/30 bg-black/80 
+                  transition-all hover:shadow-lg hover:shadow-green-500/20 
+                  hover:z-30 z-10 hover:scale-[1.02] duration-200';
+    // Additional styling based on type and significance
+};
+
+// Improved scrollable area
+<div className="space-y-4 overflow-y-auto overflow-x-hidden flex-1 relative z-10 pr-2" 
+     style={{ maxHeight: 'calc(100vh - 20rem)' }}>
+```
+
+**VISUAL ENHANCEMENTS:**
+- **Better Spacing**: Increased gaps between moments from 12px to 16px
+- **Enhanced Icons**: Larger icons (16px → 18px) with improved padding
+- **Improved Hover States**: Subtle scale effects and enhanced shadow depth
+- **Better Typography**: Improved line spacing and text hierarchy
+
+**BUSINESS VALUE IMPROVEMENTS:**
+- **User Experience**: Key moments are now clearly visible and easy to read
+- **Professional Appearance**: Better spacing creates more polished interface
+- **Information Accessibility**: Enhanced layout ensures important debate insights are prominent
+- **Demo Quality**: Improved visual presentation for contest demonstrations
+
+---
+
+### **SentimentBadge Confidence Display Fix - Real-Time Sentiment Tracking**
+*Fixed confidence score display in chat messages for proper sentiment analysis visualization*
+
+**FIXED: Confidence Display Issue**
+- ✅ Resolved static "⚪ 0.00 confidence" display in debate chat
+- ✅ Updated DebatePanel to pass proper confidence prop to SentimentBadge component
+- ✅ Enhanced sentiment data structure handling from WebSocket messages
+- ✅ Added proper prop mapping for confidence, debateId, agentId, and timestamp
+
+**TECHNICAL IMPLEMENTATION:**
+```jsx
+// Fixed SentimentBadge prop passing in DebatePanel
+<SentimentBadge 
+    sentiment={msg.sentiment}
+    confidence={msg.sentiment.confidence || 0}
+    debateId={msg.debateId}
+    agentId={msg.agentId}
+    timestamp={msg.timestamp}
+/>
+
+// Backend sentiment data structure
+sentiment: {
+    sentiment: sentimentResult.sentiment,
+    confidence: sentimentResult.confidence,
+    model: sentimentResult.model
+}
+```
+
+**ENHANCED: Sentiment Analysis Display**
+- ✅ Dynamic confidence values now display properly (e.g., "🟢 0.84 confidence")
+- ✅ Real-time confidence updates with proper color coding
+- ✅ Sparkline history visualization with confidence trends
+- ✅ Proper fallback handling for missing confidence data
+
+**BUSINESS VALUE IMPROVEMENTS:**
+- **Real-Time Intelligence**: Live sentiment confidence tracking enhances debate analysis
+- **Visual Analytics**: Dynamic confidence scores provide immediate feedback on AI certainty
+- **Professional Presentation**: Working sentiment displays demonstrate advanced AI capabilities
+- **User Insights**: Confidence levels help users understand AI decision-making process
+
+---
+
 ### **Comprehensive Layout & UX Enhancement - Professional System Upgrade**
 *Major improvement to application architecture, design system, and user experience*
 

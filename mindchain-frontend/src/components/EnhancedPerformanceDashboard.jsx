@@ -171,39 +171,39 @@ export default function EnhancedPerformanceDashboard() {
     const redisModules = metrics?.redisModules || {};
 
     return (
-        <Card className="border-blue-500/30 bg-gradient-to-br from-blue-900/20 to-cyan-900/20">
-            <CardHeader className="border-b border-blue-500/20">
+        <Card className="border-green-500/30 bg-gradient-to-br from-black/90 to-gray-900/90 shadow-lg shadow-green-500/10">
+            <CardHeader className="border-b border-green-500/30">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
-                            <Icon name="activity" size={24} className="text-blue-400" />
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 flex items-center justify-center">
+                            <Icon name="activity" size={24} className="text-green-400" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-white">System Analytics Dashboard</h2>
-                            <p className="text-slate-400 text-sm">Real-time Redis multi-modal performance</p>
+                            <h2 className="text-xl font-bold text-green-300 font-mono tracking-wide">SYSTEM ANALYTICS DASHBOARD</h2>
+                            <p className="text-green-400/80 text-sm font-mono">REAL-TIME REDIS MULTI-MODAL PERFORMANCE</p>
                         </div>
                         <StatusBadge status="success" label="LIVE" className="ml-auto" />
                     </div>
                     <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-2 text-sm text-slate-400">
+                        <div className="flex items-center space-x-2 text-sm text-green-400 font-mono">
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span>Real-time monitoring</span>
+                            <span>REAL-TIME MONITORING</span>
                         </div>
-                        <label className="flex items-center space-x-2 text-sm text-slate-400">
+                        <label className="flex items-center space-x-2 text-sm text-green-400 font-mono">
                             <input
                                 type="checkbox"
                                 checked={autoRefresh}
                                 onChange={(e) => setAutoRefresh(e.target.checked)}
-                                className="w-4 h-4 rounded border-slate-600 text-blue-500 focus:ring-blue-500/20"
+                                className="w-4 h-4 rounded border-green-600 text-green-500 focus:ring-green-500/20 bg-black/60"
                             />
-                            <span>Auto-refresh</span>
+                            <span>AUTO-REFRESH</span>
                         </label>
                         <button
                             onClick={fetchEnhancedMetrics}
-                            className="btn-ghost w-10 h-10 p-0"
+                            className="btn-ghost w-10 h-10 p-0 border border-green-500/30 rounded hover:bg-green-900/20"
                             title="Refresh metrics"
                         >
-                            <Icon name="refresh-cw" size={18} className={isLoading ? "animate-spin" : ""} />
+                            <Icon name="refresh-cw" size={18} className={isLoading ? "animate-spin text-green-400" : "text-green-400"} />
                         </button>
                     </div>
                 </div>
@@ -266,16 +266,16 @@ export default function EnhancedPerformanceDashboard() {
 
                 {/* Redis Multi-Modal Usage - Enhanced Display */}
                 <div className="mb-4">
-                    <h3 className="text-sm font-semibold text-cyan-300 mb-3 flex items-center gap-2">
-                        <Icon name="database" size={18} className="mr-2 text-purple-400" />
-                        Redis Multi-Modal Architecture
-                        <span className="text-xs bg-cyan-500/20 px-2 py-1 rounded-full">
-                            Enterprise Feature
+                    <h3 className="text-sm font-bold text-green-300 mb-3 flex items-center gap-2 font-mono tracking-wide">
+                        <Icon name="database" size={18} className="mr-2 text-green-400" />
+                        REDIS MULTI-MODAL ARCHITECTURE
+                        <span className="text-xs bg-green-500/20 px-2 py-1 rounded-full border border-green-500/30 font-mono">
+                            ENTERPRISE FEATURE
                         </span>
                         {metrics.benchmark?.multiModalScore && (
-                            <span className={`text-xs px-2 py-1 rounded-full ${metrics.benchmark.multiModalScore.score === 100
-                                ? 'bg-green-500/20 text-green-400'
-                                : 'bg-yellow-500/20 text-yellow-400'
+                            <span className={`text-xs px-2 py-1 rounded-full border font-mono ${metrics.benchmark.multiModalScore.score === 100
+                                ? 'bg-green-500/20 text-green-400 border-green-500/30'
+                                : 'bg-green-400/20 text-green-300 border-green-400/30'
                                 }`}>
                                 {metrics.benchmark.multiModalScore.rating}
                             </span>
@@ -283,55 +283,55 @@ export default function EnhancedPerformanceDashboard() {
                     </h3>
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                         {/* RedisJSON */}
-                        <div className="bg-orange-600/10 border border-orange-500/20 rounded-lg p-4">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                                <span className="text-sm font-semibold text-orange-300">RedisJSON</span>
+                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <span className="text-sm font-bold text-green-300 font-mono">REDISJSON</span>
                             </div>
-                            <div className="text-xl font-bold text-orange-200">
+                            <div className="text-xl font-bold text-green-200 font-mono">
                                 {metrics.keyCount?.json || metrics.operations?.json || 'N/A'}
                             </div>
-                            <div className="text-xs text-gray-400">Agent profiles</div>
-                            <div className="text-xs text-orange-400">Document storage</div>
+                            <div className="text-xs text-green-400/80 font-mono">AGENT PROFILES</div>
+                            <div className="text-xs text-green-400 font-mono">DOCUMENT STORAGE</div>
                         </div>
 
                         {/* Redis Streams */}
-                        <div className="bg-green-600/10 border border-green-500/20 rounded-lg p-4">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                <span className="text-sm font-semibold text-green-300">Streams</span>
+                                <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                                <span className="text-sm font-bold text-green-300 font-mono">STREAMS</span>
                             </div>
-                            <div className="text-xl font-bold text-green-200">
+                            <div className="text-xl font-bold text-green-200 font-mono">
                                 {metrics.keyCount?.streams || metrics.operations?.streams || 'N/A'}
                             </div>
-                            <div className="text-xs text-gray-400">Message streams</div>
-                            <div className="text-xs text-green-400">Real-time messaging</div>
+                            <div className="text-xs text-green-400/80 font-mono">MESSAGE STREAMS</div>
+                            <div className="text-xs text-green-400 font-mono">REAL-TIME MESSAGING</div>
                         </div>
 
                         {/* RedisTimeSeries */}
-                        <div className="bg-purple-600/10 border border-purple-500/20 rounded-lg p-4">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                                <span className="text-sm font-semibold text-purple-300">TimeSeries</span>
+                                <div className="w-3 h-3 bg-green-300 rounded-full"></div>
+                                <span className="text-sm font-bold text-green-300 font-mono">TIMESERIES</span>
                             </div>
-                            <div className="text-xl font-bold text-purple-200">
+                            <div className="text-xl font-bold text-green-200 font-mono">
                                 {metrics.keyCount?.timeseries || metrics.operations?.timeseries || 'N/A'}
                             </div>
-                            <div className="text-xs text-gray-400">Stance tracking</div>
-                            <div className="text-xs text-purple-400">Time-series data</div>
+                            <div className="text-xs text-green-400/80 font-mono">STANCE TRACKING</div>
+                            <div className="text-xs text-green-400 font-mono">TIME-SERIES DATA</div>
                         </div>
 
                         {/* Redis Vector */}
-                        <div className="bg-blue-600/10 border border-blue-500/20 rounded-lg p-4">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                <span className="text-sm font-semibold text-blue-300">Vector Search</span>
+                                <div className="w-3 h-3 bg-green-600 rounded-full"></div>
+                                <span className="text-sm font-bold text-green-300 font-mono">VECTOR SEARCH</span>
                             </div>
-                            <div className="text-xl font-bold text-blue-200">
+                            <div className="text-xl font-bold text-green-200 font-mono">
                                 {metrics.keyCount?.vector || metrics.operations?.vector || 'N/A'}
                             </div>
-                            <div className="text-xs text-gray-400">Fact embeddings</div>
-                            <div className="text-xs text-blue-400">Semantic search</div>
+                            <div className="text-xs text-green-400/80 font-mono">FACT EMBEDDINGS</div>
+                            <div className="text-xs text-green-400 font-mono">SEMANTIC SEARCH</div>
                         </div>
                     </div>
                 </div>
@@ -339,103 +339,103 @@ export default function EnhancedPerformanceDashboard() {
                 {/* Semantic Cache Performance - SHOWCASE FEATURE */}
                 {(cacheMetrics || metrics.cache) && (
                     <div className="mb-4">
-                        <h3 className="text-sm font-semibold text-cyan-300 mb-3 flex items-center gap-2">
-                            <Icon name="zap" size={18} className="mr-2 text-yellow-400" />
-                            Semantic Cache Performance
-                            <span className="text-xs bg-yellow-500/20 px-2 py-1 rounded-full text-yellow-400">
+                        <h3 className="text-sm font-bold text-green-300 mb-3 flex items-center gap-2 font-mono tracking-wide">
+                            <Icon name="zap" size={18} className="mr-2 text-green-400" />
+                            SEMANTIC CACHE PERFORMANCE
+                            <span className="text-xs bg-green-500/20 px-2 py-1 rounded-full text-green-400 border border-green-500/30 font-mono">
                                 INNOVATION SHOWCASE
                             </span>
                             {(cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) > 70 && (
-                                <span className="text-xs bg-green-500/20 px-2 py-1 rounded-full text-green-400">
+                                <span className="text-xs bg-green-500/20 px-2 py-1 rounded-full text-green-400 border border-green-500/30 font-mono">
                                     HIGH EFFICIENCY
                                 </span>
                             )}
                         </h3>
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                             {/* Cache Hit Rate */}
-                            <div className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-lg p-4 border border-green-500/20">
+                            <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                                 <div className="flex items-center gap-2 mb-2">
                                     <Icon name="target" size={16} className="text-green-400" />
-                                    <span className="text-sm font-semibold text-green-300">Hit Rate</span>
+                                    <span className="text-sm font-bold text-green-300 font-mono">HIT RATE</span>
                                 </div>
-                                <div className="text-2xl font-bold text-green-200">
+                                <div className="text-2xl font-bold text-green-200 font-mono">
                                     {((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0).toFixed(1)}%
                                 </div>
-                                <div className="text-xs text-gray-400">
-                                    {(cacheMetrics?.cache_hits || metrics.cache?.cache_hits) || 0}/{(cacheMetrics?.total_requests || metrics.cache?.total_requests) || 0} requests
+                                <div className="text-xs text-green-400/80 font-mono">
+                                    {(cacheMetrics?.cache_hits || metrics.cache?.cache_hits) || 0}/{(cacheMetrics?.total_requests || metrics.cache?.total_requests) || 0} REQUESTS
                                 </div>
-                                <div className="text-xs text-green-400">AI response caching</div>
+                                <div className="text-xs text-green-400 font-mono">AI RESPONSE CACHING</div>
                             </div>
 
                             {/* Cost Savings */}
-                            <div className="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-lg p-4 border border-yellow-500/20">
+                            <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <Icon name="dollar-sign" size={16} className="text-yellow-400" />
-                                    <span className="text-sm font-semibold text-yellow-300">Cost Saved</span>
+                                    <Icon name="dollar-sign" size={16} className="text-green-400" />
+                                    <span className="text-sm font-bold text-green-300 font-mono">COST SAVED</span>
                                 </div>
-                                <div className="text-2xl font-bold text-yellow-200">
+                                <div className="text-2xl font-bold text-green-200 font-mono">
                                     ${((cacheMetrics?.estimated_cost_saved || metrics.cache?.estimated_cost_saved) || 0).toFixed(3)}
                                 </div>
-                                <div className="text-xs text-gray-400">
-                                    {(cacheMetrics?.total_tokens_saved || 0).toLocaleString()} tokens saved
+                                <div className="text-xs text-green-400/80 font-mono">
+                                    {(cacheMetrics?.total_tokens_saved || 0).toLocaleString()} TOKENS SAVED
                                 </div>
-                                <div className="text-xs text-yellow-400">OpenAI API savings</div>
+                                <div className="text-xs text-green-400 font-mono">OPENAI API SAVINGS</div>
                             </div>
 
                             {/* Cache Efficiency */}
-                            <div className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-lg p-4 border border-blue-500/20">
+                            <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <Icon name="brain" size={16} className="text-blue-400" />
-                                    <span className="text-sm font-semibold text-blue-300">Similarity</span>
+                                    <Icon name="brain" size={16} className="text-green-400" />
+                                    <span className="text-sm font-bold text-green-300 font-mono">SIMILARITY</span>
                                 </div>
-                                <div className="text-2xl font-bold text-blue-200">
+                                <div className="text-2xl font-bold text-green-200 font-mono">
                                     {((cacheMetrics?.average_similarity || 0) * 100).toFixed(1)}%
                                 </div>
-                                <div className="text-xs text-gray-400">Average match quality</div>
-                                <div className="text-xs text-blue-400">Vector similarity</div>
+                                <div className="text-xs text-green-400/80 font-mono">AVERAGE MATCH QUALITY</div>
+                                <div className="text-xs text-green-400 font-mono">VECTOR SIMILARITY</div>
                             </div>
 
                             {/* Cache Entries */}
-                            <div className="bg-gradient-to-r from-purple-600/20 to-violet-600/20 rounded-lg p-4 border border-purple-500/20">
+                            <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <Icon name="database" size={16} className="text-purple-400" />
-                                    <span className="text-sm font-semibold text-purple-300">Cached</span>
+                                    <Icon name="database" size={16} className="text-green-400" />
+                                    <span className="text-sm font-bold text-green-300 font-mono">CACHED</span>
                                 </div>
-                                <div className="text-2xl font-bold text-purple-200">
+                                <div className="text-2xl font-bold text-green-200 font-mono">
                                     {(cacheMetrics?.total_cache_entries || metrics.cache?.total_cache_entries) || 0}
                                 </div>
-                                <div className="text-xs text-gray-400">Responses stored</div>
-                                <div className="text-xs text-purple-400">Semantic vectors</div>
+                                <div className="text-xs text-green-400/80 font-mono">RESPONSES STORED</div>
+                                <div className="text-xs text-green-400 font-mono">SEMANTIC VECTORS</div>
                             </div>
                         </div>
 
                         {/* Cache Performance Indicator */}
-                        <div className="mt-3 p-3 bg-gradient-to-r from-cyan-900/20 to-blue-900/20 rounded-lg border border-cyan-500/20">
+                        <div className="mt-3 p-3 bg-green-600/10 border border-green-500/30 rounded-lg shadow-lg">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <Icon name="trending-up" size={16} className="text-cyan-400" />
-                                    <span className="text-sm font-medium text-cyan-300">
-                                        Cache Efficiency: {((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0).toFixed(1)}% -
-                                        Monthly ROI: ${((cacheMetrics?.estimated_cost_saved || metrics.cache?.estimated_cost_saved) * 30 || 47).toFixed(0)}
+                                    <Icon name="trending-up" size={16} className="text-green-400" />
+                                    <span className="text-sm font-bold text-green-300 font-mono">
+                                        CACHE EFFICIENCY: {((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0).toFixed(1)}% -
+                                        MONTHLY ROI: ${((cacheMetrics?.estimated_cost_saved || metrics.cache?.estimated_cost_saved) * 30 || 47).toFixed(0)}
                                     </span>
                                 </div>
-                                <div className="flex items-center gap-2 text-xs text-gray-400">
+                                <div className="flex items-center gap-2 text-xs text-green-400/80 font-mono">
                                     <Icon name="target" size={12} />
-                                    <span>85% similarity threshold</span>
+                                    <span>85% SIMILARITY THRESHOLD</span>
                                 </div>
                             </div>
                             <div className="mt-2 flex items-center justify-between text-xs">
-                                <span className="text-gray-400">
-                                    Enterprise-grade semantic caching reducing API dependencies
+                                <span className="text-green-400/80 font-mono">
+                                    ENTERPRISE-GRADE SEMANTIC CACHING REDUCING API DEPENDENCIES
                                 </span>
-                                <span className={`px-2 py-1 rounded-full ${((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0) > 70
-                                    ? 'bg-green-500/20 text-green-400'
+                                <span className={`px-2 py-1 rounded-full border font-mono ${((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0) > 70
+                                    ? 'bg-green-500/20 text-green-400 border-green-500/30'
                                     : ((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0) > 50
-                                        ? 'bg-yellow-500/20 text-yellow-400'
-                                        : 'bg-orange-500/20 text-orange-400'
+                                        ? 'bg-green-400/20 text-green-300 border-green-400/30'
+                                        : 'bg-green-300/20 text-green-200 border-green-300/30'
                                     }`}>
-                                    {((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0) > 70 ? 'Excellent' :
-                                        ((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0) > 50 ? 'Good' : 'Building'}
+                                    {((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0) > 70 ? 'EXCELLENT' :
+                                        ((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 0) > 50 ? 'GOOD' : 'BUILDING'}
                                 </span>
                             </div>
                         </div>
@@ -444,67 +444,67 @@ export default function EnhancedPerformanceDashboard() {
 
                 {/* Business Performance Indicators */}
                 {metrics.benchmark && (
-                    <div className="border-t border-gray-600 pt-4">
-                        <h3 className="text-sm font-semibold text-cyan-300 mb-3 flex items-center gap-2">
-                            💼 Business Performance Metrics
-                            <span className="text-xs bg-green-500/20 px-2 py-1 rounded-full text-green-400">
+                    <div className="border-t border-green-500/30 pt-4">
+                        <h3 className="text-sm font-bold text-green-300 mb-3 flex items-center gap-2 font-mono tracking-wide">
+                            💼 BUSINESS PERFORMANCE METRICS
+                            <span className="text-xs bg-green-500/20 px-2 py-1 rounded-full text-green-400 border border-green-500/30 font-mono">
                                 {metrics.benchmark.systemReadiness}
                             </span>
                         </h3>
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                            <div className="bg-green-600/10 border border-green-500/20 rounded-lg p-4">
-                                <div className="text-lg font-bold text-green-300">
+                            <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
+                                <div className="text-lg font-bold text-green-300 font-mono">
                                     {metrics.benchmark.multiModalScore?.score || 'N/A'}%
                                 </div>
-                                <div className="text-sm text-gray-300">Architecture Efficiency</div>
-                                <div className="text-xs text-green-400">
-                                    {metrics.benchmark.multiModalScore?.activeModules || 0}/4 data models active
+                                <div className="text-sm text-green-200 font-mono">ARCHITECTURE EFFICIENCY</div>
+                                <div className="text-xs text-green-400 font-mono">
+                                    {metrics.benchmark.multiModalScore?.activeModules || 0}/4 DATA MODELS ACTIVE
                                 </div>
                             </div>
-                            <div className="bg-blue-600/10 border border-blue-500/20 rounded-lg p-4">
-                                <div className="text-lg font-bold text-blue-300">
+                            <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
+                                <div className="text-lg font-bold text-green-300 font-mono">
                                     {metrics.benchmark.realTimePerformance?.score || 'N/A'}%
                                 </div>
-                                <div className="text-sm text-gray-300">Response Performance</div>
-                                <div className="text-xs text-blue-400">
-                                    {metrics.benchmark.realTimePerformance?.responseTimeMs || 'N/A'}ms average response
+                                <div className="text-sm text-green-200 font-mono">RESPONSE PERFORMANCE</div>
+                                <div className="text-xs text-green-400 font-mono">
+                                    {metrics.benchmark.realTimePerformance?.responseTimeMs || 'N/A'}MS AVERAGE RESPONSE
                                 </div>
                             </div>
-                            <div className="bg-purple-600/10 border border-purple-500/20 rounded-lg p-4">
-                                <div className="text-lg font-bold text-purple-300">
+                            <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
+                                <div className="text-lg font-bold text-green-300 font-mono">
                                     {metrics.benchmark.scalabilityIndex?.score || 'N/A'}%
                                 </div>
-                                <div className="text-sm text-gray-300">Scalability Rating</div>
-                                <div className="text-xs text-purple-400">
-                                    {metrics.benchmark.scalabilityIndex?.rating || 'Enterprise ready'}
+                                <div className="text-sm text-green-200 font-mono">SCALABILITY RATING</div>
+                                <div className="text-xs text-green-400 font-mono">
+                                    {metrics.benchmark.scalabilityIndex?.rating || 'ENTERPRISE READY'}
                                 </div>
                             </div>
                         </div>
 
                         {/* ROI and Business Value Indicators */}
                         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            <div className="bg-gradient-to-r from-emerald-600/20 to-green-600/20 rounded-lg p-4 border border-emerald-500/20">
+                            <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <Icon name="trending-up" size={16} className="text-emerald-400" />
-                                    <span className="text-sm font-semibold text-emerald-300">Cost Efficiency</span>
+                                    <Icon name="trending-up" size={16} className="text-green-400" />
+                                    <span className="text-sm font-bold text-green-300 font-mono">COST EFFICIENCY</span>
                                 </div>
-                                <div className="text-xl font-bold text-emerald-200">
-                                    ${((cacheMetrics?.estimated_cost_saved || metrics.cache?.estimated_cost_saved) * 30 || 47).toFixed(0)}/mo
+                                <div className="text-xl font-bold text-green-200 font-mono">
+                                    ${((cacheMetrics?.estimated_cost_saved || metrics.cache?.estimated_cost_saved) * 30 || 47).toFixed(0)}/MO
                                 </div>
-                                <div className="text-xs text-gray-400">
-                                    Projected monthly savings through semantic caching
+                                <div className="text-xs text-green-400/80 font-mono">
+                                    PROJECTED MONTHLY SAVINGS THROUGH SEMANTIC CACHING
                                 </div>
                             </div>
-                            <div className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-lg p-4 border border-blue-500/20">
+                            <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 shadow-lg">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <Icon name="zap" size={16} className="text-blue-400" />
-                                    <span className="text-sm font-semibold text-blue-300">System Efficiency</span>
+                                    <Icon name="zap" size={16} className="text-green-400" />
+                                    <span className="text-sm font-bold text-green-300 font-mono">SYSTEM EFFICIENCY</span>
                                 </div>
-                                <div className="text-xl font-bold text-blue-200">
+                                <div className="text-xl font-bold text-green-200 font-mono">
                                     {((cacheMetrics?.hit_ratio || metrics.cache?.hit_ratio) || 66.7).toFixed(1)}%
                                 </div>
-                                <div className="text-xs text-gray-400">
-                                    Cache hit rate reducing computational overhead
+                                <div className="text-xs text-green-400/80 font-mono">
+                                    CACHE HIT RATE REDUCING COMPUTATIONAL OVERHEAD
                                 </div>
                             </div>
                         </div>
@@ -513,34 +513,34 @@ export default function EnhancedPerformanceDashboard() {
 
                 {/* Active Sessions Monitor */}
                 {metrics.debate?.activeDebates && Object.keys(metrics.debate.activeDebates).length > 0 && (
-                    <div className="border-t border-gray-600 pt-4 mt-4">
-                        <h3 className="text-sm font-semibold text-cyan-300 mb-3 flex items-center gap-2">
+                    <div className="border-t border-green-500/30 pt-4 mt-4">
+                        <h3 className="text-sm font-bold text-green-300 mb-3 flex items-center gap-2 font-mono tracking-wide">
                             <Icon name="activity" size={14} className="text-green-400" />
-                            Active Sessions Monitor
-                            <span className="text-xs bg-green-500/20 px-2 py-1 rounded-full text-green-400">
-                                {Object.keys(metrics.debate.activeDebates).length} sessions
+                            ACTIVE SESSIONS MONITOR
+                            <span className="text-xs bg-green-500/20 px-2 py-1 rounded-full text-green-400 border border-green-500/30 font-mono">
+                                {Object.keys(metrics.debate.activeDebates).length} SESSIONS
                             </span>
                         </h3>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                             {Object.entries(metrics.debate.activeDebates).map(([id, info]) => (
                                 <div
                                     key={id}
-                                    className="bg-gradient-to-r from-blue-600/10 to-cyan-600/10 border border-blue-500/20 rounded-lg p-3"
+                                    className="bg-green-600/10 border border-green-500/30 rounded-lg p-3 shadow-lg"
                                 >
                                     <div className="flex items-center justify-between mb-2">
-                                        <div className="text-sm font-medium text-blue-300 flex items-center gap-2">
+                                        <div className="text-sm font-bold text-green-300 flex items-center gap-2 font-mono">
                                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                            Session {id.substring(0, 8)}...
+                                            SESSION {id.substring(0, 8).toUpperCase()}...
                                         </div>
-                                        <span className="text-xs bg-blue-500/20 px-2 py-1 rounded text-blue-400">
-                                            {info.status || 'Active'}
+                                        <span className="text-xs bg-green-500/20 px-2 py-1 rounded text-green-400 border border-green-500/30 font-mono">
+                                            {info.status?.toUpperCase() || 'ACTIVE'}
                                         </span>
                                     </div>
-                                    <div className="text-xs text-gray-400 space-y-1">
-                                        <div>📋 Topic: {info.topic}</div>
+                                    <div className="text-xs text-green-400/80 space-y-1 font-mono">
+                                        <div>📋 TOPIC: {info.topic}</div>
                                         <div className="flex items-center justify-between">
-                                            <span>💬 {info.messageCount || 0} messages</span>
-                                            <span>⏱️ {info.duration || 'Real-time'}</span>
+                                            <span>💬 {info.messageCount || 0} MESSAGES</span>
+                                            <span>⏱️ {info.duration || 'REAL-TIME'}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -549,10 +549,10 @@ export default function EnhancedPerformanceDashboard() {
                     </div>
                 )}
 
-                <div className="text-xs text-slate-500 text-center mt-6">
-                    Last updated: {new Date(metrics.timestamp).toLocaleTimeString()} •
-                    {metrics.fallback ? ' [Fallback Mode] • ' : ' [Live Data] • '}
-                    MindChain Analytics Dashboard 📊
+                <div className="text-xs text-green-400/60 text-center mt-6 font-mono">
+                    LAST UPDATED: {new Date(metrics.timestamp).toLocaleTimeString()} •
+                    {metrics.fallback ? ' [FALLBACK MODE] • ' : ' [LIVE DATA] • '}
+                    MINDCHAIN ANALYTICS DASHBOARD 📊
                 </div>
             </CardContent>
         </Card>

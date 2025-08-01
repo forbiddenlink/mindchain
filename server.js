@@ -79,6 +79,9 @@ const activeDebates = new Map();
 // Store running debate processes to allow proper cancellation
 const runningDebateProcesses = new Map(); // debateId -> { cancelled: boolean }
 
+// Track last speaker per debate to ensure proper alternation
+const lastSpeakerPerDebate = new Map(); // debateId -> agentId
+
 // Store last message timestamps to prevent duplicate rapid-fire messages
 const lastMessageTimestamps = new Map(); // agentId -> timestamp
 
@@ -119,6 +122,17 @@ function broadcast(data) {
         if (ws.readyState === ws.OPEN) {
             ws.send(message);
         }
+    });
+}
+
+// Broadcast Redis operation for Matrix visualization
+function broadcastRedisOperation(operationType, operation, metadata = {}) {
+    broadcast({
+        type: 'redis_operation',
+        operation_type: operationType, // 'json', 'streams', 'timeseries', 'vector'
+        operation,
+        metadata,
+        timestamp: new Date().toISOString()
     });
 }
 
@@ -1249,12 +1263,19 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
             const lastMessageTime = lastMessageTimestamps.get(agentId) || 0;
             const timeSinceLastMessage = now - lastMessageTime;
             
-            if (timeSinceLastMessage < 1000) { // Minimum 1 second between messages per agent
+            if (timeSinceLastMessage < 2000) { // Increased to minimum 2 seconds between messages per agent
                 console.log(`⚠️ ${agentId} attempted message too soon (${timeSinceLastMessage}ms ago), skipping...`);
                 continue;
             }
             
             lastMessageTimestamps.set(agentId, now);
+
+            // Additional check: Ensure agent alternation
+            const lastSpeaker = lastSpeakerPerDebate.get(debateId);
+            if (lastSpeaker === agentId) {
+                console.log(`⚠️ ${agentId} spoke last, enforcing alternation by skipping...`);
+                continue;
+            }
 
             // 🧠 Use Enhanced AI Generation with emotional state and context
             let message;
@@ -1319,11 +1340,23 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     agent_id: agentId,
                     message,
                 });
+                
+                // Broadcast Redis Streams operation for Matrix
+                broadcastRedisOperation('streams', `debate:${debateId}:messages → new message`, {
+                    agentId,
+                    messageLength: message.length
+                });
 
                 // Store in agent's private memory
                 await client.xAdd(memoryStreamKey, '*', {
                     type: 'statement',
                     content: message,
+                });
+                
+                // Broadcast Redis Streams operation for Matrix (memory)
+                broadcastRedisOperation('streams', `agent:${agentId}:memory → strategic note`, {
+                    agentId,
+                    type: 'statement'
                 });
 
                 // 🎯 Broadcast cache hit celebration if applicable
@@ -1489,7 +1522,10 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     }
                 });
 
-                // 📊 INDIVIDUAL STANCE UPDATE BROADCAST - Send after each agent speaks
+                // � Track last speaker to enforce alternation
+                lastSpeakerPerDebate.set(debateId, agentId);
+
+                // �📊 INDIVIDUAL STANCE UPDATE BROADCAST - Send after each agent speaks
                 try {
                     const timestamp = new Date().toISOString();
 
@@ -1947,6 +1983,90 @@ app.get('/api/optimization/metrics', async (req, res) => {
             success: false,
             error: error.message,
             optimization: { status: 'offline' }
+        });
+    }
+});
+
+// 🎯 Redis Matrix Demo - Trigger all Redis operations for Matrix visualization
+app.post('/api/demo/redis-matrix', async (req, res) => {
+    try {
+        console.log('🎯 Redis Matrix demo triggered - Broadcasting all module operations');
+        
+        // Simulate JSON operations
+        broadcastRedisOperation('json', 'agent:senatorbot:profile → updating stance', {
+            agentId: 'senatorbot',
+            field: 'stance',
+            value: 0.7
+        });
+        
+        setTimeout(() => {
+            broadcastRedisOperation('json', 'debate:metrics → cache stats', {
+                hitRate: 94.2,
+                totalSaved: 47.32
+            });
+        }, 500);
+        
+        // Simulate Stream operations
+        setTimeout(() => {
+            broadcastRedisOperation('streams', 'debate:climate-policy:messages → new statement', {
+                agentId: 'reformerbot',
+                messageLength: 156
+            });
+        }, 1000);
+        
+        setTimeout(() => {
+            broadcastRedisOperation('streams', 'agent:senatorbot:memory → strategic note', {
+                agentId: 'senatorbot',
+                type: 'strategic_memory'
+            });
+        }, 1500);
+        
+        // Simulate TimeSeries operations
+        setTimeout(() => {
+            broadcastRedisOperation('timeseries', 'stance:climate_policy → +0.3', {
+                topic: 'climate_policy',
+                change: 0.3,
+                agentId: 'reformerbot'
+            });
+        }, 2000);
+        
+        setTimeout(() => {
+            broadcastRedisOperation('timeseries', 'emotions:intensity → 0.8', {
+                agentId: 'senatorbot',
+                emotion: 'conviction',
+                intensity: 0.8
+            });
+        }, 2500);
+        
+        // Simulate Vector operations
+        setTimeout(() => {
+            broadcastRedisOperation('vector', 'cache:prompt → 92.1% MATCH!', {
+                similarity: 0.921,
+                costSaved: 0.003,
+                cacheHit: true
+            });
+        }, 3000);
+        
+        setTimeout(() => {
+            broadcastRedisOperation('vector', 'facts:search → COSINE similarity', {
+                similarity: 0.887,
+                factCheck: true,
+                claim: 'renewable energy statistics'
+            });
+        }, 3500);
+
+        res.json({
+            success: true,
+            message: 'Redis Matrix operations triggered',
+            operations: 8,
+            timespan: '4 seconds'
+        });
+        
+    } catch (error) {
+        console.error('❌ Error triggering Redis Matrix demo:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 });

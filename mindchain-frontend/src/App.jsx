@@ -11,6 +11,7 @@ import KeyMomentsPanel from './components/KeyMomentsPanel';
 import BusinessValueDashboard from './components/BusinessValueDashboard';
 import ContestShowcaseDashboard from './components/ContestShowcaseDashboard';
 import LivePerformanceOverlay from './components/LivePerformanceOverlay';
+import RedisMatrixModal from './components/RedisMatrixModal';
 import Icon from './components/Icon';
 import { ViewModeSelector, ToastProvider, useNotification, Container, Stack, Grid } from './components/ui';
 import useWebSocket from './hooks/useWebSocket';
@@ -27,6 +28,7 @@ export default function App() {
   const [currentDebateId, setCurrentDebateId] = useState(null); // Track current single debate
   const [stanceData, setStanceData] = useState([]); // Track stance evolution for chart
   const [currentStances, setCurrentStances] = useState({ senatorbot: 0, reformerbot: 0 }); // Track current stance values
+  const [showMatrixModal, setShowMatrixModal] = useState(false); // Matrix modal state
 
   // WebSocket connection
   const wsUrl = window.location.hostname === '127.0.0.1'
@@ -349,11 +351,16 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col animate-fade-in-up overflow-x-hidden">
+      <div className="min-h-screen bg-black text-green-300 flex flex-col animate-fade-in-up overflow-x-hidden font-mono">
+        {/* Matrix Rain Background Effect */}
+        <div className="fixed inset-0 opacity-5 pointer-events-none z-0">
+          <div className="matrix-rain"></div>
+        </div>
+
         <Header connectionStatus={connectionStatus} backendHealth={connectionHealth} />
 
-        {/* Enhanced Controls Bar - Improved Visual Hierarchy */}
-        <div className="flex-shrink-0 border-b border-slate-700/50 bg-gradient-to-r from-slate-800/40 via-slate-800/30 to-slate-800/40 backdrop-blur-md overflow-x-hidden">
+        {/* Enhanced Controls Bar - Matrix Style */}
+        <div className="flex-shrink-0 border-b border-green-500/30 bg-gradient-to-r from-black/95 to-gray-900/95 backdrop-blur-md overflow-x-hidden relative z-10">
           <Container maxWidth="max-w-7xl" padding="px-2 sm:px-4 py-3">
             <Stack spacing="space-y-4">
               {/* Top Row: Enhanced Controls - Full Width */}
@@ -384,72 +391,80 @@ export default function App() {
 
               {/* Bottom Row: Mode Toggle + Enhanced Quick Stats */}
               <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-                {/* Left: Enhanced Quick Stats with System Health - More Space */}
+                {/* Left: Enhanced Quick Stats with System Health - Matrix Style */}
                 <div className="flex items-center gap-3 flex-1 w-full lg:w-auto overflow-hidden">
                   <div className="flex items-center gap-3 text-sm">
-                    <div className="text-center px-3 py-2 bg-blue-500/10 rounded-lg border border-blue-500/20 flex-shrink-0">
-                      <div className="text-lg font-bold text-blue-400">{activeDebates.size}</div>
+                    <div className="text-center px-3 py-2 bg-blue-500/10 rounded-lg border border-blue-500/30 flex-shrink-0">
+                      <div className="text-lg font-bold text-blue-400 font-mono">{activeDebates.size}</div>
                       <div className="text-xs text-gray-400">Sessions</div>
                     </div>
-                    <div className="text-center px-3 py-2 bg-green-500/10 rounded-lg border border-green-500/20 flex-shrink-0">
-                      <div className="text-lg font-bold text-green-400">{debateMessages.length}</div>
+                    <div className="text-center px-3 py-2 bg-green-500/10 rounded-lg border border-green-500/30 flex-shrink-0">
+                      <div className="text-lg font-bold text-green-400 font-mono">{debateMessages.length}</div>
                       <div className="text-xs text-gray-400">Messages</div>
                     </div>
-                    <div className="text-center px-3 py-2 bg-purple-500/10 rounded-lg border border-purple-500/20 flex-shrink-0">
-                      <div className="text-lg font-bold text-purple-400">{factChecks.length}</div>
+                    <div className="text-center px-3 py-2 bg-purple-500/10 rounded-lg border border-purple-500/30 flex-shrink-0">
+                      <div className="text-lg font-bold text-purple-400 font-mono">{factChecks.length}</div>
                       <div className="text-xs text-gray-400">Facts</div>
                     </div>
-                    {/* System Health Indicator - Integrated with stats */}
-                    <div className="flex items-center gap-2 px-3 py-2 bg-slate-700/30 rounded-lg border border-slate-600/30 flex-shrink-0">
+                    {/* System Health Indicator - Matrix Style */}
+                    <div className="flex items-center gap-2 px-3 py-2 bg-gray-900/50 rounded-lg border border-green-500/30 flex-shrink-0">
                       <div className={`w-2 h-2 rounded-full ${connectionStatus === 'Connected' && connectionHealth === 'healthy'
-                        ? 'bg-emerald-400 animate-pulse'
+                        ? 'bg-green-400 animate-pulse'
                         : 'bg-red-400'
                         }`}></div>
-                      <span className="text-xs text-gray-400 whitespace-nowrap">
-                        {connectionStatus === 'Connected' && connectionHealth === 'healthy' ? 'Online' : 'Issues'}
+                      <span className="text-xs text-green-300 whitespace-nowrap font-mono">
+                        {connectionStatus === 'Connected' && connectionHealth === 'healthy' ? 'ONLINE' : 'ERROR'}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Right: Compact View Mode Selector */}
+                {/* Right: Matrix Style Mode Selector */}
                 <div className="flex-shrink-0 w-full lg:w-auto mt-2 lg:mt-0">
                   <div className="flex flex-wrap gap-2">
                     <button
                       onClick={() => setViewMode('standard')}
-                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${viewMode === 'standard'
-                          ? 'bg-blue-600/30 border-blue-500/30 text-blue-200 shadow-lg'
-                          : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-blue-600/20 hover:border-blue-500/20'
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 font-mono ${viewMode === 'standard'
+                          ? 'bg-blue-600/30 border-blue-500/30 text-blue-300 shadow-lg shadow-blue-500/20'
+                          : 'bg-gray-900/50 border-green-500/30 text-green-300 hover:bg-blue-600/20 hover:border-blue-500/30'
                         }`}
                     >
-                      Standard
+                      STANDARD
                     </button>
                     <button
                       onClick={() => setViewMode('multi-debate')}
-                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${viewMode === 'multi-debate'
-                          ? 'bg-purple-600/30 border-purple-500/30 text-purple-200 shadow-lg'
-                          : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-purple-600/20 hover:border-purple-500/20'
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 font-mono ${viewMode === 'multi-debate'
+                          ? 'bg-purple-600/30 border-purple-500/30 text-purple-300 shadow-lg shadow-purple-500/20'
+                          : 'bg-gray-900/50 border-green-500/30 text-green-300 hover:bg-purple-600/20 hover:border-purple-500/30'
                         }`}
                     >
-                      Multi-Debate
+                      MULTI-DEBATE
                     </button>
                     <button
                       onClick={() => setViewMode('analytics')}
-                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${viewMode === 'analytics'
-                          ? 'bg-green-600/30 border-green-500/30 text-green-200 shadow-lg'
-                          : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-green-600/20 hover:border-green-500/20'
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 font-mono ${viewMode === 'analytics'
+                          ? 'bg-green-600/30 border-green-500/30 text-green-300 shadow-lg shadow-green-500/20'
+                          : 'bg-gray-900/50 border-green-500/30 text-green-300 hover:bg-green-600/20 hover:border-green-500/30'
                         }`}
                     >
-                      Analytics
+                      ANALYTICS
                     </button>
                     <button
                       onClick={() => setViewMode('contest-showcase')}
-                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${viewMode === 'contest-showcase'
-                          ? 'bg-gradient-to-r from-yellow-600/30 to-orange-600/30 border-yellow-500/30 text-yellow-200 shadow-lg'
-                          : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-gradient-to-r hover:from-yellow-600/20 hover:to-orange-600/20 hover:border-yellow-500/20'
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 font-mono ${viewMode === 'contest-showcase'
+                          ? 'bg-gradient-to-r from-yellow-600/30 to-orange-600/30 border-yellow-500/30 text-yellow-300 shadow-lg shadow-yellow-500/20'
+                          : 'bg-gray-900/50 border-green-500/30 text-green-300 hover:bg-gradient-to-r hover:from-yellow-600/20 hover:to-orange-600/20 hover:border-yellow-500/30'
                         }`}
                     >
-                      Contest
+                      CONTEST
+                    </button>
+                    <button
+                      onClick={() => setShowMatrixModal(true)}
+                      className="px-4 py-2 text-sm rounded-lg border bg-gradient-to-r from-black/70 to-green-900/70 border-green-500/30 text-green-300 hover:from-black/90 hover:to-green-900/90 transition-all duration-200 hover:scale-105 shadow-lg shadow-green-500/20 font-mono"
+                      title="Redis Operations Matrix - Live visualization of all 4 modules"
+                    >
+                      <Icon name="activity" className="w-4 h-4 inline mr-1" />
+                      MATRIX
                     </button>
                   </div>
                 </div>
@@ -459,45 +474,43 @@ export default function App() {
         </div>
 
         {/* Dynamic Main Content Based on View Mode */}
-        <main className="flex-1 overflow-x-hidden">
+        <main className="flex-1 overflow-x-hidden relative z-10">
           <Container maxWidth="max-w-7xl" padding="px-2 sm:px-4 py-4" className="h-full">
             {viewMode === 'standard' ? (
-              /* Standard Single-Debate Layout - Balanced Space Distribution */
-              <div className="flex flex-col gap-4 h-full min-h-screen pb-20 animate-fade-in-up">
-                {/* Main content row: 2-column layout with proper sizing */}
+              /* Standard Single-Debate Layout - Matrix Style */
+              <div className="flex flex-col gap-4 h-full pb-32 animate-fade-in-up">
+                {/* Main content row: 2-column layout with Matrix styling */}
                 <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
-                  {/* Left Column: Debate Panel (70% width) */}
-                  <div className="flex-1 lg:flex-[7] min-w-0 min-h-[500px]">
+                  {/* Left Column: Debate Panel (70% width) - Matrix Style */}
+                  <div className="flex-1 lg:flex-[7] min-w-0 min-h-[500px] bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm">
                     <DebatePanel messages={getFilteredMessages()} />
                   </div>
 
                   {/* Right Column: Semantic Cache Engine + Key Moments + Fact Checker (30% width) */}
-                  <div className="w-full lg:w-[30%] lg:flex-[3] flex-shrink-0 min-h-[600px]">
-                    <Stack spacing="space-y-4">
-                      {/* Semantic Cache Engine - Business Value Showcase */}
-                      <div className="flex-shrink-0 animate-slide-in-right stagger-1">
-                        <LivePerformanceOverlay 
-                          position="embedded" 
-                          size="small"
-                          className="relative w-full"
-                        />
-                      </div>
+                  <div className="w-full lg:w-[30%] lg:flex-[3] flex-shrink-0 min-h-[800px] flex flex-col">
+                    {/* Semantic Cache Engine - Business Value Showcase */}
+                    <div className="flex-shrink-0 mb-4 animate-slide-in-right stagger-1">
+                      <LivePerformanceOverlay 
+                        position="embedded" 
+                        size="small"
+                        className="relative w-full"
+                      />
+                    </div>
 
-                      {/* Key Moments - Enhanced with animations */}
-                      <div className="flex-[3] min-h-[300px] max-h-[350px] animate-slide-in-right stagger-2">
-                        <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
-                      </div>
+                    {/* Key Moments - Matrix Style */}
+                    <div className="flex-1 mb-4 min-h-[400px] max-h-[500px] animate-slide-in-right stagger-2">
+                      <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
+                    </div>
 
-                      {/* Fact Checker - Enhanced with animations */}
-                      <div className="flex-[2] min-h-[200px] max-h-[250px] animate-slide-in-right stagger-3">
-                        <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
-                      </div>
-                    </Stack>
+                    {/* Fact Checker - Matrix Style */}
+                    <div className="flex-1 min-h-[300px] max-h-[350px] animate-slide-in-right stagger-3">
+                      <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
+                    </div>
                   </div>
                 </div>
 
-                {/* Bottom row: Stance Evolution Chart - Enhanced with animations */}
-                <div className="h-80 flex-shrink-0 mt-6 mb-12 animate-fade-in-up stagger-3">
+                {/* Bottom row: Stance Evolution Chart - Matrix Style */}
+                <div className="h-96 flex-shrink-0 mt-6 animate-fade-in-up stagger-3 bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4">
                   <StanceEvolutionChart
                     stanceData={currentDebateId ?
                       stanceData.filter(entry => entry.debateId === currentDebateId) :
@@ -507,17 +520,17 @@ export default function App() {
                 </div>
               </div>
             ) : viewMode === 'multi-debate' ? (
-              /* Multi-Debate Layout - Perfectly even spacing with consistent margins */
-              <div className="space-y-6 p-6">
-                {/* Top row: Key Moments - Consistent container */}
-                <div className="min-h-[300px] bg-gray-800/50 rounded-xl p-4">
+              /* Multi-Debate Layout - Matrix Style */
+              <div className="space-y-6 p-6 pb-32">
+                {/* Top row: Key Moments - Matrix Container */}
+                <div className="min-h-[400px] bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4">
                   <KeyMomentsPanel viewMode="multi-debate" />
                 </div>
 
-                {/* Middle row: Multi-debate viewer and fact checker - Consistent containers */}
+                {/* Middle row: Multi-debate viewer and fact checker - Matrix Containers */}
                 <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6">
-                  {/* Main: Multi-Debate Viewer - Consistent container */}
-                  <div className="flex-1 lg:flex-[7] min-h-[600px] bg-gray-800/50 rounded-xl p-4 animate-slide-in-left">
+                  {/* Main: Multi-Debate Viewer - Matrix Container */}
+                  <div className="flex-1 lg:flex-[7] min-h-[600px] bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4 animate-slide-in-left">
                     <TrueMultiDebateViewer
                       messages={debateMessages}
                       activeDebates={activeDebates}
@@ -525,14 +538,14 @@ export default function App() {
                     />
                   </div>
 
-                  {/* Side Panel: Fact Checker - Consistent container */}
-                  <div className="w-full lg:w-[450px] lg:flex-[3] min-h-[600px] bg-gray-800/50 rounded-xl p-4 animate-slide-in-right">
+                  {/* Side Panel: Fact Checker - Matrix Container */}
+                  <div className="w-full lg:w-[450px] lg:flex-[3] min-h-[600px] bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4 animate-slide-in-right">
                     <FactChecker factChecks={factChecks} />
                   </div>
                 </div>
 
-                {/* Bottom row: Stance Evolution Chart - Consistent container */}
-                <div className="min-h-[400px] bg-gray-800/50 rounded-xl p-4">
+                {/* Bottom row: Stance Evolution Chart - Matrix Container */}
+                <div className="h-96 bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4">
                   <StanceEvolutionChart stanceData={stanceData} />
                 </div>
               </div>
@@ -547,68 +560,68 @@ export default function App() {
                 <BusinessValueDashboard />
               </div>
             ) : (
-              /* Analytics Dashboard Layout - Enhanced with animations */
+              /* Analytics Dashboard Layout - Matrix Style */
               <Stack spacing="space-y-6" className="animate-fade-in-up">
-                {/* Top Row: Key Moments Analytics - Enhanced */}
-                <div className="w-full animate-slide-in-down stagger-1">
+                {/* Top Row: Key Moments Analytics - Matrix Style */}
+                <div className="w-full animate-slide-in-down stagger-1 bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4">
                   <KeyMomentsPanel viewMode="analytics" />
                 </div>
 
-                {/* Middle Row: Performance Dashboard - Enhanced */}
-                <div className="w-full animate-scale-in stagger-2">
+                {/* Middle Row: Performance Dashboard - Matrix Style */}
+                <div className="w-full animate-scale-in stagger-2 bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4">
                   <EnhancedPerformanceDashboard key={metricsUpdateTrigger} />
                 </div>
 
-                {/* Bottom Row: Quick Actions and Stats - Enhanced Grid */}
+                {/* Bottom Row: Quick Actions and Stats - Matrix Grid */}
                 <Grid columns={2} gap="gap-6" className="animate-fade-in-up stagger-3">
-                  {/* Quick Actions */}
-                  <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
-                    <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                  {/* Quick Actions - Matrix Style */}
+                  <div className="bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4">
+                    <h3 className="text-lg font-semibold text-green-300 flex items-center gap-2 mb-4 font-mono">
                       <Icon name="analytics" size={20} className="text-blue-400" />
-                      Quick Actions
+                      QUICK ACTIONS
                     </h3>
                     <div className="flex flex-wrap items-center gap-2">
                       <button
                         onClick={() => setViewMode('multi-debate')}
-                        className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/20 rounded-lg text-sm text-purple-300 transition-colors"
+                        className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 rounded-lg text-sm text-purple-300 transition-colors font-mono"
                       >
                         <Icon name="multi-debate" size={16} className="mr-1" />
-                        Multi-Debate View
+                        MULTI-DEBATE
                       </button>
                       <button
                         onClick={() => setViewMode('standard')}
-                        className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/20 rounded-lg text-sm text-blue-300 transition-colors"
+                        className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg text-sm text-blue-300 transition-colors font-mono"
                       >
                         <Icon name="target" size={16} className="mr-1" />
-                        Standard View
+                        STANDARD
                       </button>
                       <button
                         onClick={handleMetricsUpdate}
-                        className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/20 rounded-lg text-sm text-green-300 transition-colors"
+                        className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 rounded-lg text-sm text-green-300 transition-colors font-mono"
                       >
                         <Icon name="refresh" size={16} className="mr-1" />
-                        Refresh Data
+                        REFRESH
                       </button>
                     </div>
                   </div>
 
-                  {/* Live Stats */}
-                  <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
-                    <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                  {/* Live Stats - Matrix Style */}
+                  <div className="bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4">
+                    <h3 className="text-lg font-semibold text-green-300 flex items-center gap-2 mb-4 font-mono">
                       <Icon name="bar-chart" size={20} className="text-green-400" />
-                      Live Statistics
+                      LIVE STATISTICS
                     </h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-400">{activeDebates.size}</div>
+                        <div className="text-2xl font-bold text-blue-400 font-mono">{activeDebates.size}</div>
                         <div className="text-xs text-gray-400">Active Debates</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-green-400">{debateMessages.length}</div>
+                        <div className="text-2xl font-bold text-green-400 font-mono">{debateMessages.length}</div>
                         <div className="text-xs text-gray-400">Total Messages</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-purple-400">{factChecks.length}</div>
+                        <div className="text-2xl font-bold text-purple-400 font-mono">{factChecks.length}</div>
                         <div className="text-xs text-gray-400">Fact Checks</div>
                       </div>
                     </div>
@@ -618,6 +631,12 @@ export default function App() {
             )}
           </Container>
         </main>
+
+        {/* Redis Matrix Modal */}
+        <RedisMatrixModal 
+          isOpen={showMatrixModal} 
+          onClose={() => setShowMatrixModal(false)} 
+        />
       </div>
     </ToastProvider>
   );

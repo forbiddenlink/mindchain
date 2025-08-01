@@ -1,7 +1,6 @@
 // System Showcase Dashboard - Premium Analytics and Demonstrations
 import { useState, useEffect } from 'react';
 import Icon from './Icon';
-import LivePerformanceOverlay from './LivePerformanceOverlay';
 
 export default function SystemShowcaseDashboard() {
     const [showcaseData, setShowcaseData] = useState(null);
@@ -83,72 +82,65 @@ export default function SystemShowcaseDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white p-6 relative">
-            {/* Live Performance Metrics Overlay */}
-            <LivePerformanceOverlay 
-                position="top-right" 
-                size="large"
-                className="animate-in slide-in-from-right-2 duration-500"
-            />
-
+        <div className="min-h-screen bg-black text-green-300 p-6 relative font-mono">
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
-                    <Icon name="award" className="w-8 h-8 text-yellow-400" />
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-                        Redis AI Challenge Showcase
+                    <Icon name="award" className="w-8 h-8 text-green-400" />
+                    <h1 className="text-4xl font-bold text-green-400 tracking-wide">
+                        REDIS AI CHALLENGE SHOWCASE
                     </h1>
                 </div>
-                <p className="text-xl text-gray-300">
-                    Real-time demonstration of MindChain's multi-modal Redis architecture
+                <p className="text-xl text-green-300">
+                    REAL-TIME DEMONSTRATION OF MINDCHAIN'S MULTI-MODAL REDIS ARCHITECTURE
                 </p>
             </div>
 
             {/* Contest Metrics Overview */}
             {contestMetrics && (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div className="bg-gradient-to-br from-green-600/20 to-green-800/20 border border-green-500/30 rounded-xl p-6">
+                    <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                         <div className="flex items-center gap-3 mb-2">
                             <Icon name="database" className="w-6 h-6 text-green-400" />
-                            <span className="text-lg font-semibold text-green-300">Active Debates</span>
+                            <span className="text-lg font-bold text-green-300">ACTIVE DEBATES</span>
                         </div>
                         <div className="text-3xl font-bold text-green-200">
                             {contestMetrics.contestMetrics?.debateStatistics?.activeDebates || 0}
                         </div>
-                        <div className="text-sm text-gray-400">Real-time concurrent processing</div>
+                        <div className="text-sm text-green-400/80">REAL-TIME CONCURRENT PROCESSING</div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-blue-500/30 rounded-xl p-6">
+                    <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                         <div className="flex items-center gap-3 mb-2">
-                            <Icon name="message-circle" className="w-6 h-6 text-blue-400" />
-                            <span className="text-lg font-semibold text-blue-300">Total Messages</span>
+                            <Icon name="message-circle" className="w-6 h-6 text-green-400" />
+                            <span className="text-lg font-bold text-green-300">TOTAL MESSAGES</span>
                         </div>
-                        <div className="text-3xl font-bold text-blue-200">
+                        <div className="text-3xl font-bold text-green-200">
                             {contestMetrics.contestMetrics?.debateStatistics?.totalMessages || 0}
                         </div>
-                        <div className="text-sm text-gray-400">Redis Streams throughput</div>
+                        <div className="text-sm text-green-400/80">REDIS STREAMS THROUGHPUT</div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-purple-600/20 to-purple-800/20 border border-purple-500/30 rounded-xl p-6">
+                    <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                         <div className="flex items-center gap-3 mb-2">
-                            <Icon name="zap" className="w-6 h-6 text-purple-400" />
-                            <span className="text-lg font-semibold text-purple-300">Cache Hit Rate</span>
+                            <Icon name="zap" className="w-6 h-6 text-green-400" />
+                            <span className="text-lg font-bold text-green-300">CACHE HIT RATE</span>
                         </div>
-                        <div className="text-3xl font-bold text-purple-200">
+                        <div className="text-3xl font-bold text-green-200">
                             {contestMetrics.contestMetrics?.semanticCache?.hit_ratio || 0}%
                         </div>
-                        <div className="text-sm text-gray-400">Semantic vector caching</div>
+                        <div className="text-sm text-green-400/80">SEMANTIC VECTOR CACHING</div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-orange-600/20 to-orange-800/20 border border-orange-500/30 rounded-xl p-6">
+                    <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                         <div className="flex items-center gap-3 mb-2">
-                            <Icon name="activity" className="w-6 h-6 text-orange-400" />
-                            <span className="text-lg font-semibold text-orange-300">System Health</span>
+                            <Icon name="activity" className="w-6 h-6 text-green-400" />
+                            <span className="text-lg font-bold text-green-300">SYSTEM HEALTH</span>
                         </div>
-                        <div className="text-3xl font-bold text-orange-200">
-                            {Math.round((contestMetrics.contestMetrics?.systemHealth?.uptime || 0) / 60)}m
+                        <div className="text-3xl font-bold text-green-200">
+                            {Math.round((contestMetrics.contestMetrics?.systemHealth?.uptime || 0) / 60)}M
                         </div>
-                        <div className="text-sm text-gray-400">Uptime & stability</div>
+                        <div className="text-sm text-green-400/80">UPTIME & STABILITY</div>
                     </div>
                 </div>
             )}
@@ -156,99 +148,99 @@ export default function SystemShowcaseDashboard() {
             {/* Redis Multi-Modal Showcase */}
             {showcaseData && (
                 <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                        <Icon name="layers" className="w-6 h-6 text-blue-400" />
-                        Redis Multi-Modal Architecture Live Demo
+                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-green-400 tracking-wide">
+                        <Icon name="layers" className="w-6 h-6 text-green-400" />
+                        REDIS MULTI-MODAL ARCHITECTURE LIVE DEMO
                     </h2>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* RedisJSON */}
-                        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                <h3 className="text-xl font-semibold text-yellow-300">RedisJSON</h3>
-                                <Icon name="file-text" className="w-5 h-5 text-yellow-400" />
+                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <h3 className="text-xl font-bold text-green-300">REDISJSON</h3>
+                                <Icon name="file-text" className="w-5 h-5 text-green-400" />
                             </div>
-                            <p className="text-sm text-gray-400 mb-3">{showcaseData.showcase?.redisJSON?.example}</p>
-                            <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
+                            <p className="text-sm text-green-400/80 mb-3">{showcaseData.showcase?.redisJSON?.example}</p>
+                            <div className="bg-black/60 rounded-lg p-3 mb-3 border border-green-500/20">
                                 <code className="text-xs text-green-400">
-                                    Keys: {showcaseData.summary?.activeKeys?.json || 0} |
-                                    Pattern: {showcaseData.showcase?.redisJSON?.keyPattern}
+                                    KEYS: {showcaseData.summary?.activeKeys?.json || 0} |
+                                    PATTERN: {showcaseData.showcase?.redisJSON?.keyPattern}
                                 </code>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {showcaseData.showcase?.redisJSON?.operations?.map((op, i) => (
-                                    <span key={i} className="px-2 py-1 bg-yellow-600/20 text-yellow-300 text-xs rounded">
-                                        {op}
+                                    <span key={i} className="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded border border-green-500/30">
+                                        {op.toUpperCase()}
                                     </span>
                                 ))}
                             </div>
                         </div>
 
                         {/* Redis Streams */}
-                        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                <h3 className="text-xl font-semibold text-green-300">Redis Streams</h3>
+                                <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                                <h3 className="text-xl font-bold text-green-300">REDIS STREAMS</h3>
                                 <Icon name="git-branch" className="w-5 h-5 text-green-400" />
                             </div>
-                            <p className="text-sm text-gray-400 mb-3">{showcaseData.showcase?.redisStreams?.example}</p>
-                            <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
+                            <p className="text-sm text-green-400/80 mb-3">{showcaseData.showcase?.redisStreams?.example}</p>
+                            <div className="bg-black/60 rounded-lg p-3 mb-3 border border-green-500/20">
                                 <code className="text-xs text-green-400">
-                                    Keys: {showcaseData.summary?.activeKeys?.streams || 0} |
-                                    Pattern: {showcaseData.showcase?.redisStreams?.keyPattern}
+                                    KEYS: {showcaseData.summary?.activeKeys?.streams || 0} |
+                                    PATTERN: {showcaseData.showcase?.redisStreams?.keyPattern}
                                 </code>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {showcaseData.showcase?.redisStreams?.operations?.map((op, i) => (
-                                    <span key={i} className="px-2 py-1 bg-green-600/20 text-green-300 text-xs rounded">
-                                        {op}
+                                    <span key={i} className="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded border border-green-500/30">
+                                        {op.toUpperCase()}
                                     </span>
                                 ))}
                             </div>
                         </div>
 
                         {/* RedisTimeSeries */}
-                        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                                <h3 className="text-xl font-semibold text-purple-300">RedisTimeSeries</h3>
-                                <Icon name="trending-up" className="w-5 h-5 text-purple-400" />
+                                <div className="w-3 h-3 bg-green-300 rounded-full"></div>
+                                <h3 className="text-xl font-bold text-green-300">REDISTIMESERIES</h3>
+                                <Icon name="trending-up" className="w-5 h-5 text-green-400" />
                             </div>
-                            <p className="text-sm text-gray-400 mb-3">{showcaseData.showcase?.redisTimeSeries?.example}</p>
-                            <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
+                            <p className="text-sm text-green-400/80 mb-3">{showcaseData.showcase?.redisTimeSeries?.example}</p>
+                            <div className="bg-black/60 rounded-lg p-3 mb-3 border border-green-500/20">
                                 <code className="text-xs text-green-400">
-                                    Keys: {showcaseData.summary?.activeKeys?.timeseries || 0} |
-                                    Pattern: {showcaseData.showcase?.redisTimeSeries?.keyPattern}
+                                    KEYS: {showcaseData.summary?.activeKeys?.timeseries || 0} |
+                                    PATTERN: {showcaseData.showcase?.redisTimeSeries?.keyPattern}
                                 </code>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {showcaseData.showcase?.redisTimeSeries?.operations?.map((op, i) => (
-                                    <span key={i} className="px-2 py-1 bg-purple-600/20 text-purple-300 text-xs rounded">
-                                        {op}
+                                    <span key={i} className="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded border border-green-500/30">
+                                        {op.toUpperCase()}
                                     </span>
                                 ))}
                             </div>
                         </div>
 
                         {/* Redis Vector */}
-                        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                <h3 className="text-xl font-semibold text-blue-300">Redis Vector Search</h3>
-                                <Icon name="search" className="w-5 h-5 text-blue-400" />
+                                <div className="w-3 h-3 bg-green-600 rounded-full"></div>
+                                <h3 className="text-xl font-bold text-green-300">REDIS VECTOR SEARCH</h3>
+                                <Icon name="search" className="w-5 h-5 text-green-400" />
                             </div>
-                            <p className="text-sm text-gray-400 mb-3">{showcaseData.showcase?.redisVector?.example}</p>
-                            <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
+                            <p className="text-sm text-green-400/80 mb-3">{showcaseData.showcase?.redisVector?.example}</p>
+                            <div className="bg-black/60 rounded-lg p-3 mb-3 border border-green-500/20">
                                 <code className="text-xs text-green-400">
-                                    Keys: {showcaseData.summary?.activeKeys?.vector || 0} |
-                                    Pattern: {showcaseData.showcase?.redisVector?.keyPattern}
+                                    KEYS: {showcaseData.summary?.activeKeys?.vector || 0} |
+                                    PATTERN: {showcaseData.showcase?.redisVector?.keyPattern}
                                 </code>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {showcaseData.showcase?.redisVector?.operations?.map((op, i) => (
-                                    <span key={i} className="px-2 py-1 bg-blue-600/20 text-blue-300 text-xs rounded">
-                                        {op}
+                                    <span key={i} className="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded border border-green-500/30">
+                                        {op.toUpperCase()}
                                     </span>
                                 ))}
                             </div>
@@ -260,51 +252,51 @@ export default function SystemShowcaseDashboard() {
             {/* Performance Optimization Dashboard */}
             {optimizationMetrics && (
                 <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                        <Icon name="gauge" className="w-6 h-6 text-orange-400" />
-                        Real-Time Performance Optimization
+                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-green-400 tracking-wide">
+                        <Icon name="gauge" className="w-6 h-6 text-green-400" />
+                        REAL-TIME PERFORMANCE OPTIMIZATION
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                             <div className="flex items-center gap-3 mb-3">
-                                <Icon name="cpu" className="w-5 h-5 text-orange-400" />
-                                <span className="font-semibold">Optimization Status</span>
+                                <Icon name="cpu" className="w-5 h-5 text-green-400" />
+                                <span className="font-bold text-green-300">OPTIMIZATION STATUS</span>
                             </div>
-                            <div className="text-2xl font-bold text-orange-300 mb-2">
-                                {optimizationMetrics.optimization?.status || 'Offline'}
+                            <div className="text-2xl font-bold text-green-200 mb-2">
+                                {(optimizationMetrics.optimization?.status || 'OFFLINE').toUpperCase()}
                             </div>
-                            <div className="text-sm text-gray-400">
-                                {optimizationMetrics.optimization?.total_optimizations || 0} total optimizations
+                            <div className="text-sm text-green-400/80">
+                                {optimizationMetrics.optimization?.total_optimizations || 0} TOTAL OPTIMIZATIONS
                             </div>
                         </div>
 
-                        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                             <div className="flex items-center gap-3 mb-3">
                                 <Icon name="trending-up" className="w-5 h-5 text-green-400" />
-                                <span className="font-semibold">Avg Improvement</span>
+                                <span className="font-bold text-green-300">AVG IMPROVEMENT</span>
                             </div>
-                            <div className="text-2xl font-bold text-green-300 mb-2">
+                            <div className="text-2xl font-bold text-green-200 mb-2">
                                 {(optimizationMetrics.optimization?.average_improvement || 0).toFixed(1)}%
                             </div>
-                            <div className="text-sm text-gray-400">
-                                Performance gains per cycle
+                            <div className="text-sm text-green-400/80">
+                                PERFORMANCE GAINS PER CYCLE
                             </div>
                         </div>
 
-                        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                        <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                             <div className="flex items-center gap-3 mb-3">
-                                <Icon name="clock" className="w-5 h-5 text-blue-400" />
-                                <span className="font-semibold">Last Optimization</span>
+                                <Icon name="clock" className="w-5 h-5 text-green-400" />
+                                <span className="font-bold text-green-300">LAST OPTIMIZATION</span>
                             </div>
-                            <div className="text-lg font-bold text-blue-300 mb-2">
+                            <div className="text-lg font-bold text-green-200 mb-2">
                                 {optimizationMetrics.optimization?.last_optimization ?
                                     new Date(optimizationMetrics.optimization.last_optimization).toLocaleTimeString() :
-                                    'Pending'
+                                    'PENDING'
                                 }
                             </div>
-                            <div className="text-sm text-gray-400">
-                                Continuous monitoring active
+                            <div className="text-sm text-green-400/80">
+                                CONTINUOUS MONITORING ACTIVE
                             </div>
                         </div>
                     </div>
@@ -313,81 +305,81 @@ export default function SystemShowcaseDashboard() {
 
             {/* Interactive Demo Scenarios */}
             <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-green-400 tracking-wide">
                     <Icon name="play-circle" className="w-6 h-6 text-green-400" />
-                    Interactive Contest Demonstrations
+                    INTERACTIVE CONTEST DEMONSTRATIONS
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {[
                         {
                             id: 'multi-modal-showcase',
-                            title: 'Multi-Modal Showcase',
-                            description: 'Demonstrate all 4 Redis modules in sequence',
+                            title: 'MULTI-MODAL SHOWCASE',
+                            description: 'DEMONSTRATE ALL 4 REDIS MODULES IN SEQUENCE',
                             icon: 'layers',
-                            color: 'blue'
+                            color: 'green'
                         },
                         {
                             id: 'performance-stress-test',
-                            title: 'Performance Stress Test',
-                            description: 'High-throughput operations benchmark',
+                            title: 'PERFORMANCE STRESS TEST',
+                            description: 'HIGH-THROUGHPUT OPERATIONS BENCHMARK',
                             icon: 'zap',
-                            color: 'yellow'
+                            color: 'green'
                         },
                         {
                             id: 'concurrent-debates',
-                            title: 'Concurrent Debates',
-                            description: 'Multiple simultaneous AI debates',
+                            title: 'CONCURRENT DEBATES',
+                            description: 'MULTIPLE SIMULTANEOUS AI DEBATES',
                             icon: 'users',
                             color: 'green'
                         },
                         {
                             id: 'cache-efficiency',
-                            title: 'Cache Efficiency',
-                            description: 'Semantic cache hit rate optimization',
+                            title: 'CACHE EFFICIENCY',
+                            description: 'SEMANTIC CACHE HIT RATE OPTIMIZATION',
                             icon: 'database',
-                            color: 'purple'
+                            color: 'green'
                         }
                     ].map((demo) => (
-                        <div key={demo.id} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                        <div key={demo.id} className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                             <div className="flex items-center gap-3 mb-3">
                                 <Icon
                                     name={demo.icon}
-                                    className={`w-5 h-5 text-${demo.color}-400`}
+                                    className="w-5 h-5 text-green-400"
                                 />
-                                <span className="font-semibold">{demo.title}</span>
+                                <span className="font-bold text-green-300">{demo.title}</span>
                             </div>
-                            <p className="text-sm text-gray-400 mb-4">{demo.description}</p>
+                            <p className="text-sm text-green-400/80 mb-4">{demo.description}</p>
 
                             <button
                                 onClick={() => runDemo(demo.id)}
                                 disabled={demoRunning}
-                                className={`w-full px-4 py-2 rounded-lg font-medium transition-all ${demoRunning && activeDemo === demo.id
-                                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                    : `bg-${demo.color}-600 hover:bg-${demo.color}-700 text-white`
+                                className={`w-full px-4 py-2 rounded-lg font-bold transition-all border font-mono ${demoRunning && activeDemo === demo.id
+                                    ? 'bg-green-800/50 text-green-600 cursor-not-allowed border-green-800/50'
+                                    : 'bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30 hover:border-green-500/50'
                                     }`}
                             >
                                 {demoRunning && activeDemo === demo.id ? (
-                                    <span className="flex items-center gap-2">
+                                    <span className="flex items-center gap-2 justify-center">
                                         <Icon name="loader-2" className="w-4 h-4 animate-spin" />
-                                        Running...
+                                        RUNNING...
                                     </span>
                                 ) : (
-                                    'Run Demo'
+                                    'RUN DEMO'
                                 )}
                             </button>
 
                             {/* Demo Results */}
                             {demoResults[demo.id] && (
-                                <div className="mt-4 p-3 bg-gray-900/50 rounded-lg">
-                                    <div className="text-xs text-gray-400 mb-2">Latest Result:</div>
+                                <div className="mt-4 p-3 bg-black/60 rounded-lg border border-green-500/20">
+                                    <div className="text-xs text-green-400/80 mb-2 font-mono">LATEST RESULT:</div>
                                     {demoResults[demo.id].success ? (
-                                        <div className="text-xs text-green-400">
-                                            ✅ Success - {demoResults[demo.id].result?.metrics?.totalOperations || 0} operations
+                                        <div className="text-xs text-green-400 font-mono">
+                                            ✅ SUCCESS - {demoResults[demo.id].result?.metrics?.totalOperations || 0} OPERATIONS
                                         </div>
                                     ) : (
-                                        <div className="text-xs text-red-400">
-                                            ❌ Error: {demoResults[demo.id].error}
+                                        <div className="text-xs text-green-300 font-mono">
+                                            ❌ ERROR: {demoResults[demo.id].error}
                                         </div>
                                     )}
                                 </div>
@@ -399,20 +391,20 @@ export default function SystemShowcaseDashboard() {
 
             {/* Real-time Activity Feed */}
             <div>
-                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                    <Icon name="activity" className="w-6 h-6 text-purple-400" />
-                    Live System Activity
+                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-green-400 tracking-wide">
+                    <Icon name="activity" className="w-6 h-6 text-green-400" />
+                    LIVE SYSTEM ACTIVITY
                 </h2>
 
-                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                     <div className="space-y-3">
                         {showcaseData && (
                             <div className="flex items-center gap-3 text-sm">
                                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                <span className="text-gray-300">
-                                    Redis modules active: {showcaseData.summary?.totalModules || 0}/4
+                                <span className="text-green-300 font-mono">
+                                    REDIS MODULES ACTIVE: {showcaseData.summary?.totalModules || 0}/4
                                 </span>
-                                <span className="text-gray-500">
+                                <span className="text-green-500/60 font-mono">
                                     {new Date().toLocaleTimeString()}
                                 </span>
                             </div>
@@ -420,11 +412,11 @@ export default function SystemShowcaseDashboard() {
 
                         {contestMetrics && (
                             <div className="flex items-center gap-3 text-sm">
-                                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                                <span className="text-gray-300">
-                                    Processing {contestMetrics.contestMetrics?.debateStatistics?.activeDebates || 0} concurrent debates
+                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                <span className="text-green-300 font-mono">
+                                    PROCESSING {contestMetrics.contestMetrics?.debateStatistics?.activeDebates || 0} CONCURRENT DEBATES
                                 </span>
-                                <span className="text-gray-500">
+                                <span className="text-green-500/60 font-mono">
                                     {new Date().toLocaleTimeString()}
                                 </span>
                             </div>
@@ -432,22 +424,22 @@ export default function SystemShowcaseDashboard() {
 
                         {optimizationMetrics?.optimization?.status === 'active' && (
                             <div className="flex items-center gap-3 text-sm">
-                                <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-                                <span className="text-gray-300">
-                                    Performance optimizer running ({optimizationMetrics.optimization.total_optimizations} cycles completed)
+                                <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
+                                <span className="text-green-300 font-mono">
+                                    PERFORMANCE OPTIMIZER RUNNING ({optimizationMetrics.optimization.total_optimizations} CYCLES COMPLETED)
                                 </span>
-                                <span className="text-gray-500">
+                                <span className="text-green-500/60 font-mono">
                                     {new Date().toLocaleTimeString()}
                                 </span>
                             </div>
                         )}
 
                         <div className="flex items-center gap-3 text-sm">
-                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-                            <span className="text-gray-300">
-                                Semantic cache hit rate: {contestMetrics?.contestMetrics?.semanticCache?.hit_ratio || 0}%
+                            <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+                            <span className="text-green-300 font-mono">
+                                SEMANTIC CACHE HIT RATE: {contestMetrics?.contestMetrics?.semanticCache?.hit_ratio || 0}%
                             </span>
-                            <span className="text-gray-500">
+                            <span className="text-green-500/60 font-mono">
                                 {new Date().toLocaleTimeString()}
                             </span>
                         </div>

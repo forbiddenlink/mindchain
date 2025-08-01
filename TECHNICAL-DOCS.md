@@ -53,7 +53,7 @@ mindchain/
 ### **Core Backend Files**
 ```
 ├── 🖥️  server.js                   # Main Express + WebSocket server with centralized message storage
-├── 🤖 generateMessage.js          # AI message generation with semantic caching (+ storage-free versions)
+├── 🤖 generateMessage.js          # AI message generation with agent-specific semantic caching (+ storage-free versions)
 ├── 🧠 enhancedAI.js               # Enhanced AI with emotional states (+ storage-free versions)
 ├── 🧠 intelligentAgents.js        # Redis-powered intelligent agents with coalition analysis
 ├── ⚡ redisOptimizer.js           # Real-time Redis performance optimization engine
@@ -138,19 +138,30 @@ generateEnhancedMessageOnly(agentId, debateId, topic)
   └── Return message without storing to Redis
 ```
 
-### **Centralized Server Storage**
-The server (`runDebateRounds` function) handles all Redis stream storage:
+### **Centralized Server Storage & Agent Alternation**
+The server (`runDebateRounds` function) handles all Redis stream storage with enhanced agent alternation control:
 
 ```javascript
-// Generate message (no storage)
+// Enhanced agent alternation enforcement
+const lastSpeakerPerDebate = new Map(); // Track last speaker per debate
+
+// Generate message (no storage) with speaker validation
 let message;
+if (lastSpeakerPerDebate.get(debateId) === agentId) {
+    // Skip if same agent spoke last to prevent double responses
+    return;
+}
+
 try {
     message = await generateEnhancedMessageOnly(agentId, debateId, topic);
 } catch (enhancedError) {
     message = await generateMessageOnly(agentId, debateId, topic);
 }
 
-// Centralized storage (exactly once)
+// Update last speaker tracking
+lastSpeakerPerDebate.set(debateId, agentId);
+
+// Centralized storage (exactly once) with 2-second cooldown
 await client.xAdd(`debate:${debateId}:messages`, '*', {
     agent_id: agentId,
     message,
@@ -160,13 +171,17 @@ await client.xAdd(`debate:${debateId}:agent:${agentId}:memory`, '*', {
     type: 'statement',
     content: message,
 });
+
+// Enhanced timing control (2-second cooldown between messages)
+setTimeout(() => runDebateRounds(debateId, agents, topic), 2000);
 ```
 
 ### **Architecture Benefits**
-- **Reliability**: Eliminates duplicate messages, clean fallback logic
-- **Performance**: Reduced Redis operations, better error handling
-- **Maintainability**: Separation of concerns, easier testing
-- **Enterprise Quality**: Atomic operations, audit trail, scalability
+- **Reliability**: Eliminates duplicate messages, clean fallback logic, agent alternation enforcement
+- **Performance**: Reduced Redis operations, better error handling, controlled message timing
+- **Agent Control**: Last speaker tracking prevents double responses, 2-second cooldowns for natural flow
+- **Maintainability**: Separation of concerns, easier testing, centralized debate orchestration
+- **Enterprise Quality**: Atomic operations, audit trail, scalability, enhanced debate reliability
 
 ---
 
@@ -177,7 +192,7 @@ The semantic caching system is MindChain's **biggest Redis showcase feature**, d
 
 ### **Core Architecture**
 ```javascript
-// Check for similar cached prompts (85% similarity threshold)
+// Check for similar cached prompts (95% similarity threshold)
 const cached = await getCachedResponse(prompt);
 if (cached) {
     return cached.response; // Use cached response
@@ -199,8 +214,9 @@ Index: cache-index
 
 ### **Performance Metrics**
 - **Hit Rate**: 66.7% (actively working in production)
-- **Similarity Threshold**: 85% (configurable)
+- **Similarity Threshold**: 95% (enhanced precision for agent-specific responses)
 - **Cache TTL**: 24 hours
+- **Agent-Specific Caching**: Prevents cross-agent response sharing
 - **Cost Savings**: Real-time tracking of OpenAI API cost reduction
 
 ### **Cache Metrics Structure (RedisJSON)**
@@ -507,7 +523,7 @@ node -e "import('redis').then(({createClient})=>{const c=createClient({url:proce
 - Historical trend analysis
 
 ### **Redis Vector Search** 🟠
-- Semantic similarity caching with 85% threshold
+- Semantic similarity caching with 95% threshold (enhanced precision)
 - AI fact-checking with embedding search
 - Knowledge base expansion and verification
 - Real-time claim validation during debates

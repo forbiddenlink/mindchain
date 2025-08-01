@@ -72,11 +72,11 @@ const TopicSelector = ({ onTopicChange, currentTopic, disabled }) => {
     return (
         <div className="space-y-4">
             <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-3 flex items-center space-x-2">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <label className="block text-sm font-bold text-green-300 mb-3 flex items-center space-x-2 font-mono tracking-wide">
+                    <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                     </svg>
-                    <span>Select Debate Topic</span>
+                    <span>SELECT DEBATE TOPIC</span>
                 </label>
 
                 {/* Predefined Topics */}
@@ -86,46 +86,50 @@ const TopicSelector = ({ onTopicChange, currentTopic, disabled }) => {
                             key={topic.id}
                             onClick={() => handleTopicSelect(topic)}
                             disabled={disabled}
-                            className={`p-4 rounded-xl border text-left transition-all duration-200 transform hover:scale-[1.02] ${currentTopic === topic.name
-                                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 border-blue-400 text-white shadow-lg'
-                                    : 'bg-slate-700/50 border-slate-600 text-slate-300 hover:bg-slate-600/50 hover:border-blue-500/50'
+                            className={`p-4 rounded-xl border text-left transition-all duration-200 transform hover:scale-[1.02] shadow-lg ${currentTopic === topic.name
+                                    ? 'bg-gradient-to-r from-green-600/80 to-green-500/80 border-green-400 text-black shadow-green-500/30'
+                                    : 'bg-black/80 border-green-500/30 text-green-300 hover:bg-green-900/20 hover:border-green-400'
                                 } ${disabled ? 'opacity-50 cursor-not-allowed transform-none' : ''}`}
                         >
                             <div className="flex items-center space-x-3 mb-2">
-                                <Icon name={topic.icon} size={32} className="text-blue-400" />
-                                <span className="font-semibold text-sm">{topic.name}</span>
+                                <Icon name={topic.icon} size={32} className={currentTopic === topic.name ? "text-black" : "text-green-400"} />
+                                <span className={`font-bold text-sm font-mono tracking-wide ${currentTopic === topic.name ? "text-black" : "text-green-300"}`}>
+                                    {topic.name.toUpperCase()}
+                                </span>
                             </div>
-                            <div className="text-xs opacity-80">{topic.description}</div>
+                            <div className={`text-xs font-mono ${currentTopic === topic.name ? "text-black/80" : "text-green-200/80"}`}>
+                                {topic.description}
+                            </div>
                         </button>
                     ))}
                 </div>
 
                 {/* Custom Topic */}
-                <div className="border-t border-slate-600 pt-4">
+                <div className="border-t border-green-500/30 pt-4">
                     {!showCustom ? (
                         <button
                             onClick={() => setShowCustom(true)}
                             disabled={disabled}
-                            className="w-full p-4 bg-slate-700/30 border-2 border-dashed border-slate-600 rounded-xl text-slate-300 text-left hover:bg-slate-600/30 hover:border-blue-500/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full p-4 bg-black/60 border-2 border-dashed border-green-500/30 rounded-xl text-green-300 text-left hover:bg-green-900/20 hover:border-green-400 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                         >
                             <div className="flex items-center space-x-3 mb-2">
-                                <Icon name="enhance" size={20} className="text-purple-400" />
-                                <span className="font-semibold text-sm">Custom Topic</span>
+                                <Icon name="enhance" size={20} className="text-green-400" />
+                                <span className="font-bold text-sm font-mono tracking-wide">CUSTOM TOPIC</span>
                             </div>
-                            <div className="text-xs opacity-75">Enter your own debate topic for AI agents to discuss</div>
+                            <div className="text-xs text-green-200/80 font-mono">ENTER YOUR OWN DEBATE TOPIC FOR AI AGENTS TO DISCUSS</div>
                         </button>
                     ) : (
                         <div className="space-y-3">
                             <div className="flex items-center space-x-3 mb-3">
-                                <Icon name="enhance" size={20} className="text-purple-400" />
-                                <span className="font-semibold text-white">Create Custom Topic</span>
+                                <Icon name="enhance" size={20} className="text-green-400" />
+                                <span className="font-bold text-green-300 font-mono tracking-wide">CREATE CUSTOM TOPIC</span>
                             </div>
                             <input
                                 type="text"
                                 value={customTopic}
                                 onChange={(e) => setCustomTopic(e.target.value)}
                                 placeholder="e.g., Cryptocurrency regulation and financial innovation..."
-                                className="w-full bg-slate-700 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full bg-black/80 border border-green-500/30 rounded-xl px-4 py-3 text-green-300 placeholder-green-400/50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all font-mono"
                                 onKeyPress={(e) => e.key === 'Enter' && handleCustomSubmit()}
                                 autoFocus
                             />
@@ -133,19 +137,19 @@ const TopicSelector = ({ onTopicChange, currentTopic, disabled }) => {
                                 <button
                                     onClick={handleCustomSubmit}
                                     disabled={!customTopic.trim()}
-                                    className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-slate-600 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+                                    className="flex-1 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-black font-bold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg shadow-green-500/30 font-mono tracking-wide"
                                 >
                                     <Icon name="play" size={16} className="mr-2" />
-                                    Start Custom Debate
+                                    START CUSTOM DEBATE
                                 </button>
                                 <button
                                     onClick={() => {
                                         setShowCustom(false);
                                         setCustomTopic('');
                                     }}
-                                    className="px-6 bg-slate-600 hover:bg-slate-500 text-white font-medium py-3 rounded-xl transition-colors"
+                                    className="px-6 bg-black/80 border border-green-500/30 hover:bg-green-900/20 text-green-300 font-bold py-3 rounded-xl transition-colors font-mono tracking-wide"
                                 >
-                                    Cancel
+                                    CANCEL
                                 </button>
                             </div>
                         </div>

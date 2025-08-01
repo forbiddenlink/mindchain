@@ -9,7 +9,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Cache configuration
 const CACHE_CONFIG = {
-    SIMILARITY_THRESHOLD: 0.85, // 85% similarity threshold
+    SIMILARITY_THRESHOLD: 0.95, // Increased from 85% to 95% to reduce aggressive caching
     EMBEDDING_MODEL: 'text-embedding-ada-002',
     CACHE_TTL: 86400, // 24 hours in seconds
     MAX_CACHE_ENTRIES: 10000,
