@@ -11,6 +11,7 @@ import KeyMomentsPanel from './components/KeyMomentsPanel';
 import BusinessValueDashboard from './components/BusinessValueDashboard';
 import ContestShowcaseDashboard from './components/ContestShowcaseDashboard';
 import Icon from './components/Icon';
+import { ViewModeSelector, ToastProvider, useNotification } from './components/ui';
 import useWebSocket from './hooks/useWebSocket';
 import api from './services/api';
 
@@ -326,7 +327,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col">
+    <ToastProvider>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col">
       <Header connectionStatus={connectionStatus} backendHealth={connectionHealth} />
 
       {/* Enhanced Controls Bar - Improved Visual Hierarchy */}
@@ -390,77 +392,12 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Right: Enhanced View Mode Toggle */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-400 font-medium">View Mode:</span>
-                <div className="flex items-center gap-1 p-1 bg-slate-800/60 rounded-xl border border-slate-600/40 shadow-lg">
-                  <button
-                    onClick={() => setViewMode('standard')}
-                    className={`
-                      px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2
-                      ${viewMode === 'standard'
-                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg scale-105'
-                        : 'bg-transparent text-gray-300 hover:bg-gray-600/50 hover:text-white'
-                      }
-                    `}
-                  >
-                    <Icon name="target" size={16} />
-                    Standard
-                  </button>
-                  <button
-                    onClick={() => setViewMode('multi-debate')}
-                    className={`
-                      px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2
-                      ${viewMode === 'multi-debate'
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
-                        : 'bg-transparent text-gray-300 hover:bg-gray-600/50 hover:text-white'
-                      }
-                    `}
-                  >
-                    <Icon name="multi-debate" size={16} />
-                    Multi-Debate
-                  </button>
-                  <button
-                    onClick={() => setViewMode('analytics')}
-                    className={`
-                      px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2
-                      ${viewMode === 'analytics'
-                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg scale-105'
-                        : 'bg-transparent text-gray-300 hover:bg-gray-600/50 hover:text-white'
-                      }
-                    `}
-                  >
-                    <Icon name="analytics" size={16} />
-                    Analytics
-                  </button>
-                  <button
-                    onClick={() => setViewMode('business')}
-                    className={`
-                      px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2
-                      ${viewMode === 'business'
-                        ? 'bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-lg scale-105'
-                        : 'bg-transparent text-gray-300 hover:bg-gray-600/50 hover:text-white'
-                      }
-                    `}
-                  >
-                    <Icon name="brain" size={16} />
-                    Intelligence
-                  </button>
-                  <button
-                    onClick={() => setViewMode('showcase')}
-                    className={`
-                      px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2
-                      ${viewMode === 'showcase'
-                        ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white shadow-lg scale-105'
-                        : 'bg-transparent text-gray-300 hover:bg-gray-600/50 hover:text-white'
-                      }
-                    `}
-                  >
-                    <Icon name="award" size={16} />
-                    Showcase
-                  </button>
-                </div>
-              </div>
+              {/* Right: Professional View Mode Selector */}
+              <ViewModeSelector 
+                currentMode={viewMode}
+                onModeChange={setViewMode}
+                className="ml-auto"
+              />
             </div>
           </div>
         </div>
@@ -612,5 +549,6 @@ export default function App() {
         )}
       </main>
     </div>
+    </ToastProvider>
   );
 }

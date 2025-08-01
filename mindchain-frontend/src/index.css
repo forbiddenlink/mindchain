@@ -1,3 +1,6 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,34 +10,265 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #0f0f0f 50%, #1a1a1a 75%, #0a0a0a 100%);
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
 }
 
 #root {
     min-height: 100vh;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #0f0f0f 50%, #1a1a1a 75%, #0a0a0a 100%);
+    background-attachment: fixed;
+    position: relative;
+}
+
+/* Enhanced Background Pattern */
+#root::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 /* Custom scrollbar for webkit browsers */
 .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-    background: #1e293b;
-    border-radius: 3px;
+    background: rgba(30, 41, 59, 0.3);
+    border-radius: 4px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: #475569;
-    border-radius: 3px;
+    background: linear-gradient(180deg, #475569 0%, #64748b 100%);
+    border-radius: 4px;
+    border: 1px solid rgba(71, 85, 105, 0.2);
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
+    background: linear-gradient(180deg, #64748b 0%, #94a3b8 100%);
+}
+
+.scrollbar-thin::-webkit-scrollbar-corner {
+    background: rgba(30, 41, 59, 0.3);
+}
+
+/* Enhanced scrollbar for Firefox */
+.scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #475569 rgba(30, 41, 59, 0.3);
+}
+
+/* Professional component styles */
+@layer components {
+    .glass-card {
+        @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/10 shadow-xl;
+    }
+    
+    .glass-panel {
+        @apply bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 shadow-2xl;
+    }
+    
+    .professional-button {
+        @apply inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+    
+    .button-primary {
+        @apply professional-button bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98];
+    }
+    
+    .button-secondary {
+        @apply professional-button bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30 hover:scale-[1.02] active:scale-[0.98];
+    }
+    
+    .button-ghost {
+        @apply professional-button hover:bg-white/10 text-white hover:scale-[1.02] active:scale-[0.98];
+    }
+    
+    .input-professional {
+        @apply w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:bg-white/15;
+    }
+    
+    .card-elevated {
+        @apply glass-panel rounded-xl shadow-elevated hover:shadow-glow transition-all duration-300;
+    }
+    
+    .text-gradient {
+        @apply bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent;
+    }
+    
+    .text-gradient-success {
+        @apply bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent;
+    }
+    
+    .text-gradient-warning {
+        @apply bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent;
+    }
+    
+    .text-gradient-error {
+        @apply bg-gradient-to-r from-red-400 to-pink-400 bg-clip-text text-transparent;
+    }
+    
+    .status-indicator {
+        @apply w-3 h-3 rounded-full relative;
+    }
+    
+    .status-indicator.online {
+        @apply bg-emerald-400 shadow-glow;
+    }
+    
+    .status-indicator.offline {
+        @apply bg-red-400;
+    }
+    
+    .status-indicator.warning {
+        @apply bg-yellow-400;
+    }
+    
+    .status-indicator.loading {
+        @apply bg-blue-400 animate-pulse;
+    }
+    
+    .shimmer-effect {
+        @apply relative overflow-hidden;
+    }
+    
+    .shimmer-effect::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 2s infinite;
+    }
+}
+
+/* Loading states */
+@layer utilities {
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    .animate-slide-up {
+        animation: slideUp 0.4s ease-out;
+    }
+    
+    .animate-scale-in {
+        animation: scaleIn 0.2s ease-out;
+    }
+    
+    .animate-bounce-subtle {
+        animation: bounceSubtle 0.6s ease-in-out;
+    }
+}
+
+/* Professional spacing utilities */
+.section-padding {
+    @apply px-6 py-8 lg:px-8 lg:py-12;
+}
+
+.container-professional {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Enhanced focus states for accessibility */
+.focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900;
+}
+
+/* Professional animation for interactive elements */
+.interactive-scale {
+    @apply transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98];
+}
+
+.interactive-glow {
+    @apply transition-all duration-300 hover:shadow-glow;
+}
+
+/* Dark mode optimizations */
+.dark-optimized {
+    @apply bg-slate-900 text-white;
+}
+
+.dark-surface {
+    @apply bg-slate-800/95 border-slate-700/50;
+}
+
+.dark-muted {
+    @apply text-slate-400;
+}
+
+.dark-accent {
+    @apply text-slate-300;
+}
+
+/* Typography scale */
+.heading-hero {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
+}
+
+.heading-section {
+    @apply text-2xl md:text-3xl font-semibold leading-tight;
+}
+
+.heading-card {
+    @apply text-lg md:text-xl font-medium leading-tight;
+}
+
+.text-body {
+    @apply text-base leading-relaxed;
+}
+
+.text-caption {
+    @apply text-sm text-slate-400 leading-relaxed;
+}
+
+/* Professional layouts */
+.layout-sidebar {
+    @apply w-64 lg:w-72 xl:w-80;
+}
+
+.layout-main {
+    @apply flex-1 min-w-0;
+}
+
+.layout-header {
+    @apply h-16 lg:h-20;
+}
+
+/* Enhanced visual feedback */
+.loading-skeleton {
+    @apply bg-slate-700/50 animate-pulse rounded;
+}
+
+.success-highlight {
+    @apply bg-emerald-500/10 border-emerald-500/20 text-emerald-400;
+}
+
+.warning-highlight {
+    @apply bg-yellow-500/10 border-yellow-500/20 text-yellow-400;
+}
+
+.error-highlight {
+    @apply bg-red-500/10 border-red-500/20 text-red-400;
+}
+
+.info-highlight {
+    @apply bg-blue-500/10 border-blue-500/20 text-blue-400;
 }

@@ -15,60 +15,104 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
         }
     };
 
+    const getStatusDot = (status) => {
+        switch (status) {
+            case 'Connected':
+            case 'healthy':
+                return 'bg-emerald-400 shadow-glow animate-pulse';
+            case 'Disconnected':
+            case 'error':
+                return 'bg-red-400';
+            default:
+                return 'bg-amber-400 animate-pulse';
+        }
+    };
+
     return (
-        <header className="bg-slate-800/95 backdrop-blur-sm border-b border-slate-700/50 shadow-xl">
-            <div className="container mx-auto px-6 py-4">
-                <div className="flex items-center justify-between">
-                    {/* Logo and Title */}
+        <header className="glass-panel border-b border-slate-700/50 shadow-elevated sticky top-0 z-50">
+            <div className="container-professional">
+                <div className="flex items-center justify-between h-16 lg:h-20">
+                    {/* Enhanced Logo and Title */}
                     <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <Icon name="brain" size={24} className="text-white" />
+                        <div className="relative">
+                            <div className="w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-blue-500 via-purple-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-glow">
+                                <Icon name="brain" size={24} className="text-white" />
+                            </div>
+                            {/* Subtle glow effect */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-600 to-blue-700 rounded-xl opacity-20 blur-lg -z-10"></div>
                         </div>
-                        <div>
-                            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl lg:text-3xl font-bold text-gradient font-display">
                                 MindChain
                             </h1>
-                            <p className="text-slate-400 text-sm font-medium">AI Debate Engine</p>
+                            <p className="text-slate-400 text-sm lg:text-base font-medium">
+                                Redis AI Challenge 2025
+                            </p>
                         </div>
                     </div>
 
-                    {/* Status Indicators */}
+                    {/* Enhanced Status Indicators */}
                     <div className="flex items-center space-x-6">
-                        {/* Connection Status */}
-                        <div className="flex items-center space-x-4">
-                            <div className="text-right">
-                                <div className="flex items-center space-x-2 mb-1">
-                                    <span className="text-slate-400 text-sm">WebSocket</span>
-                                    <div className={`w-2 h-2 rounded-full ${connectionStatus === 'Connected' ? 'bg-emerald-400' : 'bg-red-400'
-                                        }`}></div>
-                                    <span className={`text-sm font-medium ${getStatusColor(connectionStatus)}`}>
-                                        {connectionStatus}
-                                    </span>
+                        {/* Connection Status Grid */}
+                        <div className="hidden sm:flex items-center space-x-6">
+                            {/* WebSocket Status */}
+                            <div className="flex items-center space-x-3">
+                                <div className="text-right">
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-slate-400 text-sm font-medium">WebSocket</span>
+                                        <div className={`status-indicator ${connectionStatus === 'Connected' ? 'online' : 'offline'}`}></div>
+                                    </div>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                    <span className="text-slate-400 text-sm">Backend</span>
-                                    <div className={`w-2 h-2 rounded-full ${backendHealth === 'healthy' ? 'bg-emerald-400' : 'bg-red-400'
-                                        }`}></div>
-                                    <span className={`text-sm font-medium ${getStatusColor(backendHealth)}`}>
-                                        {backendHealth}
-                                    </span>
+                                <span className={`text-sm font-semibold ${getStatusColor(connectionStatus)}`}>
+                                    {connectionStatus}
+                                </span>
+                            </div>
+
+                            {/* Backend Status */}
+                            <div className="flex items-center space-x-3">
+                                <div className="text-right">
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-slate-400 text-sm font-medium">Backend</span>
+                                        <div className={`status-indicator ${backendHealth === 'healthy' ? 'online' : 'offline'}`}></div>
+                                    </div>
                                 </div>
+                                <span className={`text-sm font-semibold ${getStatusColor(backendHealth)}`}>
+                                    {backendHealth === 'healthy' ? 'Healthy' : 'Error'}
+                                </span>
                             </div>
                         </div>
 
-                        {/* Live Indicator */}
-                        <div className="flex items-center space-x-2 px-3 py-2 bg-slate-700/50 rounded-lg border border-slate-600/50">
-                            <div className={`w-3 h-3 rounded-full ${connectionStatus === 'Connected' && backendHealth === 'healthy'
-                                ? 'bg-emerald-400 animate-pulse'
-                                : 'bg-red-400'
-                                }`}></div>
-                            <span className="text-slate-300 text-sm font-medium">
-                                MindChain Analytics
-                            </span>
+                        {/* Compact Live Indicator */}
+                        <div className="flex items-center space-x-3 glass-card px-4 py-2 rounded-lg border border-slate-600/50 hover:border-slate-500/50 transition-all duration-300">
+                            <div className={`w-3 h-3 rounded-full ${
+                                connectionStatus === 'Connected' && backendHealth === 'healthy'
+                                    ? 'bg-emerald-400 shadow-glow animate-pulse'
+                                    : 'bg-red-400'
+                            }`}></div>
+                            <div className="flex flex-col">
+                                <span className="text-slate-200 text-sm font-semibold">
+                                    Contest Ready
+                                </span>
+                                <span className="text-slate-400 text-xs">
+                                    {connectionStatus === 'Connected' && backendHealth === 'healthy' 
+                                        ? 'All Systems Online' 
+                                        : 'System Check Required'
+                                    }
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Mobile Status Indicator */}
+                        <div className="sm:hidden flex items-center space-x-2">
+                            <div className={`w-3 h-3 rounded-full ${getStatusDot(connectionStatus)}`}></div>
+                            <div className={`w-3 h-3 rounded-full ${getStatusDot(backendHealth)}`}></div>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            {/* Subtle bottom gradient */}
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-500/20 to-transparent"></div>
         </header>
     );
 };
