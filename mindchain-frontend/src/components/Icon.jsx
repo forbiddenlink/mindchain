@@ -52,7 +52,10 @@ import {
     Circle,
     Save,
     Maximize2,
-    Minimize2
+    Minimize2,
+    Award,
+    Star,
+    RefreshCw
 } from 'lucide-react';
 
 // Icon mapping for topics and general use
@@ -71,6 +74,7 @@ const iconMap = {
     'analytics': BarChart3,
     'search': Search,
     'loading': Loader2,
+    'loader': Loader2,  // Add alias for loading
     'success': CheckCircle,
     'error': X,
     'target': Target,
@@ -85,6 +89,10 @@ const iconMap = {
     'collapse': ChevronUp,
     'settings': Settings,
     'save': Save,
+    'award': Award,
+    'star': Star,
+    'refresh': RefreshCw,
+    'clock': Clock,
     
     // Tech icons
     'database': Database,
@@ -112,7 +120,8 @@ const iconMap = {
     // Chart and UI controls
     'maximize2': Maximize2,
     'minimize2': Minimize2,
-    'activity': Activity,
+    'Maximize2': Maximize2,  // Support both cases
+    'Activity': Activity,    // Support both cases
     
     // Agent personas
     'senator': Gavel,

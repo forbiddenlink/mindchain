@@ -4,7 +4,7 @@ import 'dotenv/config';
 import express from 'express';
 import { createClient } from 'redis';
 import { RedisMetricsCollector, generateContestAnalytics, runMultiDebateStressTest } from './advancedMetrics.js';
-import { generateEnhancedMessage, updateStanceBasedOnDebate } from './enhancedAI.js';
+import { generateEnhancedMessageOnly, updateStanceBasedOnDebate } from './enhancedAI.js';
 
 // 🏆 Contest-ready API endpoints to add to server.js
 
@@ -373,7 +373,7 @@ async function runEnhancedDebateRounds(debateId, agents, topic, rounds = 6) {
             
             try {
                 // Use enhanced AI generation
-                const message = await generateEnhancedMessage(agentId, debateId, topic);
+                const message = await generateEnhancedMessageOnly(agentId, debateId, topic);
                 
                 // Update stance based on debate dynamics
                 const stanceUpdate = await updateStanceBasedOnDebate(agentId, debateId, topic);

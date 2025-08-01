@@ -6,6 +6,15 @@ import Icon from './Icon';
 export default function StanceEvolutionChart({ stanceData = [] }) {
     const [isExpanded, setIsExpanded] = useState(false);
 
+    // Debug logging
+    useEffect(() => {
+        console.log('🎯 StanceEvolutionChart received data:', stanceData);
+        console.log('🎯 Data length:', stanceData.length);
+        if (stanceData.length > 0) {
+            console.log('🎯 Latest entry:', stanceData[stanceData.length - 1]);
+        }
+    }, [stanceData]);
+
     // Format data for Recharts
     const chartData = stanceData.map((entry, index) => ({
         turn: entry.turn || index + 1,

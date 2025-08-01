@@ -17,13 +17,15 @@ const KeyMomentsPanel = ({ debateId, viewMode = 'standard' }) => {
             if (viewMode === 'standard' && debateId) {
                 // Single debate mode - get moments for specific debate
                 response = await api.get(`/debate/${debateId}/key-moments?limit=10`);
-                setKeyMoments(response.data.moments || []);
-                setStats(response.data.stats || { total_moments: 0 });
+                console.log('📊 Key moments API response:', response.data);
+                setKeyMoments(response.data?.moments || []);
+                setStats(response.data?.stats || { total_moments: 0 });
             } else if (viewMode === 'multi-debate' || viewMode === 'analytics') {
                 // Multi-debate or analytics mode - get all moments
                 response = await api.get('/key-moments/all?limit=15');
-                setKeyMoments(response.data.moments || []);
-                setStats({ total_moments: response.data.total || 0 });
+                console.log('📊 All key moments API response:', response.data);
+                setKeyMoments(response.data?.moments || []);
+                setStats({ total_moments: response.data?.total || 0 });
             } else {
                 // No specific debate, clear moments
                 setKeyMoments([]);
@@ -216,8 +218,8 @@ const KeyMomentsPanel = ({ debateId, viewMode = 'standard' }) => {
                     </div>
                 ) : (
                     <div className="space-y-3 overflow-y-auto overflow-x-hidden flex-1">
-                        {keyMoments.map((moment) => (
-                            <div key={moment.id} className={getMomentStyle(moment.type, moment.significance)}>
+                        {keyMoments.map((moment, index) => (
+                            <div key={`${moment.id}_${index}_${moment.timestamp || Date.now()}`} className={getMomentStyle(moment.type, moment.significance)}>
                                 {/* Enhanced Header with Better Visual Hierarchy */}
                                 <div className="flex items-start justify-between mb-3">
                                     <div className="flex items-center gap-2 flex-1">

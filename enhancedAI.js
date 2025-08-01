@@ -28,7 +28,21 @@ function checkMessageSimilarity(newMessage, recentMessages) {
     return maxSimilarity;
 }
 
-// 🔄 Convert debate topic to stance key for profile lookup apiKey: process.env.OPENAI_API_KEY });
+// 📊 Calculate similarity between two messages
+function calculateSimilarity(message1, message2) {
+    if (!message1 || !message2) return 0;
+    
+    const words1 = message1.toLowerCase().split(/\s+/);
+    const words2 = message2.toLowerCase().split(/\s+/);
+    
+    const commonWords = words1.filter(word => 
+        word.length > 3 && words2.includes(word)
+    );
+    
+    return commonWords.length / Math.max(words1.length, words2.length);
+}
+
+// 🔄 Convert debate topic to stance key for profile lookup
 
 // 🧠 Enhanced AI generation with emotional state and coalition building
 export async function generateEnhancedMessage(agentId, debateId, topic = 'general policy') {
@@ -116,20 +130,23 @@ Instructions:
             }
         }
 
-        // Store enhanced metadata
+        // NOTE: Server handles all storage centrally, so we don't store here
+        // The server calls generateEnhancedMessageOnly instead
+        /*
         await client.xAdd(`debate:${debateId}:messages`, '*', {
             agent_id: agentId,
             message,
             emotional_state: emotionalState,
-            references_made: extractReferences(message, recentContext)
+            references_made: extractReferences(message, recentContext) || ''
         });
 
         await client.xAdd(`debate:${debateId}:agent:${agentId}:memory`, '*', {
             type: 'enhanced_statement',
             content: message,
-            context_size: debateMessages.length,
+            context_size: debateMessages.length.toString(),
             emotional_state: emotionalState
         });
+        */
 
         await client.quit();
         return message;
@@ -159,7 +176,7 @@ export async function generateEnhancedMessageOnly(agentId, debateId, topic = 'ge
         ).join('\n');
 
         // Determine emotional state based on recent context
-        const emotionalState = determineEmotionalState(recentContext, profile);
+        const emotionalState = determineEmotionalState(profile, recentContext);
 
         // Enhanced prompt with emotional context
         const enhancedPrompt = `
@@ -399,11 +416,14 @@ export async function updateStanceBasedOnDebate(agentId, debateId, topic) {
             }
         }
         
-        // Calculate stance evolution
+        // Calculate stance evolution (increased for better visualization)
         if (strongArgumentsFor > strongArgumentsAgainst) {
-            stanceShift = 0.05; // Slight movement toward more positive
+            stanceShift = 0.15; // More noticeable movement toward positive
         } else if (strongArgumentsAgainst > strongArgumentsFor) {
-            stanceShift = -0.05; // Slight movement toward more negative
+            stanceShift = -0.15; // More noticeable movement toward negative
+        } else {
+            // Even when no strong arguments, add some random variation for demo
+            stanceShift = (Math.random() - 0.5) * 0.1; // Random small change
         }
         
         // Apply personality resistance (some agents change less)
