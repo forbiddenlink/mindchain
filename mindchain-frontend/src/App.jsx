@@ -442,10 +442,11 @@ export default function App() {
       </div>
 
       {/* Dynamic Main Content Based on View Mode */}
-      <main className="flex-1 container mx-auto px-4 py-4 max-w-7xl">
+      <main className="flex-1 overflow-x-hidden">
+        <Container maxWidth="max-w-7xl" padding="px-2 sm:px-4 py-4" className="h-full">
         {viewMode === 'standard' ? (
           /* Standard Single-Debate Layout - Balanced Space Distribution */
-          <div className="flex flex-col gap-4 h-full min-h-screen pb-12">
+          <div className="flex flex-col gap-4 h-full min-h-screen pb-12 animate-fade-in-up">
             {/* Main content row: 2-column layout with proper sizing */}
             <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
               {/* Left Column: Debate Panel (70% width) */}
@@ -454,21 +455,23 @@ export default function App() {
               </div>
 
               {/* Right Column: Key Moments + Fact Checker (30% width) */}
-              <div className="w-full lg:w-[30%] lg:flex-[3] flex-shrink-0 min-h-[600px] flex flex-col gap-6">
-                {/* Key Moments - Fixed max height to prevent overflow */}
-                <div className="flex-[3] min-h-[350px] max-h-[400px]">
-                  <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
-                </div>
+              <div className="w-full lg:w-[30%] lg:flex-[3] flex-shrink-0 min-h-[600px]">
+                <Stack spacing="space-y-6">
+                  {/* Key Moments - Enhanced with animations */}
+                  <div className="flex-[3] min-h-[350px] max-h-[400px] animate-slide-in-right stagger-1">
+                    <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
+                  </div>
 
-                {/* Fact Checker - Fixed max height to prevent overflow */}
-                <div className="flex-[2] min-h-[240px] max-h-[300px]">
-                  <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
-                </div>
+                  {/* Fact Checker - Enhanced with animations */}
+                  <div className="flex-[2] min-h-[240px] max-h-[300px] animate-slide-in-right stagger-2">
+                    <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
+                  </div>
+                </Stack>
               </div>
             </div>
 
-            {/* Bottom row: Stance Evolution Chart - Adequate height with more spacing */}
-            <div className="h-80 flex-shrink-0 mt-6 mb-8">
+            {/* Bottom row: Stance Evolution Chart - Enhanced with animations */}
+            <div className="h-80 flex-shrink-0 mt-6 mb-8 animate-fade-in-up stagger-3">
               <StanceEvolutionChart
                 stanceData={currentDebateId ?
                   stanceData.filter(entry => entry.debateId === currentDebateId) :
@@ -478,17 +481,17 @@ export default function App() {
             </div>
           </div>
         ) : viewMode === 'multi-debate' ? (
-          /* Multi-Debate Layout - Improved proportions for better readability */
-          <div className="flex flex-col gap-4 h-[calc(100vh-200px)]">
-            {/* Top row: Key Moments - Reduced height for more space below */}
-            <div className="h-48 flex-shrink-0">
+          /* Multi-Debate Layout - Perfectly even spacing with consistent margins */
+          <div className="space-y-6 p-6">
+            {/* Top row: Key Moments - Consistent container */}
+            <div className="min-h-[300px] bg-gray-800/50 rounded-xl p-4">
               <KeyMomentsPanel viewMode="multi-debate" />
             </div>
 
-            {/* Middle row: Multi-debate viewer and fact checker - Better proportions */}
-            <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
-              {/* Main: Multi-Debate Viewer - Larger space */}
-              <div className="flex-1 lg:flex-[7] min-w-0">
+            {/* Middle row: Multi-debate viewer and fact checker - Consistent containers */}
+            <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6">
+              {/* Main: Multi-Debate Viewer - Consistent container */}
+              <div className="flex-1 lg:flex-[7] min-h-[600px] bg-gray-800/50 rounded-xl p-4 animate-slide-in-left">
                 <TrueMultiDebateViewer
                   messages={debateMessages}
                   activeDebates={activeDebates}
@@ -496,40 +499,42 @@ export default function App() {
                 />
               </div>
 
-              {/* Side Panel: Fact Checker - Reasonable width */}
-              <div className="w-full lg:w-80 lg:flex-[3] flex-shrink-0">
+              {/* Side Panel: Fact Checker - Consistent container */}
+              <div className="w-full lg:w-[450px] lg:flex-[3] min-h-[600px] bg-gray-800/50 rounded-xl p-4 animate-slide-in-right">
                 <FactChecker factChecks={factChecks} />
               </div>
             </div>
 
-            {/* Bottom row: Stance Evolution Chart - Compact height */}
-            <div className="h-56 flex-shrink-0">
+            {/* Bottom row: Stance Evolution Chart - Consistent container */}
+            <div className="min-h-[400px] bg-gray-800/50 rounded-xl p-4">
               <StanceEvolutionChart stanceData={stanceData} />
             </div>
           </div>
-        ) : viewMode === 'showcase' ? (
-          /* System Showcase Dashboard - Full screen premium experience */
-          <ContestShowcaseDashboard />
+        ) : viewMode === 'contest-showcase' ? (
+          /* Contest Showcase - Premium Full Screen Experience */
+          <div className="animate-fade-in-up">
+            <ContestShowcaseDashboard />
+          </div>
         ) : viewMode === 'business' ? (
           /* Business Intelligence Dashboard */
           <div className="space-y-6">
             <BusinessValueDashboard />
           </div>
         ) : (
-          /* Analytics Dashboard Layout - Key Moments as Primary Feature */
-          <div className="space-y-6">
-            {/* Top Row: Key Moments Analytics - Full Width Featured */}
-            <div className="w-full">
+          /* Analytics Dashboard Layout - Enhanced with animations */
+          <Stack spacing="space-y-6" className="animate-fade-in-up">
+            {/* Top Row: Key Moments Analytics - Enhanced */}
+            <div className="w-full animate-slide-in-down stagger-1">
               <KeyMomentsPanel viewMode="analytics" />
             </div>
 
-            {/* Middle Row: Performance Dashboard */}
-            <div className="w-full">
+            {/* Middle Row: Performance Dashboard - Enhanced */}
+            <div className="w-full animate-scale-in stagger-2">
               <EnhancedPerformanceDashboard key={metricsUpdateTrigger} />
             </div>
 
-            {/* Bottom Row: Quick Actions and Stats */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Bottom Row: Quick Actions and Stats - Enhanced Grid */}
+            <Grid columns={2} gap="gap-6" className="animate-fade-in-up stagger-3">
               {/* Quick Actions */}
               <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
                 <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
@@ -582,9 +587,10 @@ export default function App() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </Grid>
+          </Stack>
         )}
+        </Container>
       </main>
     </div>
     </ToastProvider>

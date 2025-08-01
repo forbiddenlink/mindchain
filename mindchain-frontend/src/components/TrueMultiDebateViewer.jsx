@@ -47,11 +47,11 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
     };
 
     return (
-        <div className={`flex flex-col h-full border rounded-xl p-3 ${getDebateColor()} min-h-0 overflow-hidden`}>
+        <div className={`flex flex-col h-full border rounded-xl p-2 sm:p-3 ${getDebateColor()} min-h-0 overflow-hidden`}>
             {/* Debate Header */}
-            <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-600 flex-shrink-0">
-                <div className="min-w-0 flex-1">
-                    <h3 className="font-bold text-slate-200 text-sm truncate">{debate.topic}</h3>
+            <div className="flex items-center justify-between mb-2 sm:mb-3 pb-2 border-b border-gray-600 flex-shrink-0">
+                <div className="min-w-0 flex-1 pr-2">
+                    <h3 className="font-bold text-slate-200 text-xs sm:text-sm truncate">{debate.topic}</h3>
                     <div className="text-xs text-slate-400">
                         {debateMessages.length} messages • {debate.status}
                     </div>
@@ -59,13 +59,13 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
                 <div className="flex gap-1 flex-shrink-0">
                     <button
                         onClick={() => setIsChangingTopic(!isChangingTopic)}
-                        className="text-xs bg-blue-600/20 px-2 py-1 rounded border border-blue-500/20 text-blue-300 hover:bg-blue-600/30 transition-colors flex items-center"
+                        className="text-xs bg-blue-600/20 px-1.5 sm:px-2 py-1 rounded border border-blue-500/20 text-blue-300 hover:bg-blue-600/30 transition-colors flex items-center"
                     >
                         <Icon name="settings" size={12} />
                     </button>
                     <button
                         onClick={() => onStop && onStop(debate.id)}
-                        className="text-xs bg-red-600/20 px-2 py-1 rounded border border-red-500/20 text-red-300 hover:bg-red-600/30 transition-colors flex items-center"
+                        className="text-xs bg-red-600/20 px-1.5 sm:px-2 py-1 rounded border border-red-500/20 text-red-300 hover:bg-red-600/30 transition-colors flex items-center"
                     >
                         <Icon name="stop" size={12} />
                     </button>
@@ -105,11 +105,12 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
             )}
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
+            <div className="flex-1 overflow-y-auto space-y-1 sm:space-y-2 min-h-0">
                 {recentMessages.length === 0 ? (
-                    <div className="text-center text-slate-400 py-8">
-                        <div className="w-12 h-12 bg-slate-700/50 rounded-full flex items-center justify-center mb-3 mx-auto">
-                            <Icon name="message" size={24} className="text-slate-500" />
+                    <div className="text-center text-slate-400 py-4 sm:py-8">
+                        <div className="w-8 h-8 sm:w-12 sm:h-12 bg-slate-700/50 rounded-full flex items-center justify-center mb-2 sm:mb-3 mx-auto">
+                            <Icon name="message" size={16} className="sm:hidden text-slate-500" />
+                            <Icon name="message" size={24} className="hidden sm:block text-slate-500" />
                         </div>
                         <div className="text-xs">No messages yet</div>
                     </div>
@@ -117,27 +118,27 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
                     recentMessages.map((msg, msgIndex) => (
                         <div
                             key={`${msg.id}-${msgIndex}`}
-                            className="p-2 rounded-lg bg-slate-800/30 border border-slate-700/50"
+                            className="p-1.5 sm:p-2 rounded-lg bg-slate-800/30 border border-slate-700/50"
                         >
                             {/* Message Header */}
                             <div className="flex items-center justify-between mb-1">
-                                <span className={`text-xs font-semibold ${getAgentColor(msg.agentId)}`}>
+                                <span className={`text-xs font-semibold ${getAgentColor(msg.agentId)} truncate flex-1 pr-2`}>
                                     {msg.sender}
                                 </span>
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center gap-1 flex-shrink-0">
                                     {msg.factCheck && (
                                         <span className="text-xs bg-green-600/20 px-1 py-0.5 rounded text-green-400 flex items-center gap-1">
-                                            <Icon name="success" size={10} />
+                                            <Icon name="success" size={8} />
                                         </span>
                                     )}
-                                    <span className="text-xs text-slate-400">
+                                    <span className="text-xs text-slate-400 hidden sm:inline">
                                         {msg.timestamp ? formatDistanceToNow(new Date(msg.timestamp), { addSuffix: true }) : 'now'}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Message Content */}
-                            <div className="text-slate-200 text-xs leading-relaxed">
+                            <div className="text-slate-200 text-xs leading-relaxed break-words">
                                 {msg.text || msg.message}
                             </div>
 
@@ -145,7 +146,7 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
                             {msg.factCheck && (
                                 <div className="mt-1 p-1 bg-green-900/20 border border-green-500/20 rounded text-xs">
                                     <div className="text-green-400 font-medium text-xs">Fact:</div>
-                                    <div className="text-green-200 text-xs">{msg.factCheck.fact}</div>
+                                    <div className="text-green-200 text-xs break-words">{msg.factCheck.fact}</div>
                                 </div>
                             )}
                         </div>
@@ -225,21 +226,22 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
     };
 
     return (
-        <div className="h-full flex flex-col max-w-full overflow-hidden bg-gradient-to-br from-neutral-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
+        <div className="h-full flex flex-col max-w-full overflow-hidden bg-gradient-to-br from-neutral-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-2 sm:p-4 border border-neutral-600/50">
             {/* Header */}
-            <div className="flex items-center justify-between mb-4 flex-shrink-0">
-                <h2 className="text-xl font-bold text-slate-200 flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-2 sm:gap-0 flex-shrink-0">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-200 flex items-center gap-2">
                     <Icon name="multi-debate" size={20} className="mr-2 text-purple-400" />
-                    Multi-Debate Arena
+                    <span className="hidden sm:inline">Multi-Debate Arena</span>
+                    <span className="sm:hidden">Multi-Debate</span>
                     <span className="text-xs bg-purple-500/20 px-2 py-1 rounded-full text-purple-400">
                         {activeDebatesArray.length} Active
                     </span>
                 </h2>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                     <select
                         value={maxDebates}
                         onChange={(e) => setMaxDebates(Number(e.target.value))}
-                        className="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-xs text-slate-200"
+                        className="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-xs text-slate-200 flex-1 sm:flex-none"
                     >
                         <option value={2}>2 Debates</option>
                         <option value={3}>3 Debates</option>
@@ -248,10 +250,11 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
                     </select>
                     <button
                         onClick={startNewDebate}
-                        className="px-3 py-1 bg-green-600/20 border border-green-500/20 rounded text-green-300 text-xs hover:bg-green-600/30 transition-colors flex items-center gap-1"
+                        className="px-2 sm:px-3 py-1 bg-green-600/20 border border-green-500/20 rounded text-green-300 text-xs hover:bg-green-600/30 transition-colors flex items-center gap-1 flex-shrink-0"
                     >
                         <Icon name="add" size={14} />
-                        New Debate
+                        <span className="hidden sm:inline">New Debate</span>
+                        <span className="sm:hidden">New</span>
                     </button>
                 </div>
             </div>
@@ -277,11 +280,11 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
                     </div>
                 ) : (
                     <div className={`
-            grid gap-3 h-full overflow-hidden
+            grid gap-2 sm:gap-3 h-full overflow-hidden
             ${activeDebatesArray.length === 1 ? 'grid-cols-1' :
-                            activeDebatesArray.length === 2 ? 'grid-cols-1 lg:grid-cols-2' :
-                                activeDebatesArray.length <= 4 ? 'grid-cols-1 lg:grid-cols-2' :
-                                    'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'}
+                            activeDebatesArray.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
+                                activeDebatesArray.length <= 4 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2' :
+                                    'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'}
           `}>
                         {activeDebatesArray.map((debate, index) => (
                             <DebateColumn

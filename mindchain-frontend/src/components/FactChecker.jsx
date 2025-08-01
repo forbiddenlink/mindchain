@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from './Icon';
-import { Card, CardHeader, CardContent, StatusBadge } from './ui';
+import { Card, CardHeader, CardContent, StatusBadge, Stack } from './ui';
 
 const FactChecker = ({factChecks = []}) => {
     const getFactCheckConfig = (score) => {

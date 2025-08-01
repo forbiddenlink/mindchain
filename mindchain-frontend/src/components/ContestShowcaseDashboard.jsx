@@ -5,6 +5,7 @@ import Icon from './Icon';
 export default function SystemShowcaseDashboard() {
     const [showcaseData, setShowcaseData] = useState(null);
     const [systemMetrics, setSystemMetrics] = useState(null);
+    const [contestMetrics, setContestMetrics] = useState(null);
     const [optimizationMetrics, setOptimizationMetrics] = useState(null);
     const [demoRunning, setDemoRunning] = useState(false);
     const [demoResults, setDemoResults] = useState({});

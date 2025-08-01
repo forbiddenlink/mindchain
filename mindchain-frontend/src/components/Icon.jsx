@@ -16,6 +16,7 @@ import {
     Target,
     Square,
     AlertTriangle,
+    AlertCircle,
     MessageCircle,
     Play,
     Pause,
@@ -57,7 +58,9 @@ import {
     Star,
     RefreshCw,
     User,
-    ShieldCheck
+    ShieldCheck,
+    ExternalLink,
+    PlayCircle
 } from 'lucide-react';
 
 // Icon mapping for topics and general use
@@ -124,9 +127,22 @@ const iconMap = {
     
     // Missing icon mappings
     'user': User,
+    'users': Users,
     'message-circle': MessageCircle,
     'shield-check': ShieldCheck,
     'trending-up': TrendingUp,
+    'zap': Zap,
+    'cpu': Cpu,
+    'check-circle': CheckCircle,
+    'dollar-sign': DollarSign,
+    'play-circle': PlayCircle,
+    'loader-2': Loader2,
+    'file-text': BookOpen,
+    'git-branch': Network,
+    'users2': Users2,
+    'alert-circle': AlertCircle,
+    'refresh-cw': RefreshCw,
+    'external-link': ExternalLink,
     
     // Chart and UI controls
     'maximize2': Maximize2,

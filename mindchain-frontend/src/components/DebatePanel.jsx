@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Icon from './Icon';
 import SentimentBadge from './SentimentBadge';
+import { Card, CardHeader, CardContent, Stack, Container } from './ui';
 
 const DebatePanel = ({ messages = [] }) => {
     const messagesEndRef = useRef(null);

@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from './Icon';
+import { Container, Flex } from './ui';
 
 const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }) => {
     const getStatusColor = (status) => {
@@ -29,11 +30,11 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
     };
 
     return (
-        <header className="glass-panel border-b border-slate-700/50 shadow-elevated sticky top-0 z-50">
-            <div className="container-professional">
-                <div className="flex items-center justify-between h-16 lg:h-20">
+        <header className="glass-panel border-b border-slate-700/50 shadow-elevated sticky top-0 z-50 animate-slide-in-down">
+            <Container maxWidth="max-w-7xl" padding="px-4 lg:px-8">
+                <Flex justify="between" align="center" className="h-16 lg:h-20">
                     {/* Enhanced Logo and Title */}
-                    <div className="flex items-center space-x-4">
+                    <Flex align="center" gap="gap-4">
                         <div className="relative">
                             <div className="w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-blue-500 via-purple-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-glow">
                                 <Icon name="brain" size={24} className="text-white" />
@@ -49,10 +50,10 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
                                 Redis AI Challenge 2025
                             </p>
                         </div>
-                    </div>
+                    </Flex>
 
                     {/* Enhanced Status Indicators */}
-                    <div className="flex items-center space-x-6">
+                    <Flex align="center" gap="gap-6">
                         {/* Connection Status Grid */}
                         <div className="hidden sm:flex items-center space-x-6">
                             {/* WebSocket Status */}
@@ -107,9 +108,9 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
                             <div className={`w-3 h-3 rounded-full ${getStatusDot(connectionStatus)}`}></div>
                             <div className={`w-3 h-3 rounded-full ${getStatusDot(backendHealth)}`}></div>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </Flex>
+                </Flex>
+            </Container>
             
             {/* Subtle bottom gradient */}
             <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-500/20 to-transparent"></div>
