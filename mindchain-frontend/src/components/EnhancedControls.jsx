@@ -29,6 +29,7 @@ export default function EnhancedControls({
     const [customTopic, setCustomTopic] = useState('');
     const [isStarting, setIsStarting] = useState(false);
     const [isAddingTopic, setIsAddingTopic] = useState(false);
+    const [lastStartTime, setLastStartTime] = useState(0); // Prevent rapid clicking
 
     const handleTopicToggle = (topicId) => {
         if (viewMode === 'standard') {
@@ -66,7 +67,15 @@ export default function EnhancedControls({
             return;
         }
 
+        // Prevent multiple simultaneous starts and rapid clicking
+        const now = Date.now();
+        if (isStarting || (now - lastStartTime < 2000)) {
+            console.log('⚠️ Debate start already in progress or too soon, ignoring duplicate request');
+            return;
+        }
+
         setIsStarting(true);
+        setLastStartTime(now);
         try {
             if (viewMode === 'multi-debate' && selectedTopics.length > 1) {
                 // Multi-debate mode: start multiple debates
@@ -92,18 +101,23 @@ export default function EnhancedControls({
                 }
             } else {
                 // Standard mode: single debate
-                // Stop current debate first if one is running
-                if (currentDebateId && onStopCurrentDebate) {
+                // Stop current debate first if one is running (use isDebating for consistency)
+                if (isDebating && onStopCurrentDebate) {
                     console.log('🛑 Stopping current debate before starting new one...');
-                    await onStopCurrentDebate();
-                    // Small delay to ensure stop is processed
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    try {
+                        await onStopCurrentDebate();
+                        // Wait for stop to be processed before starting new debate
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    } catch (stopError) {
+                        console.error('Failed to stop current debate:', stopError);
+                        // Continue anyway, but log the error
+                    }
                 }
                 
                 const topic = DEBATE_TOPICS.find(t => t.id === selectedTopics[0])?.description || selectedTopics[0];
                 const response = await api.startDebate({ 
                     topic,
-                    debateId: 'standard_debate' // Use consistent ID for standard mode
+                    debateId: `standard_${Date.now()}_${Math.random().toString(36).substring(2, 8)}` // Use unique ID to prevent conflicts
                 });
                 console.log(`🎯 Started single debate: ${topic}`);
                 
@@ -127,16 +141,26 @@ export default function EnhancedControls({
 
     const stopAllDebates = async () => {
         try {
-            // Try to stop all active debates
+            console.log(`🛑 Stopping all ${activeDebates.size} active debates...`);
+            
+            // Use the new stop-all API endpoint
+            const result = await api.stopAllDebates();
+            console.log('✅ Stop all debates result:', result);
+            
+            if (onMetricsUpdate) {
+                onMetricsUpdate();
+            }
+        } catch (error) {
+            console.error('Failed to stop all debates:', error);
+            // Fallback: try to stop each debate individually
             for (const [debateId] of activeDebates) {
                 try {
                     await api.stopDebate(debateId);
-                } catch (error) {
-                    console.error(`Failed to stop debate ${debateId}:`, error);
+                    console.log(`✅ Stopped debate: ${debateId}`);
+                } catch (stopError) {
+                    console.error(`Failed to stop debate ${debateId}:`, stopError);
                 }
             }
-        } catch (error) {
-            console.error('Failed to stop debates:', error);
         }
     };
 
@@ -320,10 +344,10 @@ export default function EnhancedControls({
                         {viewMode !== 'analytics' ? (
                             <button
                                 onClick={startDebates}
-                                disabled={selectedTopics.length === 0 || isStarting || (viewMode === 'standard' && currentDebateId)}
+                                disabled={selectedTopics.length === 0 || isStarting || (viewMode === 'standard' && isDebating)}
                                 className={`
                     w-full px-3 py-2 rounded-lg font-semibold transition-all text-sm flex items-center justify-center
-                    ${selectedTopics.length > 0 && !isStarting && !(viewMode === 'standard' && currentDebateId)
+                    ${selectedTopics.length > 0 && !isStarting && !(viewMode === 'standard' && isDebating)
                                         ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
                                         : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                                     }
@@ -334,7 +358,7 @@ export default function EnhancedControls({
                                         <Icon name="loading" size={16} className="animate-spin mr-2" />
                                         Starting...
                                     </>
-                                ) : viewMode === 'standard' && currentDebateId ? (
+                                ) : viewMode === 'standard' && isDebating ? (
                                     <>
                                         <Icon name="pause" size={16} className="mr-2" />
                                         Debate Active

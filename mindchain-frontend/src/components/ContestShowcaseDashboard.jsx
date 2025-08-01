@@ -41,8 +41,12 @@ export default function SystemShowcaseDashboard() {
         };
 
         fetchShowcaseData();
-        const interval = setInterval(fetchShowcaseData, 5000);
-        return () => clearInterval(interval);
+        // Automatic polling disabled to reduce server load
+        // const interval = setInterval(fetchShowcaseData, 15000);
+        // return () => clearInterval(interval);
+        
+        // Only update on manual interaction
+        return () => {}; // No cleanup needed
     }, []);
 
     // Run demonstration scenario

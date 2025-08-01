@@ -135,9 +135,12 @@ export default function SentimentBadge({ sentiment, confidence, debateId, agentI
 
     fetchSparklineData();
     
-    // Refresh every 5 seconds to catch new data
-    const interval = setInterval(fetchSparklineData, 5000);
-    return () => clearInterval(interval);
+    // Automatic polling disabled to reduce background load
+    // const interval = setInterval(fetchSparklineData, 30000);
+    // return () => clearInterval(interval);
+    
+    // Only refresh on manual trigger or prop changes
+    return () => {}; // No cleanup needed
   }, [debateId, agentId, timestamp, confidence]); // Include confidence to regenerate demo data
 
   // Get sentiment color and icon

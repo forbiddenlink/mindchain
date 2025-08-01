@@ -13,12 +13,12 @@ export default function BusinessValueDashboard() {
     useEffect(() => {
         fetchBusinessMetrics();
 
-        // Auto-refresh every 10 seconds for live metrics
-        const interval = setInterval(fetchBusinessMetrics, 10000);
-        setRefreshInterval(interval);
+        // Automatic polling disabled to reduce server load
+        // const interval = setInterval(fetchBusinessMetrics, 30000);
+        // setRefreshInterval(interval);
 
         return () => {
-            if (interval) clearInterval(interval);
+            // No cleanup needed since polling is disabled
         };
     }, []);
 

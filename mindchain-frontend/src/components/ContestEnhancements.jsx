@@ -70,17 +70,19 @@ function RedisModuleVisualizer() {
     const [moduleData, setModuleData] = useState(null);
 
     useEffect(() => {
-        // Simulate real-time module usage data
-        const interval = setInterval(() => {
-            setModuleData({
-                json: { usage: Math.random() * 100, operations: Math.floor(Math.random() * 50) + 10 },
-                streams: { usage: Math.random() * 100, operations: Math.floor(Math.random() * 100) + 20 },
-                timeseries: { usage: Math.random() * 100, operations: Math.floor(Math.random() * 30) + 5 },
-                vector: { usage: Math.random() * 100, operations: Math.floor(Math.random() * 25) + 8 }
-            });
-        }, 2000);
+        // Automatic polling disabled to reduce server load
+        // const interval = setInterval(() => {
+        //     setModuleData({
+        //         json: { usage: Math.random() * 100, operations: Math.floor(Math.random() * 50) + 10 },
+        //         streams: { usage: Math.random() * 100, operations: Math.floor(Math.random() * 100) + 20 },
+        //         timeseries: { usage: Math.random() * 100, operations: Math.floor(Math.random() * 30) + 5 },
+        //         vector: { usage: Math.random() * 100, operations: Math.floor(Math.random() * 25) + 8 }
+        //     });
+        // }, 20000);
 
-        return () => clearInterval(interval);
+        return () => {
+            // No cleanup needed since polling is disabled
+        };
     }, []);
 
     if (!moduleData) return <div>Loading module data...</div>;

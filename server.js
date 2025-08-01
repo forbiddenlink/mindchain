@@ -46,29 +46,43 @@ try {
     console.log('⚠️ Sentiment analyzer failed to initialize, will use fallback mode:', sentimentInitError.message);
 }
 
-// Start Redis performance optimization engine
+// Start Redis performance optimization engine - DISABLED FOR MANUAL CONTROL
 let optimizationCleanup = null;
-try {
-    optimizationCleanup = await startOptimization();
-    console.log('🚀 Redis performance optimizer started');
-} catch (optimizerError) {
-    console.log('⚠️ Redis optimizer failed to start, continuing without optimization:', optimizerError.message);
-}
+// Optimization disabled by default to reduce background noise
+// try {
+//     optimizationCleanup = await startOptimization();
+//     console.log('🚀 Redis performance optimizer started');
+// } catch (optimizerError) {
+//     console.log('⚠️ Redis optimizer failed to start, continuing without optimization:', optimizerError.message);
+// }
+console.log('⏸️ Redis optimizer disabled - use API endpoints to enable manually');
 
-// Start contest metrics collection
+// Start contest metrics collection - DISABLED FOR MANUAL CONTROL
 let contestMetricsCleanup = null;
-try {
-    contestMetricsCleanup = await startContestMetrics();
-    console.log('🏆 Contest metrics engine started');
-} catch (metricsError) {
-    console.log('⚠️ Contest metrics failed to start, continuing without contest tracking:', metricsError.message);
-}
+// Contest metrics disabled by default to reduce background noise
+// try {
+//     contestMetricsCleanup = await startContestMetrics();
+//     console.log('🏆 Contest metrics engine started');
+// } catch (metricsError) {
+//     console.log('⚠️ Contest metrics failed to start, continuing without contest tracking:', metricsError.message);
+// }
+console.log('⏸️ Contest metrics disabled - use Analytics view to enable manually');
 
 // Store active WebSocket connections
 const connections = new Set();
 
 // Store active debate state - NOW SUPPORTS MULTIPLE CONCURRENT DEBATES
 const activeDebates = new Map();
+
+// Store running debate processes to allow proper cancellation
+const runningDebateProcesses = new Map(); // debateId -> { cancelled: boolean }
+
+// Store last message timestamps to prevent duplicate rapid-fire messages
+const lastMessageTimestamps = new Map(); // agentId -> timestamp
+
+// Global debate start cooldown to prevent rapid-fire starts
+let lastGlobalDebateStart = 0;
+const DEBATE_START_COOLDOWN = 1000; // 1 second minimum between any debate starts
 
 // Enhanced debate metrics for analytics
 const debateMetrics = {
@@ -237,15 +251,30 @@ app.post('/api/debate/start', async (req, res) => {
     try {
         const { debateId = `debate_${Date.now()}`, topic = 'climate change policy', agents = ['senatorbot', 'reformerbot'] } = req.body;
 
+        // Global cooldown check
+        const now = Date.now();
+        if (now - lastGlobalDebateStart < DEBATE_START_COOLDOWN) {
+            console.log(`🚫 Debate start request too soon (${now - lastGlobalDebateStart}ms ago), rejecting`);
+            return res.status(429).json({
+                error: 'Too many requests',
+                message: `Please wait ${DEBATE_START_COOLDOWN}ms between debate starts`,
+                cooldownRemaining: DEBATE_START_COOLDOWN - (now - lastGlobalDebateStart)
+            });
+        }
+        
+        lastGlobalDebateStart = now;
+
         // Generate unique debate ID if not provided
         const uniqueDebateId = debateId === 'live_debate' ? `debate_${Date.now()}` : debateId;
 
         // Check if specific debate is already running
         if (activeDebates.has(uniqueDebateId)) {
+            console.log(`⚠️ Debate ${uniqueDebateId} is already running, rejecting duplicate start request`);
             return res.status(409).json({
                 error: 'Debate is already running',
                 debateId: uniqueDebateId,
-                message: 'Please wait for the current debate to finish or use a different debate ID'
+                message: 'Please wait for the current debate to finish or use a different debate ID',
+                currentStatus: activeDebates.get(uniqueDebateId)
             });
         }
 
@@ -276,9 +305,13 @@ app.post('/api/debate/start', async (req, res) => {
         });
 
         // Start the debate loop (don't await to return response immediately)
+        const debateProcess = { cancelled: false };
+        runningDebateProcesses.set(uniqueDebateId, debateProcess);
+        
         runDebateRounds(uniqueDebateId, agents, topic).finally(() => {
             // Remove from active debates when finished
             activeDebates.delete(uniqueDebateId);
+            runningDebateProcesses.delete(uniqueDebateId);
             debateMetrics.concurrentDebates = activeDebates.size;
 
             // Broadcast updated metrics
@@ -315,8 +348,19 @@ app.post('/api/debate/:id/stop', async (req, res) => {
             });
         }
 
+        // Signal the running debate process to stop
+        if (runningDebateProcesses.has(id)) {
+            const process = runningDebateProcesses.get(id);
+            process.cancelled = true;
+            console.log(`🛑 Signaled debate ${id} to stop (process found)`);
+        } else {
+            console.log(`⚠️ No running process found for debate ${id}`);
+        }
+
         // Remove from active debates
         activeDebates.delete(id);
+        
+        console.log(`✅ Debate ${id} removed from active debates. Remaining: ${activeDebates.size}`);
 
         // Broadcast debate stop
         broadcast({
@@ -332,6 +376,42 @@ app.post('/api/debate/:id/stop', async (req, res) => {
         });
     } catch (error) {
         console.error('Error stopping debate:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Stop all running debates
+app.post('/api/debates/stop-all', async (req, res) => {
+    try {
+        console.log(`🛑 Stopping all ${activeDebates.size} active debates...`);
+        
+        const stoppedDebates = Array.from(activeDebates.keys());
+        
+        // Signal all running debate processes to stop
+        for (const [debateId, process] of runningDebateProcesses) {
+            process.cancelled = true;
+            console.log(`🛑 Signaled debate ${debateId} to stop`);
+        }
+        
+        // Clear all active debates
+        activeDebates.clear();
+        
+        // Broadcast stop to all clients
+        broadcast({
+            type: 'all_debates_stopped',
+            stoppedDebates,
+            timestamp: new Date().toISOString()
+        });
+        
+        res.json({
+            success: true,
+            message: `${stoppedDebates.length} debates stopped successfully`,
+            stoppedDebates
+        });
+        
+        console.log(`✅ All ${stoppedDebates.length} debates stopped`);
+    } catch (error) {
+        console.error('Error stopping all debates:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -525,8 +605,12 @@ app.post('/api/debates/start-multiple', async (req, res) => {
             });
 
             // Start the debate (non-blocking)
+            const debateProcess = { cancelled: false };
+            runningDebateProcesses.set(debateId, debateProcess);
+            
             runDebateRounds(debateId, agents, topic).finally(() => {
                 activeDebates.delete(debateId);
+                runningDebateProcesses.delete(debateId);
                 debateMetrics.concurrentDebates = activeDebates.size;
             });
 
@@ -1023,12 +1107,23 @@ function getEnhancedMetrics() {
 // Debate simulation function - ENHANCED WITH METRICS TRACKING
 async function runDebateRounds(debateId, agents, topic, rounds = 5) {
     console.log(`🎯 Starting debate simulation for: ${topic} (${debateId})`);
+    console.log(`📊 Active debates at start: ${Array.from(activeDebates.keys()).join(', ')}`);
+    console.log(`🔧 Running processes at start: ${Array.from(runningDebateProcesses.keys()).join(', ')}`);
 
     // Check if debate is still active (might have been stopped)
     if (!activeDebates.has(debateId)) {
         console.log(`⏹️ Debate ${debateId} was stopped before starting`);
         return;
     }
+
+    // Get the debate process controller
+    const debateProcess = runningDebateProcesses.get(debateId);
+    if (!debateProcess) {
+        console.log(`⏹️ No debate process found for ${debateId}`);
+        return;
+    }
+    
+    console.log(`✅ Debate process confirmed for ${debateId}, proceeding with rounds...`);
 
     // Clear previous debate messages to avoid confusion
     try {
@@ -1041,8 +1136,8 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
     // Alternate between agents for natural conversation flow
     const totalTurns = rounds * agents.length;
     for (let turn = 0; turn < totalTurns; turn++) {
-        // Check if debate is still active before each turn
-        if (!activeDebates.has(debateId)) {
+        // Check if debate was cancelled or stopped before each turn
+        if (!activeDebates.has(debateId) || debateProcess.cancelled) {
             console.log(`⏹️ Debate ${debateId} was stopped during turn ${turn + 1}`);
             return;
         }
@@ -1058,19 +1153,50 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
         try {
             console.log(`🗣️ Turn ${turn + 1} (Round ${roundNumber}): ${agentId} speaking about "${topic}" (${debateId})...`);
 
+            // Prevent rapid-fire duplicate messages from same agent
+            const now = Date.now();
+            const lastMessageTime = lastMessageTimestamps.get(agentId) || 0;
+            const timeSinceLastMessage = now - lastMessageTime;
+            
+            if (timeSinceLastMessage < 1000) { // Minimum 1 second between messages per agent
+                console.log(`⚠️ ${agentId} attempted message too soon (${timeSinceLastMessage}ms ago), skipping...`);
+                continue;
+            }
+            
+            lastMessageTimestamps.set(agentId, now);
+
             // 🧠 Use Enhanced AI Generation with emotional state and context
             let message;
             try {
+                // Check cancellation before expensive AI call
+                if (debateProcess.cancelled) {
+                    console.log(`⏹️ Debate ${debateId} cancelled before AI generation`);
+                    return;
+                }
+                
                 message = await generateEnhancedMessageOnly(agentId, debateId, topic);
                 console.log(`✨ Enhanced AI message generated for ${agentId}`);
             } catch (enhancedError) {
                 console.log(`⚠️ Enhanced AI failed, falling back to standard: ${enhancedError.message}`);
+                
+                // Check cancellation before fallback AI call
+                if (debateProcess.cancelled) {
+                    console.log(`⏹️ Debate ${debateId} cancelled before fallback AI generation`);
+                    return;
+                }
+                
                 message = await generateMessageOnly(agentId, debateId, topic);
             }
 
             // 💾 Store message in Redis streams (centralized storage)
             const debateStreamKey = `debate:${debateId}:messages`;
             const memoryStreamKey = `debate:${debateId}:agent:${agentId}:memory`;
+
+            // Check for cancellation before storing data
+            if (debateProcess.cancelled || !activeDebates.has(debateId)) {
+                console.log(`⏹️ Debate ${debateId} cancelled before storing message`);
+                return;
+            }
 
                 // Store in shared debate stream
                 await client.xAdd(debateStreamKey, '*', {
@@ -1091,6 +1217,12 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 // Update debate-specific metrics
                 if (activeDebates.has(debateId)) {
                     activeDebates.get(debateId).messageCount++;
+                }
+
+                // Check for cancellation before expensive operations
+                if (debateProcess.cancelled || !activeDebates.has(debateId)) {
+                    console.log(`⏹️ Debate ${debateId} cancelled before processing message`);
+                    return;
                 }
 
                 // Get agent profile for broadcast
@@ -1192,6 +1324,12 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     console.log(`⚠️ Key moment detection failed: ${keyMomentError.message}`);
                 }
 
+                // Final check before broadcasting message
+                if (debateProcess.cancelled || !activeDebates.has(debateId)) {
+                    console.log(`⏹️ Debate ${debateId} cancelled before broadcasting message`);
+                    return;
+                }
+
                 // Broadcast the new message to all clients
                 broadcast({
                     type: 'new_message',
@@ -1281,13 +1419,21 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 console.log(`✅ ${agentId}: ${message.substring(0, 50)}...`);
 
                 // Check again if debate was stopped before waiting
-                if (!activeDebates.has(debateId)) {
+                if (!activeDebates.has(debateId) || debateProcess.cancelled) {
                     console.log(`⏹️ Debate ${debateId} was stopped after message generation`);
                     return;
                 }
 
-                // Wait between messages (optimized for better demo flow)
-                await new Promise(resolve => setTimeout(resolve, 1200));
+                // Wait between messages with frequent cancellation checks (optimized for better demo flow)
+                const waitTime = 1200;
+                const checkInterval = 200; // Check every 200ms
+                for (let waited = 0; waited < waitTime; waited += checkInterval) {
+                    if (!activeDebates.has(debateId) || debateProcess.cancelled) {
+                        console.log(`⏹️ Debate ${debateId} was stopped during wait period`);
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, Math.min(checkInterval, waitTime - waited)));
+                }
 
             } catch (error) {
                 console.error(`❌ Error generating message for ${agentId}:`, error);

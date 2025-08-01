@@ -176,8 +176,13 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
 
     const handleTopicChange = async (debateId, newTopic) => {
         try {
+            console.log(`🔄 Changing topic for debate ${debateId} to: ${newTopic}`);
+            
             // Stop the old debate
             await api.stopDebate(debateId);
+            
+            // Wait a moment for the stop to process
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Start a new debate with the new topic
             await api.startDebate({

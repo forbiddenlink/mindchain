@@ -110,7 +110,11 @@ export default function EnhancedPerformanceDashboard() {
 
         let interval;
         if (autoRefresh) {
-            interval = setInterval(fetchEnhancedMetrics, 3000); // Update every 3 seconds
+            // Automatic polling disabled to reduce server load
+            // interval = setInterval(fetchEnhancedMetrics, 10000);
+            
+            // Only update on manual refresh or view changes
+            interval = null;
         }
 
         return () => {

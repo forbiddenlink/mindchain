@@ -154,6 +154,13 @@ export default function App() {
           }
           break;
 
+        case 'all_debates_stopped':
+          // Handle stopping all debates at once
+          console.log('🛑 All debates stopped');
+          setActiveDebates(new Map());
+          // Keep messages visible for review
+          break;
+
         case 'debate_ended':
           if (data.debateId) {
             setActiveDebates(prev => {
@@ -188,6 +195,19 @@ export default function App() {
         case 'debate:stance_update':
           // Handle real-time stance evolution for election-night style chart
           console.log('📊 Received stance update:', data); // Debug log
+          
+          // Prevent duplicate stance updates by checking if we already have this turn data
+          const isDuplicate = stanceData.some(entry => 
+            entry.debateId === data.debateId && 
+            entry.turn === data.turn && 
+            entry.timestamp === data.timestamp
+          );
+          
+          if (isDuplicate) {
+            console.log('⚠️ Duplicate stance update detected, skipping...');
+            break;
+          }
+          
           const newStanceEntry = {
             senatorbot: data.senatorbot,
             reformerbot: data.reformerbot,

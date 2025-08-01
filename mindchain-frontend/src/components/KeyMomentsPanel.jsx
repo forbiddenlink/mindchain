@@ -54,8 +54,12 @@ const KeyMomentsPanel = ({ debateId, viewMode = 'standard' }) => {
 
     // Auto-refresh every 45 seconds (reduced frequency)
     useEffect(() => {
-        const interval = setInterval(fetchKeyMoments, 45000);
-        return () => clearInterval(interval);
+        // Automatic polling disabled to reduce server load
+        // const interval = setInterval(fetchKeyMoments, 60000);
+        // return () => clearInterval(interval);
+        
+        // Only fetch on manual refresh or when debate changes
+        return () => {}; // No cleanup needed
     }, [debateId, viewMode]);
 
     // Handle WebSocket key moment updates

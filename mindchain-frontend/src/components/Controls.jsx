@@ -89,11 +89,9 @@ const Controls = () => {
 
     const handleClearConversation = () => {
         console.log('🧹 Clear Conversation clicked!');
-        // Clear messages and reset for fresh start
-        setDebateMessages([]);
-        setCurrentDebateId(null);
-        setIsDebating(false);
-        console.log('✅ Conversation cleared - ready for fresh start');
+        // Note: This component doesn't manage debateMessages directly
+        // The parent App.jsx component handles this via onClearConversation callback
+        console.log('✅ Clear conversation requested - parent will handle');
     };
 
     const handleAddFact = async () => {
@@ -282,7 +280,7 @@ const Controls = () => {
 
                             <button
                                 onClick={handleClearConversation}
-                                disabled={debateMessages.length === 0}
+                                disabled={false} // Always allow clearing
                                 className="flex items-center justify-center space-x-2 bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 disabled:from-slate-700 disabled:to-slate-800 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md"
                             >
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
