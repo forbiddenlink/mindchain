@@ -87,7 +87,7 @@ function DebateColumn({ debate, messages, onTopicChange, onStop, index }) {
                             </option>
                         ))}
                     </select>
-                    <div className="flex gap-1">
+                    <div className="flex flex-col sm:flex-row gap-1">
                         <button
                             onClick={handleTopicChange}
                             className="flex-1 px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors"

@@ -162,10 +162,10 @@ const Controls = () => {
             <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 shadow-sm">
                 {/* Main Control Bar - Single Row */}
                 <div className="p-3">
-                    <div className="flex items-center justify-between gap-4">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         
                         {/* Left: Topic Dropdown */}
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full lg:w-auto">
                             <label className="text-sm font-medium text-slate-300 whitespace-nowrap">Topic:</label>
                             {!showCustomTopic ? (
                                 <div className="flex items-center gap-2">
@@ -180,7 +180,7 @@ const Controls = () => {
                                             }
                                         }}
                                         disabled={isDebating}
-                                        className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed min-w-[200px]"
+                                        className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto sm:min-w-[200px]"
                                     >
                                         <option value="climate change policy">Climate Change Policy</option>
                                         <option value="AI Regulation & Ethics">AI Regulation & Ethics</option>
@@ -200,7 +200,7 @@ const Controls = () => {
                                         value={customTopicInput}
                                         onChange={(e) => setCustomTopicInput(e.target.value)}
                                         placeholder="Enter custom debate topic..."
-                                        className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-[250px]"
+                                        className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto sm:min-w-[250px]"
                                         onKeyPress={(e) => {
                                             if (e.key === 'Enter' && customTopicInput.trim()) {
                                                 setTopic(customTopicInput.trim());
@@ -237,57 +237,57 @@ const Controls = () => {
                         </div>
 
                         {/* Center: Main Actions */}
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
                             <button
                                 onClick={handleStartDebate}
                                 disabled={isDebating || loading.start}
-                                className="flex items-center justify-center space-x-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 disabled:from-slate-600 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md"
+                                className="flex items-center justify-center space-x-1 sm:space-x-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 disabled:from-slate-600 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-semibold py-2 px-3 sm:px-4 md:px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md w-full sm:w-auto min-w-0"
                             >
-                                <span>
+                                <span className="flex-shrink-0">
                                     {loading.start ? (
-                                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                        <svg className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
                                     ) : (
-                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                                         </svg>
                                     )}
                                 </span>
-                                <span>{loading.start ? 'Starting...' : 'Start Debate'}</span>
+                                <span className="truncate text-xs sm:text-sm">{loading.start ? 'Starting...' : 'Start Debate'}</span>
                             </button>
                             
                             <button
                                 onClick={handleStopDebate}
                                 disabled={!isDebating || loading.stop}
-                                className="flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-slate-600 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md"
+                                className="flex items-center justify-center space-x-1 sm:space-x-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-slate-600 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-semibold py-2 px-3 sm:px-4 md:px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md w-full sm:w-auto min-w-0"
                             >
-                                <span>
+                                <span className="flex-shrink-0">
                                     {loading.stop ? (
-                                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                        <svg className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
                                     ) : (
-                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 012 0v4a1 1 0 11-2 0V7zM12 9a1 1 0 000 2v2a1 1 0 002 0V9a1 1 0 00-2 0z" clipRule="evenodd" />
                                         </svg>
                                     )}
                                 </span>
-                                <span>{loading.stop ? 'Stopping...' : 'Stop Debate'}</span>
+                                <span className="truncate text-xs sm:text-sm">{loading.stop ? 'Stopping...' : 'Stop Debate'}</span>
                             </button>
 
                             <button
                                 onClick={handleClearConversation}
                                 disabled={false} // Always allow clearing
-                                className="flex items-center justify-center space-x-2 bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 disabled:from-slate-700 disabled:to-slate-800 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md"
+                                className="flex items-center justify-center space-x-1 sm:space-x-2 bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 disabled:from-slate-700 disabled:to-slate-800 disabled:cursor-not-allowed text-white font-semibold py-2 px-3 sm:px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md w-full sm:w-auto min-w-0"
                             >
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clipRule="evenodd" />
                                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v4a1 1 0 102 0V7z" clipRule="evenodd" />
                                 </svg>
-                                <span>Clear</span>
+                                <span className="truncate text-xs sm:text-sm">Clear</span>
                             </button>
                         </div>
 

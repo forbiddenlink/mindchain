@@ -289,13 +289,13 @@ export default function EnhancedControls({
                         </div>
                     )}
 
-                    {/* Topic Grid - Optimized for horizontal space */}
-                    <div className="grid grid-cols-4 gap-1">
+                    {/* Topic Grid - Responsive layout */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                         {DEBATE_TOPICS.map(topic => (
                             <label
                                 key={topic.id}
                                 className={`
-                  flex items-center justify-center p-2 rounded-lg border cursor-pointer transition-all text-xs
+                  flex items-center justify-center p-2 sm:p-3 rounded-lg border cursor-pointer transition-all text-xs sm:text-sm
                   ${selectedTopics.includes(topic.id)
                                         ? 'bg-blue-500/20 border-blue-400 text-blue-200'
                                         : 'bg-slate-800/50 border-slate-600 text-slate-300 hover:border-blue-500'
@@ -309,9 +309,9 @@ export default function EnhancedControls({
                                     onChange={() => handleTopicToggle(topic.id)}
                                     className="sr-only"
                                 />
-                                <span className="flex items-center gap-2 font-medium text-center">
-                                    <Icon name={topic.icon} size={16} className="flex-shrink-0" />
-                                    <span className="truncate">{topic.name}</span>
+                                <span className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 font-medium text-center min-w-0">
+                                    <Icon name={topic.icon} size={14} className="flex-shrink-0 sm:size-4" />
+                                    <span className="truncate text-xs sm:text-sm leading-tight">{topic.name}</span>
                                 </span>
                             </label>
                         ))}
