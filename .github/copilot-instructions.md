@@ -104,9 +104,16 @@ cd mindchain-frontend && pnpm dev  # Port 5173
 - `semanticCache.js` - Redis Vector-powered prompt caching system (MAJOR SHOWCASE)
 - `setupCacheIndex.js` - Cache vector index initialization for similarity search
 - `enhancedAI.js` - Advanced AI with emotional state, coalition building, similarity checking
+- `intelligentAgents.js` - Redis-powered AI agents with emotional states and coalition analysis
+- `redisOptimizer.js` - Real-time Redis performance optimization engine
+- `advancedFactChecker.js` - Multi-source fact verification with cross-validation
+- `contestMetricsEngine.js` - Live contest scoring and evaluation system
+- `networkResilience.js` - Network resilience manager with auto-reconnection for demos
+- `contestErrorRecovery.js` - Contest demo error recovery and fallback systems
 - `factChecker.js` - Vector-based fact verification against knowledge base
 - `vectorsearch.js` - Creates Redis vector index (run once during setup)
-- `App.jsx` - React app with 3-mode navigation (Standard/Multi-Debate/Analytics)
+- `App.jsx` - React app with 4-mode navigation (Standard/Multi-Debate/Analytics/Contest Showcase)
+- `ContestShowcaseDashboard.jsx` - Premium demonstration interface for contest judges
 - `StanceEvolutionChart.jsx` - Real-time stance evolution chart with Recharts (election-night style)
 
 ### Multi-Debate System Architecture

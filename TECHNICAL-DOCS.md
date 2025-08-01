@@ -32,7 +32,9 @@ mindchain/
 ├── ⚡ redisOptimizer.js           # Real-time Redis performance optimization engine
 ├── 🔍 advancedFactChecker.js      # Multi-source fact verification with cross-validation
 ├── 📊 contestMetricsEngine.js     # Live contest scoring and evaluation system
-├── 🎯 semanticCache.js             # Redis Vector-powered response caching (MAJOR SHOWCASE)
+├── � networkResilience.js        # Network resilience manager with auto-reconnection
+├── 🛡️ contestErrorRecovery.js     # Contest demo error recovery and fallback systems
+├── �🎯 semanticCache.js             # Redis Vector-powered response caching (MAJOR SHOWCASE)
 ├── ⚙️  setupCacheIndex.js          # Cache vector index initialization
 ├── ✅ factChecker.js               # Vector-based fact verification
 ├── 🔍 vectorsearch.js             # Redis vector index setup
