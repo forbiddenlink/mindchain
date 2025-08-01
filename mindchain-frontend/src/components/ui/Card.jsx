@@ -113,8 +113,8 @@ export const MetricCard = ({
                     )}
                 </div>
                 {icon && (
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center">
-                        <Icon name={icon} size={24} className="text-blue-400" />
+                    <div className="w-12 h-12 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl flex items-center justify-center">
+                        <Icon name={icon} size={24} className="text-green-400" />
                     </div>
                 )}
             </div>
@@ -149,9 +149,9 @@ export const StatusCard = ({
             title: 'text-red-400'
         },
         info: {
-            bg: 'bg-blue-500/10 border-blue-500/20',
-            icon: 'text-blue-400',
-            title: 'text-blue-400'
+            bg: 'bg-green-500/10 border-green-500/20',
+            icon: 'text-green-400',
+            title: 'text-green-400'
         }
     };
 

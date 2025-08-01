@@ -185,11 +185,11 @@ export default function SentimentBadge({ sentiment, confidence, debateId, agentI
         };
       default:
         return {
-          color: 'text-blue-400',
-          bgColor: 'bg-blue-500/20',
-          borderColor: 'border-blue-500/30',
+          color: 'text-green-400',
+          bgColor: 'bg-green-500/20',
+          borderColor: 'border-green-500/30',
           icon: 'circle',
-          emoji: '🔵',
+          emoji: '�',
           label: 'neutral'
         };
     }

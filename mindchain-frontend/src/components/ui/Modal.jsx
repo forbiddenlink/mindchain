@@ -70,8 +70,8 @@ export const ModalHeader = ({
         <div className={`flex items-center justify-between p-6 border-b border-slate-700/50 ${className}`}>
             <div className="flex items-center space-x-4">
                 {icon && (
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                        <Icon name={icon} size={24} className="text-blue-400" />
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 flex items-center justify-center">
+                        <Icon name={icon} size={24} className="text-green-400" />
                     </div>
                 )}
                 <div>
@@ -131,7 +131,7 @@ export const ConfirmDialog = ({
     };
 
     const iconColors = {
-        primary: 'text-blue-400',
+        primary: 'text-green-400',
         danger: 'text-red-400',
         warning: 'text-yellow-400',
         success: 'text-green-400'
@@ -255,7 +255,7 @@ export const InputDialog = ({
                             value={value}
                             onChange={(e) => setValue(e.target.value)}
                             placeholder={placeholder}
-                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all"
                             autoFocus
                             required={required}
                         />

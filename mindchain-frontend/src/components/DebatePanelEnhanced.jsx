@@ -185,8 +185,8 @@ const DebatePanel = ({ messages = [] }) => {
                                             {msg.factCheck && (
                                                 <div className="mt-3 pt-3 border-t border-slate-600/30">
                                                     <div className="flex items-center space-x-2">
-                                                        <Icon name="shield-check" size={14} className="text-blue-400" />
-                                                        <span className="text-blue-400 text-xs font-medium">
+                                                        <Icon name="shield-check" size={14} className="text-green-400" />
+                                                        <span className="text-green-400 text-xs font-medium">
                                                             Fact Check: {(msg.factCheck.score * 100).toFixed(0)}% confidence
                                                         </span>
                                                     </div>

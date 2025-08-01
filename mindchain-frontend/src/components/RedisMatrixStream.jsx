@@ -9,53 +9,6 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
     const containerRef = useRef(null);
     const operationIdRef = useRef(0);
 
-    // Add CSS for custom animations
-    useEffect(() => {
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes glow {
-                0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.5); }
-                50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.8), 0 0 30px rgba(16, 185, 129, 0.6); }
-                100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.5); }
-            }
-            
-            @keyframes slideInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px) scale(0.95);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0) scale(1);
-                }
-            }
-            
-            @keyframes slideOutDown {
-                from {
-                    opacity: 1;
-                    transform: translateY(0) scale(1);
-                }
-                to {
-                    opacity: 0;
-                    transform: translateY(-20px) scale(0.95);
-                }
-            }
-            
-            .matrix-operation-enter {
-                animation: slideInUp 0.5s ease-out forwards;
-            }
-            
-            .matrix-operation-exit {
-                animation: slideOutDown 0.3s ease-in forwards;
-            }
-        `;
-        document.head.appendChild(style);
-        
-        return () => {
-            document.head.removeChild(style);
-        };
-    }, []);
-
     // Redis operation types with colors and animations
     const operationTypes = {
         json: {
@@ -139,12 +92,12 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
     // Update operation progress and phases
     const updateOperations = () => {
         setOperations(prev => prev.map(op => {
-            let newProgress = op.progress + (2 + Math.random() * 5); // Slower, more controlled progress
+            let newProgress = op.progress + (5 + Math.random() * 10); // Variable speed
             let newPhase = op.phase;
             
-            if (newProgress > 20 && op.phase === 'starting') {
+            if (newProgress > 25 && op.phase === 'starting') {
                 newPhase = 'processing';
-            } else if (newProgress > 70 && op.phase === 'processing') {
+            } else if (newProgress > 75 && op.phase === 'processing') {
                 newPhase = 'completing';
             } else if (newProgress >= 100) {
                 newPhase = 'success';
@@ -157,8 +110,8 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
                 phase: newPhase
             };
         }).filter(op => {
-            // Keep completed operations visible longer (8 seconds instead of 2)
-            return !(op.phase === 'success' && op.progress >= 100 && Date.now() - op.timestamp > 8000);
+            // Remove completed operations after a delay
+            return !(op.phase === 'success' && op.progress >= 100 && Date.now() - op.timestamp > 2000);
         }));
     };
 
@@ -166,15 +119,15 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
     useEffect(() => {
         if (!isActive) return;
         
-        // Add new operations at longer intervals for better visibility
+        // Add new operations at varying intervals (Matrix feel)
         const addInterval = setInterval(() => {
-            if (Math.random() > 0.4) { // 60% chance to add (reduced from 70%)
+            if (Math.random() > 0.3) { // 70% chance to add
                 addOperation();
             }
-        }, 1500 + Math.random() * 2000); // 1.5-3.5s intervals (increased from 0.8-2s)
+        }, 800 + Math.random() * 1200); // 0.8-2s intervals
         
-        // Update operation progress more slowly
-        const updateInterval = setInterval(updateOperations, 200); // Slower updates (200ms vs 150ms)
+        // Update operation progress
+        const updateInterval = setInterval(updateOperations, 150);
         
         return () => {
             clearInterval(addInterval);
@@ -261,28 +214,28 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
         return () => window.removeEventListener('websocket-message', handleRedisOperation);
     }, [isActive]);
 
-    // Get phase styling with smoother animations
+    // Get phase styling
     const getPhaseStyle = (phase, isReal = false) => {
-        const baseStyle = isReal ? 'ring-2 ring-yellow-400/50 transform scale-105 ' : '';
+        const baseStyle = isReal ? 'ring-2 ring-yellow-400/50 ' : '';
         
         switch (phase) {
             case 'starting':
-                return baseStyle + 'bg-gray-800/60 border-gray-600/30 transition-all duration-500';
+                return baseStyle + 'bg-gray-800/60 border-gray-600/30';
             case 'processing':
-                return baseStyle + 'bg-blue-900/40 border-blue-500/40 transition-all duration-300';
+                return baseStyle + 'bg-green-900/40 border-green-500/40 animate-pulse';
             case 'completing':
-                return baseStyle + 'bg-green-900/40 border-green-500/40 transition-all duration-300';
+                return baseStyle + 'bg-green-900/40 border-green-500/40';
             case 'success':
-                return baseStyle + 'bg-emerald-900/60 border-emerald-400/60 transform scale-102 transition-all duration-500';
+                return baseStyle + 'bg-emerald-900/60 border-emerald-400/60 animate-bounce';
             default:
-                return baseStyle + 'bg-gray-800/60 border-gray-600/30 transition-all duration-500';
+                return baseStyle + 'bg-gray-800/60 border-gray-600/30';
         }
     };
 
     // Progress bar color by type
     const getProgressColor = (type, phase) => {
         const colors = {
-            json: phase === 'success' ? 'bg-blue-400' : 'bg-blue-500',
+            json: phase === 'success' ? 'bg-green-400' : 'bg-green-500',
             streams: phase === 'success' ? 'bg-green-400' : 'bg-green-500',
             timeseries: phase === 'success' ? 'bg-purple-400' : 'bg-purple-500',
             vector: phase === 'success' ? 'bg-orange-400' : 'bg-orange-500'
@@ -339,54 +292,45 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
             {/* Operations Stream */}
             <div 
                 ref={containerRef}
-                className="bg-black/95 backdrop-blur-sm border-x border-b border-green-500/30 rounded-b-lg p-3 max-h-96 overflow-y-auto scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-green-500"
-                style={{
-                    scrollBehavior: 'smooth'
-                }}
+                className="bg-black/95 backdrop-blur-sm border-x border-b border-green-500/30 rounded-b-lg p-3 max-h-80 overflow-y-auto scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-green-500"
             >
-                <div className="space-y-3">
+                <div className="space-y-2">
                     {operations.length === 0 ? (
-                        <div className="text-center text-gray-500 font-mono text-sm py-8">
-                            <div className="animate-pulse">Initializing Redis Matrix...</div>
-                            <div className="text-xs text-gray-600 mt-2">Waiting for operations...</div>
+                        <div className="text-center text-gray-500 font-mono text-xs py-4">
+                            Initializing Redis Matrix...
                         </div>
                     ) : (
                         operations.map((op) => (
                             <div
                                 key={op.id}
-                                className={`border rounded-lg p-3 transition-all duration-500 ease-in-out matrix-operation-enter ${getPhaseStyle(op.phase, op.isReal)} hover:shadow-lg`}
-                                style={{
-                                    animation: op.phase === 'processing' ? 'pulse 2s infinite' : 
-                                              op.phase === 'success' ? 'glow 1s ease-in-out' : 'none',
-                                    animationDelay: `${Math.random() * 0.3}s` // Stagger animations
-                                }}
+                                className={`border rounded-lg p-2 transition-all duration-300 ${getPhaseStyle(op.phase, op.isReal)}`}
                             >
                                 {/* Operation Header */}
-                                <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center justify-between mb-1">
                                     <div className="flex items-center gap-2">
                                         <Icon 
                                             name={op.config.icon} 
-                                            className={`w-4 h-4 text-${op.config.color}-400 transition-all duration-300 ${
+                                            className={`w-3 h-3 text-${op.config.color}-400 ${
                                                 op.phase === 'processing' ? 'animate-spin' : ''
                                             }`} 
                                         />
-                                        <span className={`text-sm font-bold text-${op.config.color}-300 font-mono`}>
+                                        <span className={`text-xs font-bold text-${op.config.color}-300 font-mono`}>
                                             {op.config.label}
                                         </span>
                                         {op.isReal && (
-                                            <span className="px-2 py-1 bg-yellow-600/30 border border-yellow-500/50 rounded text-xs text-yellow-300 font-bold animate-pulse">
+                                            <span className="px-1 py-0.5 bg-yellow-600/30 border border-yellow-500/50 rounded text-xs text-yellow-300 font-bold">
                                                 LIVE
                                             </span>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-3 text-xs">
+                                    <div className="flex items-center gap-2 text-xs">
                                         {op.similarity && (
-                                            <span className="text-orange-300 font-mono font-bold">
+                                            <span className="text-orange-300 font-mono">
                                                 {op.similarity.toFixed(1)}%
                                             </span>
                                         )}
                                         {op.value && (
-                                            <span className={`font-mono font-bold ${
+                                            <span className={`font-mono ${
                                                 parseFloat(op.value) > 0 ? 'text-green-300' : 'text-red-300'
                                             }`}>
                                                 {op.value > 0 ? '+' : ''}{op.value}
@@ -399,29 +343,28 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
                                 </div>
 
                                 {/* Operation Details */}
-                                <div className="text-sm text-gray-300 font-mono mb-3 leading-relaxed">
+                                <div className="text-xs text-gray-300 font-mono mb-2">
                                     {op.operation}
                                 </div>
 
                                 {/* Progress Bar */}
-                                <div className="w-full bg-gray-700/50 rounded-full h-2 mb-2">
+                                <div className="w-full bg-gray-700/50 rounded-full h-1">
                                     <div
-                                        className={`h-2 rounded-full transition-all duration-500 ease-out ${getProgressColor(op.type, op.phase)}`}
+                                        className={`h-1 rounded-full transition-all duration-300 ${getProgressColor(op.type, op.phase)}`}
                                         style={{ width: `${op.progress}%` }}
                                     ></div>
                                 </div>
 
                                 {/* Phase Status */}
-                                <div className={`text-xs font-mono font-bold ${
+                                <div className={`text-xs mt-1 font-mono ${
                                     op.phase === 'success' ? 'text-green-300' :
                                     op.phase === 'completing' ? 'text-yellow-300' :
-                                    op.phase === 'processing' ? 'text-blue-300' :
+                                    op.phase === 'processing' ? 'text-green-300' :
                                     'text-gray-400'
                                 }`}>
                                     {op.phase.toUpperCase()}
                                     {op.phase === 'success' && ' ✓'}
                                     {op.phase === 'processing' && ' ⟳'}
-                                    {op.phase === 'completing' && ' ⚡'}
                                 </div>
                             </div>
                         ))

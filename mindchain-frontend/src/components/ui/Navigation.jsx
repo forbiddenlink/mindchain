@@ -98,7 +98,7 @@ export const SidebarNav = ({
                         className={`
                             w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-200
                             ${activeItem === item.id
-                                ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-blue-500/30'
+                                ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-white border border-green-500/30'
                                 : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                             }
                             ${item.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
@@ -110,7 +110,7 @@ export const SidebarNav = ({
                             <Icon
                                 name={item.icon}
                                 size={20}
-                                className={activeItem === item.id ? 'text-blue-400' : 'text-slate-400'}
+                                className={activeItem === item.id ? 'text-green-400' : 'text-slate-400'}
                             />
                         )}
                         {!collapsed && (

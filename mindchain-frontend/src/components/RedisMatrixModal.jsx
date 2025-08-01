@@ -13,7 +13,7 @@ export default function RedisMatrixModal({ isOpen, onClose }) {
                 {/* Home Button */}
                 <button
                     onClick={onClose}
-                    className="bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/30 rounded-lg p-2 text-blue-300 hover:text-blue-200 transition-all flex items-center gap-2"
+                    className="bg-green-600/20 hover:bg-green-600/40 border border-green-500/30 rounded-lg p-2 text-green-300 hover:text-green-200 transition-all flex items-center gap-2"
                 >
                     <Icon name="home" className="w-5 h-5" />
                     <span className="text-sm font-medium">Back to Home</span>
@@ -45,18 +45,18 @@ export default function RedisMatrixModal({ isOpen, onClose }) {
 
                 {/* How It Works Section */}
                 <div className="mb-8">
-                    <div className="bg-gradient-to-r from-gray-900/90 to-blue-900/70 border border-green-500/30 rounded-xl p-6">
+                    <div className="bg-gradient-to-r from-gray-900/90 to-green-900/70 border border-green-500/30 rounded-xl p-6">
                         <h2 className="text-2xl font-bold text-green-300 mb-4 text-center font-mono">
                             🔄 HOW ALL 4 REDIS MODULES WORK TOGETHER
                         </h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                             {/* JSON Module */}
-                            <div className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4">
+                            <div className="bg-green-900/30 border border-green-500/30 rounded-lg p-4">
                                 <div className="text-center mb-3">
-                                    <Icon name="database" className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-                                    <h3 className="font-bold text-blue-300 text-lg">RedisJSON</h3>
-                                    <div className="text-xs text-blue-400 font-mono">COMPLEX DATA</div>
+                                    <Icon name="database" className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                                    <h3 className="font-bold text-green-300 text-lg">RedisJSON</h3>
+                                    <div className="text-xs text-green-400 font-mono">COMPLEX DATA</div>
                                 </div>
                                 <ul className="text-xs text-gray-300 space-y-1">
                                     <li>• Agent profiles & personalities</li>
@@ -118,7 +118,7 @@ export default function RedisMatrixModal({ isOpen, onClose }) {
                                 🔗 INTEGRATION FLOW
                             </h3>
                             <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
-                                <span className="bg-blue-600/20 text-blue-300 px-2 py-1 rounded border border-blue-500/30 font-mono">
+                                <span className="bg-green-600/20 text-green-300 px-2 py-1 rounded border border-green-500/30 font-mono">
                                     JSON stores agent profiles
                                 </span>
                                 <Icon name="arrow-right" className="w-4 h-4 text-gray-400" />
@@ -155,7 +155,7 @@ export default function RedisMatrixModal({ isOpen, onClose }) {
                             <div className="space-y-3 text-sm">
                                 <div className="flex justify-between items-center">
                                     <span className="text-gray-300">JSON Operations:</span>
-                                    <span className="text-blue-300 font-mono font-bold">1,247/min</span>
+                                    <span className="text-green-300 font-mono font-bold">1,247/min</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-gray-300">Stream Messages:</span>

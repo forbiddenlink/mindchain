@@ -3,7 +3,7 @@ import Icon from './Icon';
 import { Card, CardContent, Skeleton, Stack } from './ui';
 
 export const LoadingSpinner = ({ size = 16, text = "Loading..." }) => (
-    <div className="flex items-center justify-center gap-2 text-blue-400 animate-fade-in-up">
+    <div className="flex items-center justify-center gap-2 text-green-400 animate-fade-in-up">
         <Icon name="loading" size={size} className="animate-spin" />
         <span className="text-sm">{text}</span>
     </div>
@@ -13,7 +13,7 @@ export const LoadingSpinner = ({ size = 16, text = "Loading..." }) => (
 export const PageLoader = ({ title = "Loading MindChain..." }) => (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="text-center animate-fade-in-up">
-            <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-500 via-purple-600 to-blue-700 rounded-xl flex items-center justify-center animate-pulse-gentle">
+            <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-green-500 via-emerald-600 to-green-700 rounded-xl flex items-center justify-center animate-pulse-gentle">
                 <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             </div>
             <h2 className="text-xl font-semibold text-white mb-2">{title}</h2>
@@ -50,7 +50,7 @@ export const LoadingOverlay = ({ isVisible, text = "Processing..." }) => {
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
             <div className="bg-slate-800 border border-slate-600 rounded-xl p-8 flex items-center gap-4 animate-scale-in">
-                <Icon name="loading" size={24} className="animate-spin text-blue-400" />
+                <Icon name="loading" size={24} className="animate-spin text-green-400" />
                 <span className="text-white font-medium">{text}</span>
             </div>
         </div>

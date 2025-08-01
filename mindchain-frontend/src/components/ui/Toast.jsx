@@ -112,15 +112,15 @@ const ToastItem = ({ toast, onRemove }) => {
             },
             info: {
                 icon: 'info',
-                iconColor: 'text-blue-400',
-                bgColor: 'from-blue-500/20 to-purple-500/20',
-                borderColor: 'border-blue-500/30'
+                iconColor: 'text-green-400',
+                bgColor: 'from-green-500/20 to-emerald-500/20',
+                borderColor: 'border-green-500/30'
             },
             loading: {
                 icon: 'loader-2',
-                iconColor: 'text-purple-400',
-                bgColor: 'from-purple-500/20 to-blue-500/20',
-                borderColor: 'border-purple-500/30'
+                iconColor: 'text-green-400',
+                bgColor: 'from-green-500/20 to-emerald-500/20',
+                borderColor: 'border-green-500/30'
             }
         };
 
@@ -163,7 +163,7 @@ const ToastItem = ({ toast, onRemove }) => {
                         {toast.action && (
                             <button
                                 onClick={toast.action.onClick}
-                                className="text-xs text-blue-400 hover:text-blue-300 font-medium mt-2 underline"
+                                className="text-xs text-green-400 hover:text-green-300 font-medium mt-2 underline"
                             >
                                 {toast.action.label}
                             </button>

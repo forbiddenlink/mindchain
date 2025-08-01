@@ -58,7 +58,7 @@ export const Spinner = ({ size = 'md', className = '' }) => {
 
     return (
         <div className={`${sizes[size]} ${className}`}>
-            <div className="w-full h-full border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-full h-full border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
     );
 };
@@ -77,9 +77,9 @@ export const LoadingOverlay = ({
             <div className="glass-panel rounded-2xl p-8 max-w-sm w-full mx-4">
                 <div className="text-center">
                     <div className="w-16 h-16 mx-auto mb-6 relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-pulse"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full animate-pulse"></div>
                         <div className="absolute inset-2 bg-slate-900 rounded-full flex items-center justify-center">
-                            <Icon name="brain" size={24} className="text-blue-400 animate-pulse" />
+                            <Icon name="brain" size={24} className="text-green-400 animate-pulse" />
                         </div>
                     </div>
                     <h3 className="text-xl font-semibold text-white mb-2">{message}</h3>
@@ -136,7 +136,7 @@ export const DotLoader = ({ className = '' }) => {
             {[0, 1, 2].map((i) => (
                 <div
                     key={i}
-                    className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                    className="w-2 h-2 bg-green-500 rounded-full animate-pulse"
                     style={{ animationDelay: `${i * 0.15}s` }}
                 ></div>
             ))}
@@ -155,9 +155,9 @@ export const LoadingCard = ({
         <div className={`glass-panel rounded-xl p-8 ${className}`}>
             <div className="flex flex-col items-center justify-center text-center">
                 <div className="w-16 h-16 mb-4 relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full"></div>
                     <div className="w-full h-full flex items-center justify-center">
-                        <Icon name={icon} size={32} className="text-blue-400 animate-spin" />
+                        <Icon name={icon} size={32} className="text-green-400 animate-spin" />
                     </div>
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>

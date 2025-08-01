@@ -100,7 +100,7 @@ const ViewModeSelector = ({ viewMode, setViewMode, className = '' }) => {
                     <Icon
                         name={modes.find(m => m.key === viewMode)?.icon || 'target'}
                         size={20}
-                        className="text-blue-400"
+                        className="text-green-400"
                     />
                     <div>
                         <h4 className="text-white font-medium">

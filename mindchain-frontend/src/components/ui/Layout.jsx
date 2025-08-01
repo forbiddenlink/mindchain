@@ -38,8 +38,8 @@ export const Section = ({
 }) => {
     const backgroundClasses = {
         transparent: '',
-        glass: 'bg-white/5 backdrop-blur-lg border border-white/10',
-        gradient: 'bg-gradient-to-br from-blue-50/50 to-purple-50/50',
+        glass: 'bg-black/20 backdrop-blur-lg border border-green-500/20',
+        gradient: 'bg-gradient-to-br from-green-900/20 to-black/50',
         dark: 'bg-gray-900/50',
     };
 
@@ -253,19 +253,19 @@ export const DashboardLayout = ({
     return (
         <div
             className={cn(
-                'min-h-screen bg-gray-50',
+                'min-h-screen bg-black',
                 className
             )}
             {...props}
         >
             {header && (
-                <header className="bg-white shadow-sm border-b">
+                <header className="bg-black/80 border border-green-500/30 backdrop-blur-sm">
                     {header}
                 </header>
             )}
             <div className="flex">
                 {sidebar && (
-                    <aside className="w-64 min-h-screen bg-white shadow-sm">
+                    <aside className="w-64 min-h-screen bg-black/80 border border-green-500/30 backdrop-blur-sm">
                         {sidebar}
                     </aside>
                 )}

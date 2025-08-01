@@ -175,7 +175,7 @@ export const Toggle = ({
                 role="switch"
                 aria-checked={checked}
                 onClick={() => onChange?.(!checked)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${checked ? 'bg-blue-600' : 'bg-slate-600'
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${checked ? 'bg-green-600' : 'bg-slate-600'
                     }`}
                 {...props}
             >
@@ -213,7 +213,7 @@ export const RadioGroup = ({
                             value={option.value}
                             checked={value === option.value}
                             onChange={(e) => onChange?.(e.target.value)}
-                            className="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 focus:ring-blue-500 focus:ring-2"
+                            className="w-4 h-4 text-green-600 bg-slate-700 border-slate-600 focus:ring-green-500 focus:ring-2"
                         />
                         <span className="text-slate-300">{option.label}</span>
                     </label>
@@ -238,7 +238,7 @@ export const Checkbox = ({
                 type="checkbox"
                 checked={checked}
                 onChange={(e) => onChange?.(e.target.checked)}
-                className="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500 focus:ring-2 mt-0.5"
+                className="w-4 h-4 text-green-600 bg-slate-700 border-slate-600 rounded focus:ring-green-500 focus:ring-2 mt-0.5"
                 {...props}
             />
             <div className="flex-1">
