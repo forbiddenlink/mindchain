@@ -50,6 +50,22 @@
 ```bash
 # 1. Verify all dependencies installed
 pnpm install
+cd mindchain-frontend && pnpm install && cd ..
+
+# 2. Initialize Redis indices and agent profiles
+node vectorsearch.js        # Creates facts vector index
+node setupCacheIndex.js     # Creates semantic cache index
+node index.js              # Creates SenatorBot profile
+node addReformer.js        # Creates ReformerBot profile
+
+# 3. Optimize system for demo performance
+node presentationOptimizer.js  # Primes cache and optimizes Redis
+
+# 4. Test core functionality
+node testRedis.js          # Verify Redis connectivity
+node quickTest.js          # System functionality test
+```
+pnpm install
 cd mindchain-frontend && pnpm install
 
 # 2. Check environment variables

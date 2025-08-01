@@ -4,13 +4,29 @@ import SentimentBadge from './SentimentBadge';
 
 const DebatePanel = ({ messages = [] }) => {
     const messagesEndRef = useRef(null);
+    const messagesContainerRef = useRef(null);
+    const lastMessageCountRef = useRef(0);
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        // Use a more reliable scroll method that's less jarring
+        if (messagesEndRef.current) {
+            // Use setTimeout to ensure DOM is updated before scrolling
+            setTimeout(() => {
+                messagesEndRef.current?.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'nearest',
+                    inline: 'nearest'
+                });
+            }, 100);
+        }
     };
 
     useEffect(() => {
-        scrollToBottom();
+        // Only scroll for new messages, with debouncing
+        if (messages.length > lastMessageCountRef.current && messages.length > 0) {
+            scrollToBottom();
+        }
+        lastMessageCountRef.current = messages.length;
     }, [messages]);
 
     const getAgentStyle = (agentId) => {
@@ -59,7 +75,10 @@ const DebatePanel = ({ messages = [] }) => {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 min-h-0 bg-gradient-to-b from-slate-900/20 to-slate-900/40">
+            <div 
+                ref={messagesContainerRef}
+                className="flex-1 overflow-y-auto p-6 space-y-4 min-h-0 bg-gradient-to-b from-slate-900/20 to-slate-900/40"
+            >
                 {messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
                         <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mb-4">

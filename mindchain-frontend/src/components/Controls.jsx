@@ -32,6 +32,17 @@ const Controls = () => {
         console.log('🎯 Start Debate clicked!');
         setLoading(prev => ({ ...prev, start: true }));
         try {
+            // Stop any existing debate first
+            if (currentDebateId) {
+                console.log('🛑 Stopping existing debate before starting new one...');
+                try {
+                    await api.stopDebate(currentDebateId);
+                    console.log('✅ Previous debate stopped successfully');
+                } catch (stopError) {
+                    console.warn('⚠️ Failed to stop previous debate:', stopError);
+                }
+            }
+
             console.log('🚀 Calling API to start debate...');
             const debateId = `debate_${Date.now()}`;
             const result = await api.startDebate({
@@ -64,7 +75,8 @@ const Controls = () => {
             const result = await api.stopDebate(currentDebateId);
             console.log('✅ Debate stopped successfully:', result);
             setIsDebating(false);
-            setCurrentDebateId(null);
+            // Don't clear currentDebateId - keep it so messages remain visible
+            // setCurrentDebateId(null); // Commented out to preserve conversation
         } catch (error) {
             console.error('❌ Failed to stop debate:', error);
             alert('Failed to stop debate. Check console for details.');
@@ -73,6 +85,15 @@ const Controls = () => {
         } finally {
             setLoading(prev => ({ ...prev, stop: false }));
         }
+    };
+
+    const handleClearConversation = () => {
+        console.log('🧹 Clear Conversation clicked!');
+        // Clear messages and reset for fresh start
+        setDebateMessages([]);
+        setCurrentDebateId(null);
+        setIsDebating(false);
+        console.log('✅ Conversation cleared - ready for fresh start');
     };
 
     const handleAddFact = async () => {
@@ -257,6 +278,18 @@ const Controls = () => {
                                     )}
                                 </span>
                                 <span>{loading.stop ? 'Stopping...' : 'Stop Debate'}</span>
+                            </button>
+
+                            <button
+                                onClick={handleClearConversation}
+                                disabled={debateMessages.length === 0}
+                                className="flex items-center justify-center space-x-2 bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 disabled:from-slate-700 disabled:to-slate-800 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md"
+                            >
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clipRule="evenodd" />
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v4a1 1 0 102 0V7z" clipRule="evenodd" />
+                                </svg>
+                                <span>Clear</span>
                             </button>
                         </div>
 

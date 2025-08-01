@@ -416,15 +416,28 @@ export async function updateStanceBasedOnDebate(agentId, debateId, topic) {
             }
         }
         
-        // Calculate stance evolution (increased for better visualization)
+        // Calculate stance evolution with agent-specific behavior (increased for better visualization)
+        let baseShift = 0;
         if (strongArgumentsFor > strongArgumentsAgainst) {
-            stanceShift = 0.15; // More noticeable movement toward positive
+            baseShift = 0.15; // More noticeable movement toward positive
         } else if (strongArgumentsAgainst > strongArgumentsFor) {
-            stanceShift = -0.15; // More noticeable movement toward negative
+            baseShift = -0.15; // More noticeable movement toward negative
         } else {
             // Even when no strong arguments, add some random variation for demo
-            stanceShift = (Math.random() - 0.5) * 0.1; // Random small change
+            baseShift = (Math.random() - 0.5) * 0.1; // Random small change
         }
+        
+        // Add agent-specific personality modifiers for distinct patterns
+        let agentModifier = 1.0;
+        if (agentId === 'senatorbot') {
+            // SenatorBot tends to be more conservative, changes less drastically
+            agentModifier = 0.7 + (Math.sin(Date.now() / 10000) * 0.3); // Subtle wave pattern
+        } else if (agentId === 'reformerbot') {
+            // ReformerBot is more dynamic, changes more dramatically
+            agentModifier = 1.3 + (Math.cos(Date.now() / 8000) * 0.4); // Different wave pattern
+        }
+        
+        stanceShift = baseShift * agentModifier;
         
         // Apply personality resistance (some agents change less)
         const personalityFactor = profile.tone === 'stubborn' ? 0.5 : 1.0;

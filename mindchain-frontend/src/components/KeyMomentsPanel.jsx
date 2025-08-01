@@ -43,14 +43,18 @@ const KeyMomentsPanel = ({ debateId, viewMode = 'standard' }) => {
         }
     };
 
-    // Initial fetch and refresh on debate/mode changes
+    // Initial fetch and refresh on debate/mode changes with debouncing
     useEffect(() => {
-        fetchKeyMoments();
+        const timeoutId = setTimeout(() => {
+            fetchKeyMoments();
+        }, 100); // Small delay to batch rapid changes
+        
+        return () => clearTimeout(timeoutId);
     }, [debateId, viewMode]);
 
-    // Auto-refresh every 30 seconds
+    // Auto-refresh every 45 seconds (reduced frequency)
     useEffect(() => {
-        const interval = setInterval(fetchKeyMoments, 30000);
+        const interval = setInterval(fetchKeyMoments, 45000);
         return () => clearInterval(interval);
     }, [debateId, viewMode]);
 

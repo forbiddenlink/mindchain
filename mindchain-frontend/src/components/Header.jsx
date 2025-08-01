@@ -63,7 +63,7 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
                                 : 'bg-red-400'
                                 }`}></div>
                             <span className="text-slate-300 text-sm font-medium">
-                                Redis Challenge 2025
+                                MindChain Analytics
                             </span>
                         </div>
                     </div>

@@ -16,17 +16,22 @@ export default function StanceEvolutionChart({ stanceData = [] }) {
     }, [stanceData]);
 
     // Format data for Recharts
-    const chartData = stanceData.map((entry, index) => ({
-        turn: entry.turn || index + 1,
-        timestamp: entry.timestamp,
-        senatorbot: entry.senatorbot || 0,
-        reformerbot: entry.reformerbot || 0,
-        timeLabel: new Date(entry.timestamp).toLocaleTimeString('en-US', {
-            hour12: false,
-            minute: '2-digit',
-            second: '2-digit'
-        })
-    }));
+    const chartData = stanceData.map((entry, index) => {
+        const timeLabel = entry.timestamp ? 
+            new Date(entry.timestamp).toLocaleTimeString('en-US', {
+                hour12: false,
+                minute: '2-digit',
+                second: '2-digit'
+            }) : `Turn ${entry.turn || index + 1}`;
+            
+        return {
+            turn: entry.turn || index + 1,
+            timestamp: entry.timestamp,
+            senatorbot: entry.senatorbot || 0,
+            reformerbot: entry.reformerbot || 0,
+            timeLabel: timeLabel
+        };
+    });
 
     // Custom tooltip to show actual values and time
     const CustomTooltip = ({ active, payload, label }) => {
@@ -34,8 +39,8 @@ export default function StanceEvolutionChart({ stanceData = [] }) {
             const data = payload[0].payload;
             return (
                 <div className="bg-slate-800/95 backdrop-blur-sm p-3 border border-slate-600/50 rounded-lg shadow-xl">
-                    <p className="text-sm font-medium text-white">Turn {label}</p>
-                    <p className="text-xs text-slate-400 mb-2">{data.timeLabel}</p>
+                    <p className="text-sm font-medium text-white">{label}</p>
+                    <p className="text-xs text-slate-400 mb-2">Turn {data.turn}</p>
                     {payload.map((entry, index) => (
                         <p key={index} className="text-sm" style={{ color: entry.color }}>
                             <span className="font-medium">{entry.dataKey === 'senatorbot' ? 'SenatorBot' : 'ReformerBot'}:</span> {entry.value.toFixed(2)}
@@ -142,21 +147,24 @@ export default function StanceEvolutionChart({ stanceData = [] }) {
                     <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
                         <XAxis
-                            dataKey="turn"
+                            dataKey="timeLabel"
                             stroke="#94a3b8"
                             fontSize={12}
                             tickLine={false}
                             axisLine={false}
                             tick={{ fill: '#94a3b8' }}
+                            angle={-45}
+                            textAnchor="end"
+                            height={60}
                         />
                         <YAxis
-                            domain={[-1, 1]}
+                            domain={['dataMin - 0.1', 'dataMax + 0.1']}
                             stroke="#94a3b8"
                             fontSize={12}
                             tickLine={false}
                             axisLine={false}
                             tick={{ fill: '#94a3b8' }}
-                            tickFormatter={(value) => value.toFixed(1)}
+                            tickFormatter={(value) => value.toFixed(2)}
                         />
                         <Tooltip content={<CustomTooltip />} />
                         <Line

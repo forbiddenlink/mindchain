@@ -14,7 +14,17 @@ const DEBATE_TOPICS = [
     { id: 'space', name: 'Space Exploration', description: 'Space colonization and research funding', icon: 'space' }
 ];
 
-export default function EnhancedControls({ viewMode, activeDebates, currentDebateId, onMetricsUpdate, onStopCurrentDebate, onDebateStarted }) {
+export default function EnhancedControls({ 
+    viewMode, 
+    activeDebates, 
+    currentDebateId, 
+    debateMessages = [], 
+    isDebating = false,
+    onMetricsUpdate, 
+    onStopCurrentDebate, 
+    onClearConversation,
+    onDebateStarted 
+}) {
     const [selectedTopics, setSelectedTopics] = useState(['climate']);
     const [customTopic, setCustomTopic] = useState('');
     const [isStarting, setIsStarting] = useState(false);
@@ -82,8 +92,19 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                 }
             } else {
                 // Standard mode: single debate
+                // Stop current debate first if one is running
+                if (currentDebateId && onStopCurrentDebate) {
+                    console.log('🛑 Stopping current debate before starting new one...');
+                    await onStopCurrentDebate();
+                    // Small delay to ensure stop is processed
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
                 const topic = DEBATE_TOPICS.find(t => t.id === selectedTopics[0])?.description || selectedTopics[0];
-                const response = await api.startDebate({ topic });
+                const response = await api.startDebate({ 
+                    topic,
+                    debateId: 'standard_debate' // Use consistent ID for standard mode
+                });
                 console.log(`🎯 Started single debate: ${topic}`);
                 
                 // Notify parent of the new debate ID
@@ -156,6 +177,15 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                                     <Icon name="stop" size={14} />
                                     Stop
                                 </button>
+                                {debateMessages.length > 0 && (
+                                    <button
+                                        onClick={onClearConversation}
+                                        className="px-2 py-1 bg-slate-600/20 border border-slate-500/20 rounded text-slate-300 hover:bg-slate-600/30 transition-colors text-sm flex items-center gap-1"
+                                    >
+                                        <Icon name="trash" size={14} />
+                                        Clear
+                                    </button>
+                                )}
                             </div>
                         ) : viewMode === 'multi-debate' && activeDebates.size > 0 ? (
                             <div className="flex items-center gap-2">
@@ -169,6 +199,15 @@ export default function EnhancedControls({ viewMode, activeDebates, currentDebat
                                     <Icon name="stop" size={14} />
                                     Stop All
                                 </button>
+                                {debateMessages.length > 0 && (
+                                    <button
+                                        onClick={onClearConversation}
+                                        className="px-2 py-1 bg-slate-600/20 border border-slate-500/20 rounded text-slate-300 hover:bg-slate-600/30 transition-colors text-sm flex items-center gap-1"
+                                    >
+                                        <Icon name="trash" size={14} />
+                                        Clear All
+                                    </button>
+                                )}
                             </div>
                         ) : null}
                     </div>

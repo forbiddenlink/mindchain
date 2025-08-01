@@ -1,10 +1,10 @@
-// Contest Showcase Dashboard - Premium Features for Redis AI Challenge
+// System Showcase Dashboard - Premium Analytics and Demonstrations
 import { useState, useEffect } from 'react';
 import Icon from './Icon';
 
-export default function ContestShowcaseDashboard() {
+export default function SystemShowcaseDashboard() {
     const [showcaseData, setShowcaseData] = useState(null);
-    const [contestMetrics, setContestMetrics] = useState(null);
+    const [systemMetrics, setSystemMetrics] = useState(null);
     const [optimizationMetrics, setOptimizationMetrics] = useState(null);
     const [demoRunning, setDemoRunning] = useState(false);
     const [demoResults, setDemoResults] = useState({});
@@ -49,7 +49,7 @@ export default function ContestShowcaseDashboard() {
     const runDemo = async (scenario) => {
         setDemoRunning(true);
         setActiveDemo(scenario);
-        
+
         try {
             const response = await fetch(`/api/contest/demo/${scenario}`, {
                 method: 'POST',
@@ -147,7 +147,7 @@ export default function ContestShowcaseDashboard() {
                         <Icon name="layers" className="w-6 h-6 text-blue-400" />
                         Redis Multi-Modal Architecture Live Demo
                     </h2>
-                    
+
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* RedisJSON */}
                         <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
@@ -159,7 +159,7 @@ export default function ContestShowcaseDashboard() {
                             <p className="text-sm text-gray-400 mb-3">{showcaseData.showcase?.redisJSON?.example}</p>
                             <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
                                 <code className="text-xs text-green-400">
-                                    Keys: {showcaseData.summary?.activeKeys?.json || 0} | 
+                                    Keys: {showcaseData.summary?.activeKeys?.json || 0} |
                                     Pattern: {showcaseData.showcase?.redisJSON?.keyPattern}
                                 </code>
                             </div>
@@ -182,7 +182,7 @@ export default function ContestShowcaseDashboard() {
                             <p className="text-sm text-gray-400 mb-3">{showcaseData.showcase?.redisStreams?.example}</p>
                             <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
                                 <code className="text-xs text-green-400">
-                                    Keys: {showcaseData.summary?.activeKeys?.streams || 0} | 
+                                    Keys: {showcaseData.summary?.activeKeys?.streams || 0} |
                                     Pattern: {showcaseData.showcase?.redisStreams?.keyPattern}
                                 </code>
                             </div>
@@ -205,7 +205,7 @@ export default function ContestShowcaseDashboard() {
                             <p className="text-sm text-gray-400 mb-3">{showcaseData.showcase?.redisTimeSeries?.example}</p>
                             <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
                                 <code className="text-xs text-green-400">
-                                    Keys: {showcaseData.summary?.activeKeys?.timeseries || 0} | 
+                                    Keys: {showcaseData.summary?.activeKeys?.timeseries || 0} |
                                     Pattern: {showcaseData.showcase?.redisTimeSeries?.keyPattern}
                                 </code>
                             </div>
@@ -228,7 +228,7 @@ export default function ContestShowcaseDashboard() {
                             <p className="text-sm text-gray-400 mb-3">{showcaseData.showcase?.redisVector?.example}</p>
                             <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
                                 <code className="text-xs text-green-400">
-                                    Keys: {showcaseData.summary?.activeKeys?.vector || 0} | 
+                                    Keys: {showcaseData.summary?.activeKeys?.vector || 0} |
                                     Pattern: {showcaseData.showcase?.redisVector?.keyPattern}
                                 </code>
                             </div>
@@ -251,7 +251,7 @@ export default function ContestShowcaseDashboard() {
                         <Icon name="gauge" className="w-6 h-6 text-orange-400" />
                         Real-Time Performance Optimization
                     </h2>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
                             <div className="flex items-center gap-3 mb-3">
@@ -285,8 +285,8 @@ export default function ContestShowcaseDashboard() {
                                 <span className="font-semibold">Last Optimization</span>
                             </div>
                             <div className="text-lg font-bold text-blue-300 mb-2">
-                                {optimizationMetrics.optimization?.last_optimization ? 
-                                    new Date(optimizationMetrics.optimization.last_optimization).toLocaleTimeString() : 
+                                {optimizationMetrics.optimization?.last_optimization ?
+                                    new Date(optimizationMetrics.optimization.last_optimization).toLocaleTimeString() :
                                     'Pending'
                                 }
                             </div>
@@ -304,7 +304,7 @@ export default function ContestShowcaseDashboard() {
                     <Icon name="play-circle" className="w-6 h-6 text-green-400" />
                     Interactive Contest Demonstrations
                 </h2>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {[
                         {
@@ -338,22 +338,21 @@ export default function ContestShowcaseDashboard() {
                     ].map((demo) => (
                         <div key={demo.id} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
                             <div className="flex items-center gap-3 mb-3">
-                                <Icon 
-                                    name={demo.icon} 
-                                    className={`w-5 h-5 text-${demo.color}-400`} 
+                                <Icon
+                                    name={demo.icon}
+                                    className={`w-5 h-5 text-${demo.color}-400`}
                                 />
                                 <span className="font-semibold">{demo.title}</span>
                             </div>
                             <p className="text-sm text-gray-400 mb-4">{demo.description}</p>
-                            
+
                             <button
                                 onClick={() => runDemo(demo.id)}
                                 disabled={demoRunning}
-                                className={`w-full px-4 py-2 rounded-lg font-medium transition-all ${
-                                    demoRunning && activeDemo === demo.id
+                                className={`w-full px-4 py-2 rounded-lg font-medium transition-all ${demoRunning && activeDemo === demo.id
                                         ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                                         : `bg-${demo.color}-600 hover:bg-${demo.color}-700 text-white`
-                                }`}
+                                    }`}
                             >
                                 {demoRunning && activeDemo === demo.id ? (
                                     <span className="flex items-center gap-2">
@@ -391,7 +390,7 @@ export default function ContestShowcaseDashboard() {
                     <Icon name="activity" className="w-6 h-6 text-purple-400" />
                     Live System Activity
                 </h2>
-                
+
                 <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
                     <div className="space-y-3">
                         {showcaseData && (
@@ -405,7 +404,7 @@ export default function ContestShowcaseDashboard() {
                                 </span>
                             </div>
                         )}
-                        
+
                         {contestMetrics && (
                             <div className="flex items-center gap-3 text-sm">
                                 <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
@@ -417,7 +416,7 @@ export default function ContestShowcaseDashboard() {
                                 </span>
                             </div>
                         )}
-                        
+
                         {optimizationMetrics?.optimization?.status === 'active' && (
                             <div className="flex items-center gap-3 text-sm">
                                 <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
@@ -429,7 +428,7 @@ export default function ContestShowcaseDashboard() {
                                 </span>
                             </div>
                         )}
-                        
+
                         <div className="flex items-center gap-3 text-sm">
                             <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
                             <span className="text-gray-300">

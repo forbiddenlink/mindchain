@@ -129,11 +129,11 @@ app.post('/api/test/stance', async (req, res) => {
 
         broadcast(testStanceData);
         console.log('📊 Sent test stance update:', testStanceData);
-        
-        res.json({ 
-            success: true, 
+
+        res.json({
+            success: true,
             message: 'Test stance update broadcasted',
-            data: testStanceData 
+            data: testStanceData
         });
     } catch (error) {
         console.error('Error sending test stance update:', error);
@@ -146,13 +146,13 @@ app.get('/api/sentiment/:debateId/:agentId/history', async (req, res) => {
     try {
         const { debateId, agentId } = req.params;
         const points = parseInt(req.query.points) || 20;
-        
+
         console.log(`📊 Fetching sentiment history for ${agentId} in debate ${debateId} (${points} points)`);
-        
+
         if (!sentimentAnalyzer) {
             console.error('❌ sentimentAnalyzer not available');
-            return res.status(500).json({ 
-                success: false, 
+            return res.status(500).json({
+                success: false,
                 error: 'Sentiment analyzer not initialized',
                 debateId,
                 agentId,
@@ -160,10 +160,10 @@ app.get('/api/sentiment/:debateId/:agentId/history', async (req, res) => {
                 points: 0
             });
         }
-        
+
         const history = await sentimentAnalyzer.getConfidenceHistory(debateId, agentId, points);
         console.log(`📈 Retrieved ${history.length} history points for ${agentId}`);
-        
+
         res.json({
             success: true,
             debateId,
@@ -173,8 +173,8 @@ app.get('/api/sentiment/:debateId/:agentId/history', async (req, res) => {
         });
     } catch (error) {
         console.error('❌ Error fetching sentiment history:', error);
-        res.status(500).json({ 
-            success: false, 
+        res.status(500).json({
+            success: false,
             error: 'Internal server error',
             message: error.message,
             debateId: req.params.debateId,
@@ -403,7 +403,7 @@ app.get('/api/agent/:id/stance/:debateId/:topic', async (req, res) => {
 // Enhanced Health check with Redis connectivity
 app.get('/api/health', async (req, res) => {
     console.log(`Health check from origin: ${req.get('Origin')}`);
-    
+
     const health = {
         status: 'healthy',
         timestamp: new Date().toISOString(),
@@ -449,9 +449,9 @@ app.get('/api/health', async (req, res) => {
 app.get('/api/contest/analytics', async (req, res) => {
     try {
         console.log('🏆 Contest analytics requested');
-        
+
         const analytics = await generateContestAnalytics();
-        
+
         // Add live debate data
         analytics.liveData = {
             activeDebates: activeDebates.size,
@@ -459,10 +459,10 @@ app.get('/api/contest/analytics', async (req, res) => {
             factChecks: debateMetrics.factChecksPerformed,
             uptime: Date.now() - new Date(debateMetrics.startTime).getTime()
         };
-        
+
         console.log('✅ Contest analytics generated');
         res.json(analytics);
-        
+
     } catch (error) {
         console.error('❌ Error generating contest analytics:', error);
         res.status(500).json({
@@ -642,7 +642,7 @@ app.get('/api/stats/redis', async (req, res) => {
         // Use enhanced metrics collector
         const metricsCollector = new RedisMetricsCollector();
         const advancedMetrics = await metricsCollector.getBenchmarkMetrics();
-        
+
         // Get cache metrics
         let cacheMetrics = null;
         try {
@@ -651,7 +651,7 @@ app.get('/api/stats/redis', async (req, res) => {
         } catch (cacheError) {
             console.log('ℹ️ Cache metrics not available:', cacheError.message);
         }
-        
+
         // Combine with existing debate metrics
         const combinedStats = {
             ...advancedMetrics,
@@ -663,7 +663,7 @@ app.get('/api/stats/redis', async (req, res) => {
                 agentInteractions: debateMetrics.agentInteractions,
                 activeDebates: Object.fromEntries(
                     Array.from(activeDebates.entries()).map(([id, info]) => [
-                        id, 
+                        id,
                         {
                             topic: info.topic,
                             messageCount: info.messageCount,
@@ -688,10 +688,10 @@ app.get('/api/stats/redis', async (req, res) => {
 
         console.log('✅ Enhanced Redis stats generated');
         res.json(combinedStats);
-        
+
     } catch (error) {
         console.error('❌ Error fetching enhanced Redis stats:', error);
-        
+
         // Fallback to basic stats
         try {
             const info = await client.info();
@@ -715,7 +715,7 @@ app.get('/api/stats/redis', async (req, res) => {
 
             res.json(fallbackStats);
         } catch (fallbackError) {
-            res.status(500).json({ 
+            res.status(500).json({
                 error: 'Failed to fetch Redis stats',
                 fallback: true,
                 timestamp: new Date().toISOString()
@@ -733,18 +733,26 @@ app.get('/api/stats/redis', async (req, res) => {
 app.get('/api/cache/metrics', async (req, res) => {
     try {
         console.log('🎯 Cache metrics requested');
-        
+
         // Import cache metrics function
         const { getCacheMetrics, getCacheStats } = await import('./semanticCache.js');
-        
+
         // Get comprehensive cache statistics
         const cacheStats = await getCacheStats();
-        
+
         if (cacheStats) {
-            console.log(`📊 Cache metrics: ${cacheStats.cache_hits}/${cacheStats.total_requests} hits (${cacheStats.hit_ratio.toFixed(1)}%)`);
+            // Add business value calculations
+            const { calculateBusinessMetrics, getDashboardMetrics } = await import('./costCalculator.js');
+            const businessMetrics = calculateBusinessMetrics(cacheStats);
+            const dashboardMetrics = getDashboardMetrics(cacheStats);
+
+            console.log(`📊 Cache metrics: ${cacheStats.cache_hits}/${cacheStats.total_requests} hits (${cacheStats.hit_ratio.toFixed(1)}%) - $${businessMetrics.current_usage.monthly_savings}/month saved`);
+
             res.json({
                 success: true,
                 metrics: cacheStats,
+                business_value: businessMetrics,
+                dashboard: dashboardMetrics,
                 timestamp: new Date().toISOString()
             });
         } else {
@@ -766,12 +774,57 @@ app.get('/api/cache/metrics', async (req, res) => {
                 timestamp: new Date().toISOString()
             });
         }
-        
+
     } catch (error) {
         console.error('❌ Error fetching cache metrics:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to fetch cache metrics',
+            message: error.message
+        });
+    }
+});
+
+// Business intelligence and ROI summary
+app.get('/api/business/summary', async (req, res) => {
+    try {
+        console.log('📈 Business summary requested');
+
+        const { getCacheStats } = await import('./semanticCache.js');
+        const { calculateBusinessMetrics, generateExecutiveSummary } = await import('./costCalculator.js');
+
+        const cacheStats = await getCacheStats();
+
+        if (cacheStats && cacheStats.total_requests > 0) {
+            const businessMetrics = calculateBusinessMetrics(cacheStats);
+            const executiveSummary = generateExecutiveSummary(businessMetrics);
+
+            console.log(`💰 Business impact: $${businessMetrics.current_usage.monthly_savings}/month, ${businessMetrics.current_usage.cache_efficiency} efficiency`);
+
+            res.json({
+                success: true,
+                executive_summary: executiveSummary,
+                detailed_metrics: businessMetrics,
+                performance_grade: businessMetrics.performance_impact.system_efficiency,
+                roi_status: businessMetrics.performance_impact.production_readiness,
+                generated_at: new Date().toISOString()
+            });
+        } else {
+            res.json({
+                success: true,
+                executive_summary: {
+                    headline: "System initializing - collecting performance data",
+                    status: "Warming up caching system"
+                },
+                message: "Business metrics will be available after system processes requests"
+            });
+        }
+
+    } catch (error) {
+        console.error('❌ Error generating business summary:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to generate business summary',
             message: error.message
         });
     }
@@ -835,18 +888,18 @@ app.get('/api/debate/:id/key-moments', async (req, res) => {
     try {
         const { id } = req.params;
         const limit = parseInt(req.query.limit) || 10;
-        
+
         console.log(`🔍 Fetching key moments for debate: ${id} (limit: ${limit})`);
-        
+
         const keyMomentsData = await getKeyMoments(id, limit);
-        
+
         res.json({
             success: true,
             debateId: id,
             ...keyMomentsData,
             timestamp: new Date().toISOString()
         });
-        
+
     } catch (error) {
         console.error('❌ Error fetching key moments:', error);
         res.status(500).json({
@@ -863,18 +916,18 @@ app.get('/api/debate/:id/key-moments', async (req, res) => {
 app.get('/api/key-moments/all', async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 20;
-        
+
         console.log(`🔍 Fetching all key moments (limit: ${limit})`);
-        
+
         const allMoments = await getAllKeyMoments(limit);
-        
+
         res.json({
             success: true,
             moments: allMoments,
             total: allMoments.length,
             timestamp: new Date().toISOString()
         });
-        
+
     } catch (error) {
         console.error('❌ Error fetching all key moments:', error);
         res.status(500).json({
@@ -890,9 +943,9 @@ app.get('/api/key-moments/all', async (req, res) => {
 app.post('/api/debug/key-moment', async (req, res) => {
     try {
         const { debateId, agentId, message, factCheckScore, stance } = req.body;
-        
+
         console.log('🔧 Manual key moment detection triggered');
-        
+
         const result = await processDebateEvent({
             type: 'manual',
             debateId,
@@ -902,7 +955,7 @@ app.post('/api/debug/key-moment', async (req, res) => {
             stance,
             recentMessages: [] // Could fetch from Redis if needed
         });
-        
+
         if (result.created) {
             // Broadcast the new key moment
             broadcast({
@@ -913,13 +966,13 @@ app.post('/api/debug/key-moment', async (req, res) => {
                 timestamp: new Date().toISOString()
             });
         }
-        
+
         res.json({
             success: true,
             ...result,
             timestamp: new Date().toISOString()
         });
-        
+
     } catch (error) {
         console.error('❌ Error in manual key moment detection:', error);
         res.status(500).json({
@@ -985,37 +1038,40 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
         console.log(`⚠️ No previous messages to clear for debate: ${debateId}`);
     }
 
-    for (let round = 0; round < rounds; round++) {
-        // Check if debate is still active before each round
+    // Alternate between agents for natural conversation flow
+    const totalTurns = rounds * agents.length;
+    for (let turn = 0; turn < totalTurns; turn++) {
+        // Check if debate is still active before each turn
         if (!activeDebates.has(debateId)) {
-            console.log(`⏹️ Debate ${debateId} was stopped during round ${round + 1}`);
+            console.log(`⏹️ Debate ${debateId} was stopped during turn ${turn + 1}`);
             return;
         }
 
-        for (const agentId of agents) {
-            // Check if debate is still active before each agent speaks
-            if (!activeDebates.has(debateId)) {
-                console.log(`⏹️ Debate ${debateId} was stopped during agent ${agentId} turn`);
-                return;
+        // Alternate between agents: turn 0 = agent 0, turn 1 = agent 1, turn 2 = agent 0, etc.
+        const agentIndex = turn % agents.length;
+        const agentId = agents[agentIndex];
+        const roundNumber = Math.floor(turn / agents.length) + 1;
+        
+        // Debug log to track alternation
+        console.log(`🔄 Turn ${turn + 1}: agentIndex=${agentIndex}, agentId=${agentId}, agents=[${agents.join(', ')}]`);
+
+        try {
+            console.log(`🗣️ Turn ${turn + 1} (Round ${roundNumber}): ${agentId} speaking about "${topic}" (${debateId})...`);
+
+            // 🧠 Use Enhanced AI Generation with emotional state and context
+            let message;
+            try {
+                message = await generateEnhancedMessageOnly(agentId, debateId, topic);
+                console.log(`✨ Enhanced AI message generated for ${agentId}`);
+            } catch (enhancedError) {
+                console.log(`⚠️ Enhanced AI failed, falling back to standard: ${enhancedError.message}`);
+                message = await generateMessageOnly(agentId, debateId, topic);
             }
 
-            try {
-                console.log(`🗣️ Round ${round + 1}: ${agentId} speaking about "${topic}" (${debateId})...`);
+            // 💾 Store message in Redis streams (centralized storage)
+            const debateStreamKey = `debate:${debateId}:messages`;
+            const memoryStreamKey = `debate:${debateId}:agent:${agentId}:memory`;
 
-                // 🧠 Use Enhanced AI Generation with emotional state and context
-                let message;
-                try {
-                    message = await generateEnhancedMessageOnly(agentId, debateId, topic);
-                    console.log(`✨ Enhanced AI message generated for ${agentId}`);
-                } catch (enhancedError) {
-                    console.log(`⚠️ Enhanced AI failed, falling back to standard: ${enhancedError.message}`);
-                    message = await generateMessageOnly(agentId, debateId, topic);
-                }
-
-                // 💾 Store message in Redis streams (centralized storage)
-                const debateStreamKey = `debate:${debateId}:messages`;
-                const memoryStreamKey = `debate:${debateId}:agent:${agentId}:memory`;
-                
                 // Store in shared debate stream
                 await client.xAdd(debateStreamKey, '*', {
                     agent_id: agentId,
@@ -1080,7 +1136,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     console.log(`📈 ${agentId} stance evolved: ${stanceUpdate.oldStance.toFixed(3)} → ${stanceUpdate.newStance.toFixed(3)}`);
                 } catch (stanceError) {
                     console.log(`⚠️ Stance evolution failed, using fallback: ${stanceError.message}`);
-                    
+
                     // Fallback to simple stance evolution
                     const currentStance = profile.stance?.climate_policy || 0.5;
                     const stanceShift = (Math.random() - 0.5) * 0.1;
@@ -1122,7 +1178,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
 
                     if (keyMomentResult.created) {
                         console.log(`🔍 KEY MOMENT CREATED: ${keyMomentResult.moment.type} in debate ${debateId}`);
-                        
+
                         // Broadcast key moment to all clients
                         broadcast({
                             type: 'key_moment_created',
@@ -1169,7 +1225,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 // 📊 INDIVIDUAL STANCE UPDATE BROADCAST - Send after each agent speaks
                 try {
                     const timestamp = new Date().toISOString();
-                    
+
                     // Get current stances for both agents to send complete picture
                     const currentStances = {};
                     for (const otherAgentId of agents) {
@@ -1177,10 +1233,10 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                             const otherProfile = await client.json.get(`agent:${otherAgentId}:profile`);
                             if (otherProfile && otherProfile.stance) {
                                 // Map topic to stance key
-                                const stanceKey = topic.includes('climate') ? 'climate_policy' : 
-                                                 topic.includes('ai') ? 'ai_policy' : 
-                                                 topic.includes('healthcare') ? 'healthcare_policy' : 'climate_policy';
-                                
+                                const stanceKey = topic.includes('climate') ? 'climate_policy' :
+                                    topic.includes('ai') ? 'ai_policy' :
+                                        topic.includes('healthcare') ? 'healthcare_policy' : 'climate_policy';
+
                                 // Convert 0-1 range to -1 to 1 for better visualization
                                 const stanceValue = otherProfile.stance[stanceKey] || 0.5;
                                 currentStances[otherAgentId] = (stanceValue - 0.5) * 2; // Maps 0-1 to -1 to 1
@@ -1194,8 +1250,10 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     }
 
                     // Calculate turn number (round * agents.length + current agent index)
-                    const agentIndex = agents.indexOf(agentId);
-                    const currentTurn = round * agents.length + agentIndex + 1;
+                    // Calculate current round for broadcast compatibility
+                    const currentRound = Math.floor(turn / agents.length) + 1;
+                    const agentIndex = turn % agents.length;
+                    const currentTurn = turn + 1;
 
                     // Broadcast stance update with election-night excitement
                     broadcast({
@@ -1208,13 +1266,13 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                         topic,
                         // Add some election-night style metadata
                         metadata: {
-                            round: round + 1,
+                            round: currentRound,
                             agentIndex: agentIndex,
                             totalMessages: debateMetrics.messagesGenerated
                         }
                     });
 
-                    console.log(`📈 Stance broadcast sent - Turn ${currentTurn}: SenatorBot(${(currentStances.senatorbot || 0).toFixed(2)}), ReformerBot(${(currentStances.reformerbot || 0).toFixed(2)})`);
+                    console.log(`📈 Stance broadcast sent - Turn ${currentTurn} (Round ${currentRound}): SenatorBot(${(currentStances.senatorbot || 0).toFixed(2)}), ReformerBot(${(currentStances.reformerbot || 0).toFixed(2)})`);
 
                 } catch (individualStanceError) {
                     console.log(`⚠️ Failed to broadcast individual stance update: ${individualStanceError.message}`);
@@ -1222,8 +1280,14 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
 
                 console.log(`✅ ${agentId}: ${message.substring(0, 50)}...`);
 
-                // Wait between messages (reduced for better demo flow)
-                await new Promise(resolve => setTimeout(resolve, 2500));
+                // Check again if debate was stopped before waiting
+                if (!activeDebates.has(debateId)) {
+                    console.log(`⏹️ Debate ${debateId} was stopped after message generation`);
+                    return;
+                }
+
+                // Wait between messages (optimized for better demo flow)
+                await new Promise(resolve => setTimeout(resolve, 1200));
 
             } catch (error) {
                 console.error(`❌ Error generating message for ${agentId}:`, error);
@@ -1234,23 +1298,23 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     timestamp: new Date().toISOString()
                 });
             }
-        }
+    }
 
-        // 📊 STANCE UPDATE BROADCAST - Send combined stance data for election-night chart
-        try {
-            const currentStances = {};
-            const timestamp = new Date().toISOString();
-            
+    // 📊 STANCE UPDATE BROADCAST - Send combined stance data for election-night chart
+    try {
+        const currentStances = {};
+        const timestamp = new Date().toISOString();
+
             // Get current stance for each agent
             for (const agentId of agents) {
                 try {
                     const profile = await client.json.get(`agent:${agentId}:profile`);
                     if (profile && profile.stance) {
                         // Map topic to stance key (from the project instructions)
-                        const stanceKey = topic.includes('climate') ? 'climate_policy' : 
-                                         topic.includes('ai') ? 'ai_policy' : 
-                                         topic.includes('healthcare') ? 'healthcare_policy' : 'climate_policy';
-                        
+                        const stanceKey = topic.includes('climate') ? 'climate_policy' :
+                            topic.includes('ai') ? 'ai_policy' :
+                                topic.includes('healthcare') ? 'healthcare_policy' : 'climate_policy';
+
                         // Convert 0-1 range to -1 to 1 for better visualization
                         const stanceValue = profile.stance[stanceKey] || 0.5;
                         currentStances[agentId] = (stanceValue - 0.5) * 2; // Maps 0-1 to -1 to 1
@@ -1263,29 +1327,28 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 }
             }
 
-            // Broadcast stance update with election-night excitement
+            // Broadcast final stance update
             broadcast({
                 type: 'debate:stance_update',
                 debateId,
                 senatorbot: currentStances.senatorbot || 0,
                 reformerbot: currentStances.reformerbot || 0,
                 timestamp,
-                turn: round + 1,
+                turn: totalTurns,
                 topic,
                 // Add some election-night style metadata
                 metadata: {
-                    round: round + 1,
+                    round: rounds,
                     totalRounds: rounds,
                     totalMessages: debateMetrics.messagesGenerated
                 }
             });
 
-            console.log(`📈 Stance broadcast sent - Round ${round + 1}: SenatorBot(${(currentStances.senatorbot || 0).toFixed(2)}), ReformerBot(${(currentStances.reformerbot || 0).toFixed(2)})`);
+            console.log(`📈 Stance broadcast sent - Final: SenatorBot(${(currentStances.senatorbot || 0).toFixed(2)}), ReformerBot(${(currentStances.reformerbot || 0).toFixed(2)})`);
 
         } catch (stanceError) {
             console.log(`⚠️ Failed to broadcast stance update: ${stanceError.message}`);
         }
-    }
 
     // Mark debate as completed and broadcast end
     if (activeDebates.has(debateId)) {
@@ -1326,16 +1389,16 @@ process.on('SIGINT', async () => {
 app.post('/api/fact-check/advanced', async (req, res) => {
     try {
         const { statement, context } = req.body;
-        
+
         if (!statement) {
             return res.status(400).json({
                 success: false,
                 error: 'Statement is required for fact checking'
             });
         }
-        
+
         const result = await checkFactAdvanced(statement, context || {});
-        
+
         res.json({
             success: true,
             factCheck: result,
@@ -1481,7 +1544,7 @@ function getContestGrade(score) {
 
 function generateContestRecommendations(liveMetrics, optimizationMetrics, factCheckAnalytics) {
     const recommendations = [];
-    
+
     // Redis Innovation recommendations
     if ((liveMetrics.multiModal?.totalModulesActive || 0) < 4) {
         recommendations.push({
@@ -1491,7 +1554,7 @@ function generateContestRecommendations(liveMetrics, optimizationMetrics, factCh
             impact: 'Up to +10 points'
         });
     }
-    
+
     if (!liveMetrics.multiModal?.advanced?.semanticCache?.active) {
         recommendations.push({
             category: 'Redis Innovation',
@@ -1500,7 +1563,7 @@ function generateContestRecommendations(liveMetrics, optimizationMetrics, factCh
             impact: 'Up to +5 points'
         });
     }
-    
+
     // Technical Implementation recommendations
     if ((liveMetrics.performance?.responseTimes?.average || 1000) > 200) {
         recommendations.push({
@@ -1510,7 +1573,7 @@ function generateContestRecommendations(liveMetrics, optimizationMetrics, factCh
             impact: 'Up to +8 points'
         });
     }
-    
+
     if ((liveMetrics.performance?.cachePerformance?.hitRate || 0) < 70) {
         recommendations.push({
             category: 'Technical Implementation',
@@ -1519,7 +1582,7 @@ function generateContestRecommendations(liveMetrics, optimizationMetrics, factCh
             impact: 'Up to +5 points'
         });
     }
-    
+
     // Real-World Impact recommendations
     if ((liveMetrics.business?.userEngagement?.totalDebates || 0) < 3) {
         recommendations.push({
@@ -1529,7 +1592,7 @@ function generateContestRecommendations(liveMetrics, optimizationMetrics, factCh
             impact: 'Up to +6 points'
         });
     }
-    
+
     if ((factCheckAnalytics.avgConfidence || 0) < 0.8) {
         recommendations.push({
             category: 'Real-World Impact',
@@ -1538,18 +1601,18 @@ function generateContestRecommendations(liveMetrics, optimizationMetrics, factCh
             impact: 'Up to +3 points'
         });
     }
-    
+
     return recommendations;
 }
 
 function determineOverallHealth(liveMetrics, optimizationMetrics, factCheckAnalytics) {
     let healthScore = 0;
-    
+
     if (liveMetrics.redis?.connectionHealthy) healthScore += 25;
     if ((liveMetrics.multiModal?.totalModulesActive || 0) >= 3) healthScore += 25;
     if ((liveMetrics.performance?.responseTimes?.average || 1000) < 300) healthScore += 25;
     if (factCheckAnalytics.total > 0) healthScore += 25;
-    
+
     if (healthScore >= 75) return 'excellent';
     if (healthScore >= 50) return 'good';
     if (healthScore >= 25) return 'fair';
@@ -1563,9 +1626,9 @@ app.post('/api/agent/:agentId/intelligent-message', async (req, res) => {
     try {
         const { agentId } = req.params;
         const { debateId, topic, conversationHistory } = req.body;
-        
+
         const result = await generateIntelligentMessage(agentId, debateId, topic, conversationHistory || []);
-        
+
         res.json({
             success: true,
             response: result.response,
@@ -1606,9 +1669,9 @@ app.post('/api/contest/demo/:scenario', async (req, res) => {
     try {
         const { scenario } = req.params;
         const { duration = 30, agents = ['senatorbot', 'reformerbot'] } = req.body;
-        
+
         let demoResult;
-        
+
         switch (scenario) {
             case 'multi-modal-showcase':
                 demoResult = await runMultiModalDemo(agents, duration);
@@ -1625,14 +1688,14 @@ app.post('/api/contest/demo/:scenario', async (req, res) => {
             default:
                 throw new Error(`Unknown demo scenario: ${scenario}`);
         }
-        
+
         res.json({
             success: true,
             scenario,
             result: demoResult,
             timestamp: new Date().toISOString()
         });
-        
+
     } catch (error) {
         console.error('❌ Contest demo error:', error);
         res.status(500).json({
@@ -1648,19 +1711,19 @@ app.get('/api/analytics/contest-metrics', async (req, res) => {
     try {
         const metrics = await generateContestAnalytics();
         const optimizationMetrics = await getOptimizationMetrics();
-        
+
         // Get semantic cache performance
         const cacheMetrics = await client.json.get('cache:metrics').catch(() => null);
-        
+
         // Get multi-debate statistics
         const debateStats = {
             activeDebates: activeDebates.size,
             totalDebates: debateMetrics.debatesStarted || 0,
             totalMessages: debateMetrics.messagesGenerated || 0,
-            avgMessagesPerDebate: debateMetrics.debatesStarted > 0 ? 
+            avgMessagesPerDebate: debateMetrics.debatesStarted > 0 ?
                 Math.round(debateMetrics.messagesGenerated / debateMetrics.debatesStarted) : 0
         };
-        
+
         res.json({
             success: true,
             contestMetrics: {
@@ -1677,7 +1740,7 @@ app.get('/api/analytics/contest-metrics', async (req, res) => {
             },
             timestamp: new Date().toISOString()
         });
-        
+
     } catch (error) {
         console.error('❌ Contest metrics error:', error);
         res.status(500).json({
@@ -1692,7 +1755,7 @@ app.get('/api/analytics/contest-metrics', async (req, res) => {
 app.get('/api/showcase/redis-modules', async (req, res) => {
     try {
         const showcase = {};
-        
+
         // RedisJSON showcase
         const jsonDemo = await client.json.get('agent:senatorbot:profile').catch(() => null);
         showcase.redisJSON = {
@@ -1701,7 +1764,7 @@ app.get('/api/showcase/redis-modules', async (req, res) => {
             keyPattern: 'agent:*:profile',
             operations: ['JSON.GET', 'JSON.SET', 'JSON.MERGE']
         };
-        
+
         // Redis Streams showcase
         const streamKeys = await client.keys('debate:*:messages');
         const latestStream = streamKeys[0];
@@ -1715,7 +1778,7 @@ app.get('/api/showcase/redis-modules', async (req, res) => {
             keyPattern: 'debate:*:messages',
             operations: ['XADD', 'XRANGE', 'XREVRANGE']
         };
-        
+
         // RedisTimeSeries showcase
         const timeseriesKeys = await client.keys('debate:*:stance:*');
         const latestTimeseries = timeseriesKeys[0];
@@ -1729,7 +1792,7 @@ app.get('/api/showcase/redis-modules', async (req, res) => {
             keyPattern: 'debate:*:stance:*',
             operations: ['TS.ADD', 'TS.RANGE', 'TS.INFO']
         };
-        
+
         // Redis Vector showcase
         const vectorKeys = await client.keys('fact:*');
         const vectorDemo = vectorKeys.slice(0, 3);
@@ -1748,7 +1811,7 @@ app.get('/api/showcase/redis-modules', async (req, res) => {
             keyPattern: 'fact:*',
             operations: ['FT.SEARCH', 'HSET', 'FT.CREATE']
         };
-        
+
         res.json({
             success: true,
             showcase,
@@ -1763,7 +1826,7 @@ app.get('/api/showcase/redis-modules', async (req, res) => {
             },
             timestamp: new Date().toISOString()
         });
-        
+
     } catch (error) {
         console.error('❌ Redis showcase error:', error);
         res.status(500).json({
@@ -1778,10 +1841,10 @@ app.get('/api/showcase/redis-modules', async (req, res) => {
 async function runMultiModalDemo(agents, duration) {
     const startTime = Date.now();
     const results = { operations: [], metrics: {} };
-    
+
     try {
         // Demonstrate all 4 Redis modules in sequence
-        
+
         // 1. RedisJSON operations
         for (const agentId of agents) {
             const profile = await client.json.get(`agent:${agentId}:profile`);
@@ -1790,7 +1853,7 @@ async function runMultiModalDemo(agents, duration) {
                 results.operations.push(`JSON.SET agent:${agentId}:profile demo_timestamp`);
             }
         }
-        
+
         // 2. Redis Streams operations
         const demoDebateId = `demo_${Date.now()}`;
         for (let i = 0; i < 3; i++) {
@@ -1801,7 +1864,7 @@ async function runMultiModalDemo(agents, duration) {
             });
             results.operations.push(`XADD debate:${demoDebateId}:messages`);
         }
-        
+
         // 3. RedisTimeSeries operations
         for (const agentId of agents) {
             const stanceKey = `debate:${demoDebateId}:agent:${agentId}:stance:demo_policy`;
@@ -1810,7 +1873,7 @@ async function runMultiModalDemo(agents, duration) {
             });
             results.operations.push(`TS.ADD ${stanceKey}`);
         }
-        
+
         // 4. Redis Vector operations (check existing facts)
         const factKeys = await client.keys('fact:*');
         if (factKeys.length > 0) {
@@ -1818,19 +1881,19 @@ async function runMultiModalDemo(agents, duration) {
             const factContent = await client.hGet(randomFact, 'content');
             results.operations.push(`HGET ${randomFact} content: ${factContent?.substring(0, 50)}...`);
         }
-        
+
         results.metrics = {
             duration: Date.now() - startTime,
             totalOperations: results.operations.length,
             modulesUsed: 4,
             status: 'completed'
         };
-        
+
     } catch (error) {
         results.error = error.message;
         results.metrics.status = 'partial';
     }
-    
+
     return results;
 }
 
@@ -1838,11 +1901,11 @@ async function runPerformanceStressTest(duration) {
     const startTime = Date.now();
     const results = { operations: 0, errors: 0, avgLatency: 0 };
     const latencies = [];
-    
+
     while (Date.now() - startTime < duration * 1000) {
         try {
             const opStart = Date.now();
-            
+
             // Mix of operations to test performance
             const operation = Math.floor(Math.random() * 4);
             switch (operation) {
@@ -1865,43 +1928,43 @@ async function runPerformanceStressTest(duration) {
                     await client.ping();
                     break;
             }
-            
+
             const latency = Date.now() - opStart;
             latencies.push(latency);
             results.operations++;
-            
+
         } catch (error) {
             results.errors++;
         }
-        
+
         // Small delay to avoid overwhelming
         await new Promise(resolve => setTimeout(resolve, 10));
     }
-    
-    results.avgLatency = latencies.length > 0 ? 
+
+    results.avgLatency = latencies.length > 0 ?
         latencies.reduce((a, b) => a + b, 0) / latencies.length : 0;
     results.duration = Date.now() - startTime;
     results.operationsPerSecond = Math.round((results.operations / results.duration) * 1000);
-    
+
     return results;
 }
 
 async function runConcurrentDebatesDemo(agents, duration) {
     const results = { debates: [], totalMessages: 0 };
     const numDebates = 3;
-    
+
     try {
         // Start multiple concurrent debates
         const debatePromises = [];
-        
+
         for (let i = 0; i < numDebates; i++) {
             const debateId = `concurrent_demo_${i}_${Date.now()}`;
             const topic = ['Climate Policy', 'AI Regulation', 'Healthcare Reform'][i];
-            
+
             debatePromises.push(
                 (async () => {
                     const debateResult = { debateId, topic, messages: 0 };
-                    
+
                     // Run short debate simulation
                     for (let round = 0; round < 3; round++) {
                         for (const agentId of agents) {
@@ -1915,28 +1978,28 @@ async function runConcurrentDebatesDemo(agents, duration) {
                             results.totalMessages++;
                         }
                     }
-                    
+
                     return debateResult;
                 })()
             );
         }
-        
+
         // Wait for all debates to complete
         results.debates = await Promise.all(debatePromises);
         results.duration = duration;
         results.status = 'completed';
-        
+
     } catch (error) {
         results.error = error.message;
         results.status = 'error';
     }
-    
+
     return results;
 }
 
 async function runCacheEfficiencyDemo(agents, duration) {
     const results = { cacheTests: [], efficiency: {} };
-    
+
     try {
         // Test semantic cache with similar prompts
         const testPrompts = [
@@ -1946,20 +2009,20 @@ async function runCacheEfficiencyDemo(agents, duration) {
             "Can you discuss climate policy approaches?",
             "What are your thoughts on climate change policy?" // Exact duplicate
         ];
-        
+
         for (const prompt of testPrompts) {
             const testStart = Date.now();
-            
+
             try {
                 // This would use the semantic cache system
                 const response = await generateMessage(agents[0], 'cache_demo', prompt);
-                
+
                 results.cacheTests.push({
                     prompt: prompt.substring(0, 50) + '...',
                     responseTime: Date.now() - testStart,
                     cached: false // Would be determined by actual cache system
                 });
-                
+
             } catch (error) {
                 results.cacheTests.push({
                     prompt: prompt.substring(0, 50) + '...',
@@ -1967,14 +2030,14 @@ async function runCacheEfficiencyDemo(agents, duration) {
                 });
             }
         }
-        
+
         // Get current cache metrics
         const cacheMetrics = await client.json.get('cache:metrics').catch(() => null);
         results.efficiency = cacheMetrics || { hit_ratio: 0, message: 'Cache metrics not available' };
-        
+
     } catch (error) {
         results.error = error.message;
     }
-    
+
     return results;
 }

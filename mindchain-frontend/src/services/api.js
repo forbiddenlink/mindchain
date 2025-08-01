@@ -97,9 +97,14 @@ class MindChainAPI {
         return this.get('/metrics/enhanced');
     }
 
-    // Get semantic cache metrics
+    // Get semantic cache metrics with business value analysis
     async getCacheMetrics() {
         return this.get('/cache/metrics');
+    }
+
+    // Get business intelligence summary and ROI analysis
+    async getBusinessSummary() {
+        return this.get('/business/summary');
     }
 
     // 🔍 KEY MOMENTS API METHODS
