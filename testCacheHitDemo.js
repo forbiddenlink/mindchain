@@ -1,10 +1,10 @@
-// Test Cache Hit Demo - Showcase MindChain's Semantic Caching Business Value
+// Test Cache Hit Demo - Showcase StanceStream's Semantic Caching Business Value
 // Run this to see the enhanced LivePerformanceOverlay in action
 
 async function testCacheHitDemo() {
     const baseUrl = 'http://localhost:3000';
     
-    console.log('🎯 Testing MindChain Cache Hit Celebrations...\n');
+    console.log('🎯 Testing StanceStream Cache Hit Celebrations...\n');
     
     // Test scenarios with different similarity scores and cost savings
     const scenarios = [
@@ -58,7 +58,7 @@ async function testCacheHitDemo() {
     console.log('   • Real-time cache hit celebrations');
     console.log('   • Live similarity score tracking');
     console.log('   • Running cost savings counter');
-    console.log('   • Traditional AI vs MindChain comparison');
+    console.log('   • Traditional AI vs StanceStream comparison');
     console.log('   • Enterprise projection displays');
     console.log('   • Mission control dashboard aesthetics');
 }

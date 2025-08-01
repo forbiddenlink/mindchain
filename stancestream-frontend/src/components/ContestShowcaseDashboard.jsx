@@ -92,7 +92,7 @@ export default function SystemShowcaseDashboard() {
                     </h1>
                 </div>
                 <p className="text-xl text-green-300">
-                    REAL-TIME DEMONSTRATION OF MINDCHAIN'S MULTI-MODAL REDIS ARCHITECTURE
+                    REAL-TIME DEMONSTRATION OF STANCESTREAM'S MULTI-MODAL REDIS ARCHITECTURE
                 </p>
             </div>
 

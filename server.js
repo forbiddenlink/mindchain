@@ -43,7 +43,7 @@ await client.connect();
 // Initialize sentiment analyzer
 try {
     await sentimentAnalyzer.initialize();
-    console.log('🧠 Sentiment analyzer initialized successfully');
+    console.log('📊 Sentiment analyzer initialized successfully');
 } catch (sentimentInitError) {
     console.log('⚠️ Sentiment analyzer failed to initialize, will use fallback mode:', sentimentInitError.message);
 }
@@ -1277,7 +1277,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 continue;
             }
 
-            // 🧠 Use Enhanced AI Generation with emotional state and context
+            // 📊 Use Enhanced AI Generation with emotional state and context
             let message;
             let cacheHit = false;
             let similarity = 0;
@@ -1398,11 +1398,11 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 // Fact-check the message
                 const factResult = await findClosestFact(message);
 
-                // 🧠 SENTIMENT ANALYSIS with RedisAI + TimeSeries
+                // 📊 SENTIMENT ANALYSIS with RedisAI + TimeSeries
                 let sentimentResult;
                 try {
                     sentimentResult = await sentimentAnalyzer.analyzeSentiment(message, debateId, agentId);
-                    console.log(`🧠 ${agentId} sentiment: ${sentimentResult.sentiment} (${sentimentResult.confidence} confidence, ${sentimentResult.model})`);
+                    console.log(`📊 ${agentId} sentiment: ${sentimentResult.sentiment} (${sentimentResult.confidence} confidence, ${sentimentResult.model})`);
                 } catch (sentimentError) {
                     console.log(`⚠️ Sentiment analysis failed: ${sentimentError.message}`);
                     // Fallback sentiment data
@@ -1944,7 +1944,7 @@ function determineOverallHealth(liveMetrics, optimizationMetrics, factCheckAnaly
 
 // 🏆 CONTEST ENHANCEMENT APIs - Additional endpoints for contest demo
 
-// 🧠 Intelligent Agent API - Uses new intelligent agent system
+        // 📊 Intelligent Agent API - Uses new intelligent agent system
 app.post('/api/agent/:agentId/intelligent-message', async (req, res) => {
     try {
         const { agentId } = req.params;

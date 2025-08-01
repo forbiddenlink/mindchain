@@ -461,8 +461,8 @@ export default function App() {
                     <button
                       onClick={() => setViewMode('contest-showcase')}
                       className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 font-mono ${viewMode === 'contest-showcase'
-                          ? 'bg-gradient-to-r from-yellow-600/30 to-orange-600/30 border-yellow-500/30 text-yellow-300 shadow-lg shadow-yellow-500/20'
-                          : 'bg-gray-900/50 border-green-500/30 text-green-300 hover:bg-gradient-to-r hover:from-yellow-600/20 hover:to-orange-600/20 hover:border-yellow-500/30'
+                                                  ? 'bg-gradient-to-r from-green-600/30 to-emerald-600/30 border-green-500/30 text-green-300 shadow-lg shadow-green-500/20'
+                        : 'bg-gray-900/50 border-green-500/30 text-green-300 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-emerald-600/20 hover:border-green-500/30'
                         }`}
                     >
                       CONTEST

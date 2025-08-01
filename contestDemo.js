@@ -5,7 +5,7 @@ import { ContestMetricsDashboard } from './contestLiveMetrics.js';
 import { generateMessage } from './generateMessage.js';
 
 async function runContestDemo() {
-    console.log('🏆 MindChain Contest Demo - Showcasing Winning Features\n');
+    console.log('🏆 StanceStream Contest Demo - Showcasing Winning Features\n');
     
     try {
         // 1. Show Redis Multi-Modal Usage
@@ -26,7 +26,7 @@ async function runContestDemo() {
         
         // 2. Demonstrate Semantic Caching Excellence  
         console.log('2️⃣ Semantic Cache Performance Test');
-        console.log('   🧠 Testing Redis Vector-powered AI response caching...\n');
+        console.log('   📊 Testing Redis Vector-powered AI response caching...\n');
         
         const topics = ['healthcare reform', 'climate policy', 'AI governance'];
         for (const topic of topics) {

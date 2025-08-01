@@ -97,11 +97,11 @@ export default function RedisMatrixModal({ isOpen, onClose }) {
                             </div>
 
                             {/* Vector Module */}
-                            <div className="bg-orange-900/30 border border-orange-500/30 rounded-lg p-4">
+                            <div className="bg-green-900/30 border border-green-500/30 rounded-lg p-4">
                                 <div className="text-center mb-3">
-                                    <Icon name="target" className="w-8 h-8 text-orange-400 mx-auto mb-2" />
-                                    <h3 className="font-bold text-orange-300 text-lg">Vector Search</h3>
-                                    <div className="text-xs text-orange-400 font-mono">SIMILARITY</div>
+                                    <Icon name="target" className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                                    <h3 className="font-bold text-green-300 text-lg">Vector Search</h3>
+                                    <div className="text-xs text-green-400 font-mono">SIMILARITY</div>
                                 </div>
                                 <ul className="text-xs text-gray-300 space-y-1">
                                     <li>• Semantic caching (94.7%)</li>
@@ -130,7 +130,7 @@ export default function RedisMatrixModal({ isOpen, onClose }) {
                                     TimeSeries tracks evolution
                                 </span>
                                 <Icon name="arrow-right" className="w-4 h-4 text-gray-400" />
-                                <span className="bg-orange-600/20 text-orange-300 px-2 py-1 rounded border border-orange-500/30 font-mono">
+                                <span className="bg-green-600/20 text-green-300 px-2 py-1 rounded border border-green-500/30 font-mono">
                                     Vector optimizes responses
                                 </span>
                             </div>
@@ -167,7 +167,7 @@ export default function RedisMatrixModal({ isOpen, onClose }) {
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-gray-300">Vector Searches:</span>
-                                    <span className="text-orange-300 font-mono font-bold">156/min</span>
+                                    <span className="text-green-300 font-mono font-bold">156/min</span>
                                 </div>
                                 <div className="border-t border-gray-600/30 pt-2 flex justify-between items-center">
                                     <span className="text-gray-300 font-bold">Total Redis Ops:</span>
@@ -181,10 +181,10 @@ export default function RedisMatrixModal({ isOpen, onClose }) {
                         </div>
 
                         {/* Business Value */}
-                        <div className="bg-gradient-to-br from-yellow-900/40 to-orange-900/40 border border-yellow-500/30 rounded-lg p-4">
+                        <div className="bg-gradient-to-br from-green-900/40 to-blue-900/40 border border-green-500/30 rounded-lg p-4">
                             <div className="text-center mb-3">
-                                <Icon name="dollar-sign" className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
-                                <h3 className="text-lg font-bold text-yellow-300 font-mono">
+                                <Icon name="dollar-sign" className="w-6 h-6 text-green-400 mx-auto mb-2" />
+                                <h3 className="text-lg font-bold text-green-300 font-mono">
                                     💰 BUSINESS IMPACT
                                 </h3>
                             </div>

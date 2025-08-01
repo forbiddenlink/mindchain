@@ -38,11 +38,11 @@ const DebatePanel = ({ messages = [] }) => {
                 };
             case 'reformerbot':
                 return {
-                    gradient: 'from-orange-600 via-red-500 to-pink-600',
+                    gradient: 'from-green-600 via-emerald-500 to-blue-600',
                     avatar: <Icon name="zap" size={20} className="text-white" />,
                     name: 'ReformerBot',
-                    accentColor: 'orange-400',
-                    bgColor: 'bg-orange-500/10 border-orange-500/20'
+                    accentColor: 'green-400',
+                    bgColor: 'bg-green-500/10 border-green-500/20'
                 };
             default:
                 return {
@@ -121,7 +121,7 @@ const DebatePanel = ({ messages = [] }) => {
                         </p>
                         <div className="mt-6 flex items-center space-x-6 text-slate-500 text-sm">
                             <div className="flex items-center space-x-2">
-                                <Icon name="brain" size={16} />
+                                <Icon name="activity" size={16} />
                                 <span>AI Memory</span>
                             </div>
                             <div className="flex items-center space-x-2">

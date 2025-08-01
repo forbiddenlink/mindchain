@@ -139,9 +139,9 @@ export const StatusCard = ({
             title: 'text-emerald-400'
         },
         warning: {
-            bg: 'bg-yellow-500/10 border-yellow-500/20',
-            icon: 'text-yellow-400',
-            title: 'text-yellow-400'
+            bg: 'bg-green-500/10 border-green-500/20',
+            icon: 'text-green-400',
+            title: 'text-green-400'
         },
         error: {
             bg: 'bg-red-500/10 border-red-500/20',

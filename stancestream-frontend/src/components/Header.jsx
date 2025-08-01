@@ -12,7 +12,7 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
             case 'error':
                 return 'text-red-400';
             default:
-                return 'text-yellow-400';
+                return 'text-green-400';
         }
     };
 
@@ -25,7 +25,7 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
             case 'error':
                 return 'bg-red-400';
             default:
-                return 'bg-yellow-400 animate-pulse';
+                return 'bg-green-400 animate-pulse';
         }
     };
 
@@ -37,8 +37,8 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
                     <Flex align="center" gap="gap-2 sm:gap-3 lg:gap-4" className="min-w-0 flex-1 sm:flex-none">
                         <div className="relative flex-shrink-0">
                             <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-green-600/20 to-black/80 border border-green-500/30 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg shadow-green-500/20 transform hover:scale-105 transition-all duration-300 hover:shadow-green-500/40">
-                                <Icon name="brain" size={20} className="text-green-400 sm:hidden" />
-                                <Icon name="brain" size={24} className="text-green-400 hidden sm:block" />
+                                <Icon name="activity" size={20} className="text-green-400 sm:hidden" />
+                                <Icon name="activity" size={24} className="text-green-400 hidden sm:block" />
                             </div>
                             {/* Matrix glow effect */}
                             <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-green-700/20 rounded-lg sm:rounded-xl opacity-40 blur-lg -z-10"></div>

@@ -1,9 +1,11 @@
-# MindChain Contest Submission Checklist
+# StanceStream Contest Submission Checklist
+
 # Redis AI Challenge - Final Verification Before August 10, 2025
 
 ## 🏆 Contest Requirements Verification
 
 ### ✅ Redis Multi-Modal Usage (CRITICAL)
+
 - [ ] **RedisJSON**: Agent profiles + cache metrics + intelligent agent data + contest scoring
   - Test: `node index.js` creates SenatorBot profile
   - Verify: Redis-CLI `JSON.GET agent:senatorbot:profile`
@@ -26,6 +28,7 @@
   - Test: Advanced fact-checking with multi-source verification
 
 ### ✅ Technical Excellence
+
 - [ ] **Intelligent agent system** with Redis-powered decision making and emotional states
 - [ ] **Real-time optimization engine** improving Redis performance continuously
 - [ ] **Advanced fact-checking** with multi-source verification and AI analysis
@@ -40,6 +43,7 @@
 - [ ] **WebSocket connectivity** maintains connection stability with contest-ready performance
 
 ### ✅ Innovation & Business Impact
+
 - [ ] **Novel approach**: First AI debate system with Redis multi-modal
 - [ ] **Real-world application**: Enterprise training, education scenarios
 - [ ] **Problem solving**: Combats misinformation with fact-checking
@@ -48,10 +52,11 @@
 ## 🚀 Pre-Demo Technical Tests
 
 ### Environment Setup (5 minutes)
+
 ```bash
 # 1. Verify all dependencies installed
 pnpm install
-cd mindchain-frontend && pnpm install && cd ..
+cd stancestream-frontend && pnpm install && cd ..
 
 # 2. Initialize Redis indices and agent profiles
 node vectorsearch.js        # Creates facts vector index
@@ -66,22 +71,27 @@ node presentationOptimizer.js  # Primes cache and optimizes Redis
 node testRedis.js          # Verify Redis connectivity
 node quickTest.js          # System functionality test
 ```
+
 pnpm install
-cd mindchain-frontend && pnpm install
+cd stancestream-frontend && pnpm install
 
 # 2. Check environment variables
+
 echo "REDIS_URL: ${REDIS_URL}"
 echo "OPENAI_API_KEY: ${OPENAI_API_KEY:0:8}..."
 
 # 3. Test Redis connectivity
+
 node -e "import('redis').then(({createClient})=>{const c=createClient({url:process.env.REDIS_URL});c.connect().then(()=>c.ping()).then(r=>console.log('Redis:',r)).then(()=>c.quit());})"
 
 # 4. Initialize system (including cache and intelligent agents)
+
 node vectorsearch.js
 node setupCacheIndex.js
 node index.js
 node addReformer.js
-```
+
+````
 
 ### Functionality Tests (10 minutes)
 ```bash
@@ -108,13 +118,14 @@ node -e "import('./advancedFactChecker.js').then(({checkFactAdvanced})=>checkFac
 
 # Test 9: Contest metrics engine
 node -e "import('./contestMetricsEngine.js').then(({calculateContestScores})=>calculateContestScores())"
-```
+````
 
 ### Performance Benchmarks (5 minutes)
+
 ```bash
 # Start servers
 node server.js &
-cd mindchain-frontend && pnpm dev &
+cd stancestream-frontend && pnpm dev &
 
 # Wait for startup
 sleep 10
@@ -131,22 +142,26 @@ curl -w "%{time_total}s\n" http://localhost:3001/api/optimization/metrics
 ## 🎯 Demo Day Preparation
 
 ### Hardware Requirements
+
 - [ ] **Minimum**: 8GB RAM, stable internet connection
 - [ ] **Recommended**: 16GB RAM, wired connection for reliability
 - [ ] **Backup**: Mobile hotspot as internet failover
 
 ### Browser Setup
+
 - [ ] **Primary**: Chrome/Edge with dev tools closed
-- [ ] **Backup**: Firefox with MindChain bookmarked
+- [ ] **Backup**: Firefox with StanceStream bookmarked
 - [ ] **Clear cache** and **disable extensions** that might interfere
 
 ### Demo Environment
+
 - [ ] **Close unnecessary applications** to free memory
 - [ ] **Test screen sharing** with full application visible
 - [ ] **Prepare talking points** from CONTEST-DEMO-SCRIPT.md
 - [ ] **Practice 5-minute demo** at least 3 times
 
 ### Contingency Planning
+
 - [ ] **Backup slides** ready if live demo fails
 - [ ] **Video recording** of successful demo as fallback
 - [ ] **Key metrics documented** to discuss even without live data
@@ -155,17 +170,20 @@ curl -w "%{time_total}s\n" http://localhost:3001/api/optimization/metrics
 ## 📊 Contest Scoring Optimization
 
 ### Redis Innovation (40 points) - Target: 39/40
+
 - **Strength**: All 4 modules used meaningfully ✅
 - **Strength**: Complex data modeling beyond caching ✅
 - **NEW STRENGTH**: Semantic caching showcases Vector Search innovation ✅
 - **Opportunity**: Highlight unique vector + timeseries + cache integration
 
 ### Technical Implementation (30 points) - Target: 28/30
+
 - **Strength**: Production-quality error handling ✅
 - **Strength**: Scalable concurrent processing ✅
 - **Opportunity**: Emphasize professional monitoring & resilience
 
 ### Real-World Impact (30 points) - Target: 27/30
+
 - **Strength**: Clear enterprise applications ✅
 - **Strength**: Addresses misinformation problem ✅
 - **Opportunity**: Quantify potential user impact
@@ -173,6 +191,7 @@ curl -w "%{time_total}s\n" http://localhost:3001/api/optimization/metrics
 ## 🚨 Day-Of-Contest Checklist
 
 ### 30 Minutes Before Demo
+
 - [ ] Run complete system test
 - [ ] Verify all services healthy
 - [ ] Check internet connectivity
@@ -180,6 +199,7 @@ curl -w "%{time_total}s\n" http://localhost:3001/api/optimization/metrics
 - [ ] Have backup materials ready
 
 ### 5 Minutes Before Demo
+
 - [ ] Navigate to localhost:5173
 - [ ] Test WebSocket connection (green indicator)
 - [ ] Verify Redis analytics showing data
@@ -189,13 +209,15 @@ curl -w "%{time_total}s\n" http://localhost:3001/api/optimization/metrics
 - [ ] Take deep breath - you've built something amazing! 🌟
 
 ### During Demo
-- [ ] **Start confident**: "MindChain demonstrates all 4 Redis modules in a real-time AI system"
+
+- [ ] **Start confident**: "StanceStream demonstrates all 4 Redis modules in a real-time AI system"
 - [ ] **Show multi-modal usage**: Switch between analytics, debates, and configuration
 - [ ] **Highlight performance**: Point out sub-3-second responses
 - [ ] **Demonstrate scalability**: Show concurrent debates
 - [ ] **End strong**: "This is production-ready for enterprise deployment"
 
 ### After Demo
+
 - [ ] Answer questions confidently with technical details
 - [ ] Emphasize Redis as the core enabling technology
 - [ ] Share vision for enterprise applications
@@ -206,6 +228,7 @@ curl -w "%{time_total}s\n" http://localhost:3001/api/optimization/metrics
 ## 🏆 Final Confidence Booster
 
 **You've built a genuinely impressive system that:**
+
 - Uses all 4 Redis modules meaningfully with ADVANCED caching innovation
 - Delivers real-time performance with sub-3-second AI responses + cost optimization
 - Handles concurrent processing with professional error handling
@@ -214,6 +237,7 @@ curl -w "%{time_total}s\n" http://localhost:3001/api/optimization/metrics
 - Shows clear enterprise applications and business value
 
 **The judges will be impressed by:**
+
 - Technical sophistication of the Redis integration
 - Professional quality of the UI and error handling
 - Innovation in combining AI debates with multi-modal data storage

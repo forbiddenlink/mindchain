@@ -2,7 +2,7 @@ const API_BASE_URL = window.location.hostname === '127.0.0.1'
     ? 'http://127.0.0.1:3001/api'
     : 'http://localhost:3001/api';
 
-class MindChainAPI {
+class StanceStreamAPI {
     async get(endpoint) {
         const response = await fetch(`${API_BASE_URL}${endpoint}`);
         if (!response.ok) {
@@ -129,4 +129,4 @@ class MindChainAPI {
     }
 }
 
-export default new MindChainAPI();
+export default new StanceStreamAPI();

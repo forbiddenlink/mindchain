@@ -101,7 +101,7 @@ class KeyMomentsDetector {
             if (messageCount >= currentThreshold) {
                 this.debateMemoryThresholds.set(debateId, nextThreshold);
                 
-                console.log(`🧠 MEMORY THRESHOLD reached for debate ${debateId}: ${messageCount} messages (next: ${nextThreshold})`);
+                console.log(`📊 MEMORY THRESHOLD reached for debate ${debateId}: ${messageCount} messages (next: ${nextThreshold})`);
                 
                 return {
                     type: 'memory_milestone',

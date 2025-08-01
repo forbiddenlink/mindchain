@@ -1,4 +1,4 @@
-# Test MindChain Enhanced Semantic Caching Display
+# Test StanceStream Enhanced Semantic Caching Display
 # Quick demo script to showcase the business value features
 
 # Test StanceStream Enhanced Semantic Caching Display
@@ -14,7 +14,8 @@ try {
     $response = Invoke-RestMethod -Uri "http://localhost:3000/api/cache/metrics" -TimeoutSec 3
     $serverRunning = $true
     Write-Host "✅ Server is running" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "❌ Server not running. Please start the server first:" -ForegroundColor Red
     Write-Host "   npm start" -ForegroundColor Yellow
     Write-Host ""
@@ -54,10 +55,12 @@ if ($serverRunning) {
             if ($response.success) {
                 Write-Host "   ✅ Cache hit celebration triggered!" -ForegroundColor Green
                 Write-Host "   🎯 Business Value: $($response.data.percentage) match, `$$($response.data.cost_saved.ToString('F3')) saved" -ForegroundColor Cyan
-            } else {
+            }
+            else {
                 Write-Host "   ❌ Failed: $($response.message)" -ForegroundColor Red
             }
-        } catch {
+        }
+        catch {
             Write-Host "   ❌ Error: $($_.Exception.Message)" -ForegroundColor Red
         }
         

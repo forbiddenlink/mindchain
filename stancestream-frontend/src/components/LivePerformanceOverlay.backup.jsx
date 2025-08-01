@@ -1,5 +1,5 @@
 // Live Performance Metrics Overlay - Mission Control Dashboard Style
-// Enhanced to showcase MindChain's Semantic Caching Business Value
+// Enhanced to showcase StanceStream's Semantic Caching Business Value
 import { useState, useEffect, useRef } from 'react';
 import Icon from './Icon';
 import RedisMatrixStream from './RedisMatrixStream';
@@ -343,9 +343,9 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
                         </div>
                     </div>
                     
-                    {/* MindChain AI Bar */}
+                                            {/* StanceStream AI Bar */}
                     <div className="flex items-center justify-between">
-                        <span className="text-xs text-green-300">MindChain:</span>
+                        <span className="text-xs text-green-300">StanceStream:</span>
                         <div className="flex items-center gap-2 flex-1 mx-2">
                             <div className="bg-green-500/20 rounded-full h-2 flex-1 relative">
                                 <div 
@@ -457,7 +457,7 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
                                 value={businessMetrics.performance_impact.api_calls_eliminated}
                                 unit="calls"
                                 icon="zap"
-                                color="yellow"
+                                color="green"
                                 trend={15.1}
                                 isLoading={isLoading}
                                 pulse={true}
@@ -488,7 +488,7 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
                         </div>
                         <div className="flex justify-between text-xs text-gray-400 mt-1">
                             <span>Traditional AI</span>
-                            <span>MindChain</span>
+                            <span>StanceStream</span>
                         </div>
                     </div>
                 ) : (

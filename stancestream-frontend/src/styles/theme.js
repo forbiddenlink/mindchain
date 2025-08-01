@@ -35,7 +35,7 @@ export const gradients = {
     primary: 'from-blue-600 to-blue-700',
     secondary: 'from-purple-600 to-pink-600',
     success: 'from-green-600 to-emerald-600',
-    warning: 'from-yellow-600 to-orange-600',
+    warning: 'from-green-600 to-emerald-600',
     error: 'from-red-600 to-red-700',
     surface: 'from-slate-900/50 to-gray-900/50',
     surfaceLight: 'from-slate-800/40 via-slate-800/30 to-slate-800/40',
@@ -105,7 +105,7 @@ export const viewModes = {
         key: 'showcase',
         label: 'System Showcase',
         icon: 'award',
-        gradient: gradients.warning,
+        gradient: 'from-green-600 to-emerald-600',
         description: 'Premium demonstration interface'
     }
 };

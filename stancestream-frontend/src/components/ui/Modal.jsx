@@ -133,7 +133,7 @@ export const ConfirmDialog = ({
     const iconColors = {
         primary: 'text-green-400',
         danger: 'text-red-400',
-        warning: 'text-yellow-400',
+        warning: 'text-green-400',
         success: 'text-green-400'
     };
 

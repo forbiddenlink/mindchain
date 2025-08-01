@@ -122,7 +122,7 @@ const DebatePanel = ({ messages = [] }) => {
                         </p>
                         <div className="mt-6 flex items-center space-x-6 text-gray-500 text-sm font-mono">
                             <div className="flex items-center space-x-2">
-                                <Icon name="brain" size={16} />
+                                <Icon name="activity" size={16} />
                                 <span>AI MEMORY</span>
                             </div>
                             <div className="flex items-center space-x-2">

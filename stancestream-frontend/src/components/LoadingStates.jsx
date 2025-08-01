@@ -10,7 +10,7 @@ export const LoadingSpinner = ({ size = 16, text = "Loading..." }) => (
 );
 
 // Enhanced Page Loading Component
-export const PageLoader = ({ title = "Loading MindChain..." }) => (
+export const PageLoader = ({ title = "Loading StanceStream..." }) => (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="text-center animate-fade-in-up">
             <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-green-500 via-emerald-600 to-green-700 rounded-xl flex items-center justify-center animate-pulse-gentle">

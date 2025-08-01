@@ -78,7 +78,7 @@ export default function MainLayout({
                                         { key: 'multi-debate', label: 'Multi-Debate', icon: 'multi-debate', gradient: 'from-purple-600 to-pink-600' },
                                         { key: 'analytics', label: 'Analytics', icon: 'analytics', gradient: 'from-green-600 to-emerald-600' },
                                         { key: 'business', label: 'Business Intelligence', icon: 'trending-up', gradient: 'from-blue-600 to-cyan-600' },
-                                        { key: 'showcase', label: 'System Showcase', icon: 'award', gradient: 'from-yellow-600 to-orange-600' }
+                                        { key: 'showcase', label: 'System Showcase', icon: 'award', gradient: 'from-green-600 to-emerald-600' }
                                     ].map(({ key, label, icon, gradient }) => (
                                         <button
                                             key={key}

@@ -23,7 +23,7 @@ export async function generateMessage(agentId, debateId, topic = 'general policy
         .map((msg, i) => `Memory ${i + 1}: ${msg}`)
         .join('\n');
 
-    // 🧠 Step 2: Construct prompt with memory + profile + dynamic topic
+    // 📊 Step 2: Construct prompt with memory + profile + dynamic topic
     const prompt = `
 You are ${profile.name}, a ${profile.tone} ${profile.role}.
 You believe in ${profile.biases.join(', ')}.
@@ -116,7 +116,7 @@ export async function generateMessageOnly(agentId, debateId, topic = 'general po
         .map((msg, i) => `Memory ${i + 1}: ${msg}`)
         .join('\n');
 
-    // 🧠 Step 2: Construct prompt with memory + profile + dynamic topic
+    // 📊 Step 2: Construct prompt with memory + profile + dynamic topic
     const prompt = `
 You are ${profile.name}, a ${profile.tone} ${profile.role}.
 You believe in ${profile.biases.join(', ')}.

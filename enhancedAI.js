@@ -1,4 +1,4 @@
-// Enhanced AI Features for MindChain - Contest Improvements
+// Enhanced AI Features for StanceStream - Contest Improvements
 
 import 'dotenv/config';
 import { createClient } from 'redis';
@@ -44,7 +44,7 @@ function calculateSimilarity(message1, message2) {
 
 // 🔄 Convert debate topic to stance key for profile lookup
 
-// 🧠 Enhanced AI generation with emotional state and coalition building
+    // 📊 Enhanced AI generation with emotional state and coalition building
 export async function generateEnhancedMessage(agentId, debateId, topic = 'general policy') {
     const client = createClient({ url: process.env.REDIS_URL });
     await client.connect();

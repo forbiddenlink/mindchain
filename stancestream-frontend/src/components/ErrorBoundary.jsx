@@ -50,7 +50,7 @@ class ErrorBoundary extends React.Component {
             return (
                 <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex items-center justify-center p-4">
                     <div className="max-w-2xl w-full">
-                        <div className="bg-gradient-to-br from-red-900/30 to-orange-900/30 backdrop-blur-sm border border-red-500/30 rounded-xl p-8 text-center">
+                        <div className="bg-gradient-to-br from-red-900/30 to-red-800/30 backdrop-blur-sm border border-red-500/30 rounded-xl p-8 text-center">
                             {/* Error Icon */}
                             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <Icon name="alert-triangle" size={32} className="text-red-400" />
@@ -63,14 +63,14 @@ class ErrorBoundary extends React.Component {
 
                             {/* Error Description */}
                             <p className="text-gray-300 mb-6 leading-relaxed">
-                                MindChain encountered an unexpected error. This is likely a temporary issue
+                                StanceStream encountered an unexpected error. This is likely a temporary issue
                                 that can be resolved by retrying the operation or refreshing the application.
                             </p>
 
                             {/* Error Details (Development Mode) */}
                             {process.env.NODE_ENV === 'development' && this.state.error && (
                                 <div className="bg-slate-800/50 border border-slate-600/50 rounded-lg p-4 mb-6 text-left">
-                                    <h3 className="text-sm font-semibold text-orange-300 mb-2">Error Details:</h3>
+                                    <h3 className="text-sm font-semibold text-red-300 mb-2">Error Details:</h3>
                                     <pre className="text-xs text-gray-400 overflow-auto max-h-32">
                                         {this.state.error.toString()}
                                     </pre>

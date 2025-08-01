@@ -1,9 +1,9 @@
-// Quick test to verify core MindChain functionality
+// Quick test to verify core StanceStream functionality
 import 'dotenv/config';
 import { createClient } from 'redis';
 
 async function quickTest() {
-    console.log('🧪 Running MindChain Quick Test\n');
+    console.log('🧪 Running StanceStream Quick Test\n');
     
     try {
         // Test 1: Redis Connection

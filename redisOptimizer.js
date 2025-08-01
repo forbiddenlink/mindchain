@@ -369,7 +369,7 @@ class RedisPerformanceOptimizer {
         }
     }
 
-    // 🧠 Semantic cache optimization
+            // 📊 Semantic cache optimization
     async optimizeSemanticCache() {
         try {
             console.log('🔧 Optimizing semantic cache...');

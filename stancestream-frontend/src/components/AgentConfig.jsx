@@ -209,7 +209,7 @@ const AgentConfig = ({ isVisible, onClose, agentId = 'senatorbot' }) => {
                             {/* Biases */}
                             <div>
                                 <label className="block text-sm font-semibold text-slate-300 mb-2">
-                                    🧠 Core Beliefs & Biases
+                                    📊 Core Beliefs & Biases
                                 </label>
                                 <textarea
                                     value={profile.biases?.join(', ') || ''}

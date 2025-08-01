@@ -35,7 +35,7 @@ if (process.argv[2]) {
     const query = process.argv.slice(2).join(' ');
     findClosestFact(query).then((result) => {
         if (result.content) {
-            console.log(`🧠 Closest fact: "${result.content}"`);
+            console.log(`📊 Closest fact: "${result.content}"`);
             console.log(`📊 Score: ${result.score}`);
         } else {
             console.log(`⚠️ No fact match found.`);

@@ -1,4 +1,4 @@
-// Advanced Contest-Ready API Endpoints for MindChain
+// Advanced Contest-Ready API Endpoints for StanceStream
 
 import 'dotenv/config';
 import express from 'express';
@@ -80,7 +80,7 @@ app.post('/api/contest/enhanced-debate', async (req, res) => {
     try {
         const { debateId, topic = 'AI Ethics', agents = ['senatorbot', 'reformerbot'] } = req.body;
         
-        console.log(`🧠 Starting enhanced AI debate: ${topic}`);
+        console.log(`📊 Starting enhanced AI debate: ${topic}`);
         
         // Start enhanced debate with better AI
         const uniqueDebateId = debateId || `enhanced_${Date.now()}`;
@@ -290,7 +290,7 @@ app.get('/api/contest/demonstration', async (req, res) => {
         console.log('🎯 Contest demonstration requested');
         
         const demonstration = {
-            title: '🏆 MindChain - Redis AI Challenge Demonstration',
+            title: '🏆 StanceStream - Redis AI Challenge Demonstration',
             features: {
                 multiModal: {
                     name: 'Multi-Modal Redis Usage',

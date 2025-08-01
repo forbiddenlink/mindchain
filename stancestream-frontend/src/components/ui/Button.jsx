@@ -22,7 +22,7 @@ export const Button = ({
         ghost: 'button-ghost',
         danger: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-xl',
         success: 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-lg hover:shadow-xl',
-        warning: 'bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl'
+        warning: 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl'
     };
 
     const sizes = {
@@ -90,7 +90,7 @@ export const GradientButton = ({ children, gradient = 'hero', className = '', ..
     const gradients = {
         hero: 'from-blue-600 via-purple-600 to-blue-700',
         success: 'from-emerald-600 via-green-600 to-emerald-700',
-        warning: 'from-yellow-600 via-orange-600 to-yellow-700',
+        warning: 'from-green-600 via-emerald-600 to-green-700',
         danger: 'from-red-600 via-pink-600 to-red-700'
     };
 

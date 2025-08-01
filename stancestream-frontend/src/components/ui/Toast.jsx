@@ -106,9 +106,9 @@ const ToastItem = ({ toast, onRemove }) => {
             },
             warning: {
                 icon: 'alert-triangle',
-                iconColor: 'text-yellow-400',
-                bgColor: 'from-yellow-500/20 to-orange-500/20',
-                borderColor: 'border-yellow-500/30'
+                        iconColor: 'text-green-400',
+        bgColor: 'from-green-500/20 to-emerald-500/20',
+        borderColor: 'border-green-500/30'
             },
             info: {
                 icon: 'info',

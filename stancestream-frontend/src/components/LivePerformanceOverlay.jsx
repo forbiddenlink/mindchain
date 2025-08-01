@@ -442,7 +442,7 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
                                 value={businessMetrics.performance_impact.api_calls_eliminated}
                                 unit="calls"
                                 icon="zap"
-                                color="yellow"
+                                color="green"
                                 trend={15.1}
                                 isLoading={isLoading}
                                 pulse={true}

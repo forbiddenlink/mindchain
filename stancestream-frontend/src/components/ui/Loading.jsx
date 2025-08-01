@@ -79,7 +79,7 @@ export const LoadingOverlay = ({
                     <div className="w-16 h-16 mx-auto mb-6 relative">
                         <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full animate-pulse"></div>
                         <div className="absolute inset-2 bg-slate-900 rounded-full flex items-center justify-center">
-                            <Icon name="brain" size={24} className="text-green-400 animate-pulse" />
+                            <Icon name="activity" size={24} className="text-green-400 animate-pulse" />
                         </div>
                     </div>
                     <h3 className="text-xl font-semibold text-white mb-2">{message}</h3>
@@ -103,7 +103,7 @@ export const ProgressBar = ({
     const variants = {
         primary: 'from-blue-500 to-purple-600',
         success: 'from-emerald-500 to-green-600',
-        warning: 'from-yellow-500 to-orange-600',
+        warning: 'from-green-500 to-emerald-600',
         danger: 'from-red-500 to-pink-600'
     };
 

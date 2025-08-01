@@ -3,7 +3,7 @@ import { createClient } from 'redis';
 // import tf from '@tensorflow/tfjs-node';
 
 /**
- * Lightweight Sentiment Analysis for MindChain
+ * Lightweight Sentiment Analysis for StanceStream
  * Uses rule-based analysis with Redis TimeSeries storage
  * Ready for TensorFlow.js upgrade when Node.js bindings are fixed
  */
@@ -18,7 +18,7 @@ class SentimentAnalyzer {
         try {
             this.client = createClient({ url: process.env.REDIS_URL });
             await this.client.connect();
-            console.log('🧠 Redis client connected for sentiment analysis');
+            console.log('📊 Redis client connected for sentiment analysis');
 
             // Initialize rule-based sentiment for now
             this.modelLoaded = true;
@@ -34,7 +34,7 @@ class SentimentAnalyzer {
     }
 
     async analyzeSentiment(message, debateId = 'general', agentId = 'unknown') {
-        console.log(`🧠 SENTIMENT: Analyzing message from ${agentId}: "${message.substring(0, 50)}..."`);
+        console.log(`📊 SENTIMENT: Analyzing message from ${agentId}: "${message.substring(0, 50)}..."`);
         
         try {
             // Use advanced rule-based sentiment analysis for now

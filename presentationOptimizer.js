@@ -190,7 +190,7 @@ class PresentationOptimizer {
         console.log('\n📝 Generating demo presentation script...');
 
         const script = `
-🎬 MINDCHAIN DEMO SCRIPT (7 minutes)
+    🎬 STANCESTREAM DEMO SCRIPT (7 minutes)
 
 === PHASE 1: BUSINESS VALUE (2 min) ===
 1. Open Business Intelligence Dashboard
@@ -229,7 +229,7 @@ class PresentationOptimizer {
    • Real-time optimization
    
 3. Closing Statement:
-   "MindChain demonstrates genuine innovation with quantifiable business value - 
+       "StanceStream demonstrates genuine innovation with quantifiable business value - 
     the perfect combination of technical excellence and real-world impact."
 
 💡 KEY TALKING POINTS:
@@ -267,7 +267,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             const results = await optimizer.optimizeForDemo();
             await optimizer.generateDemoScript();
 
-            console.log('\n🏆 MindChain is optimized and ready to win!');
+            console.log('\n🏆 StanceStream is optimized and ready to win!');
             console.log('💡 Pro tip: Start with Business Intelligence view to showcase ROI');
 
         } catch (error) {

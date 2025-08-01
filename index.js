@@ -11,8 +11,8 @@ async function run() {
     await client.connect();
 
     // ✅ Simple test
-    await client.set('mindchain:test', 'Hello Redis!');
-    const testValue = await client.get('mindchain:test');
+            await client.set('stancestream:test', 'Hello Redis!');
+        const testValue = await client.get('stancestream:test');
     console.log('Value from Redis:', testValue);
 
     // ✅ Create Agent Profile (RedisJSON)

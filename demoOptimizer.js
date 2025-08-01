@@ -69,7 +69,7 @@ const commonDebateScenarios = [
 ];
 
 async function optimizeForDemo() {
-    console.log('🚀 Optimizing MindChain for high-performance demonstration...');
+    console.log('🚀 Optimizing StanceStream for high-performance demonstration...');
 
     const client = createClient({ url: process.env.REDIS_URL });
 

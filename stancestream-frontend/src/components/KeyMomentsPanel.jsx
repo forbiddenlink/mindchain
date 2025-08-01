@@ -87,7 +87,7 @@ const KeyMomentsPanel = ({ debateId, viewMode = 'standard' }) => {
         switch (type) {
             case 'stance_flip': return 'trending-up';
             case 'questionable_claim': return 'alert-triangle';
-            case 'memory_milestone': return 'brain';
+            case 'memory_milestone': return 'activity';
             default: return 'star';
         }
     };
@@ -312,7 +312,7 @@ const KeyMomentsPanel = ({ debateId, viewMode = 'standard' }) => {
                                     <div className="mt-4 pt-3 border-t border-green-500/30">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <Icon name="brain" size={12} className="text-green-400" />
+                                                <Icon name="activity" size={12} className="text-green-400" />
                                                 <span className="text-xs text-green-400 font-medium font-mono">AI ANALYSIS</span>
                                             </div>
                                             <span className="text-xs text-gray-500 font-mono">

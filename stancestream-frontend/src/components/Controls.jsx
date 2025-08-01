@@ -25,7 +25,7 @@ const Controls = () => {
 
     const agents = [
         { id: 'senatorbot', name: 'SenatorBot', color: 'bg-blue-600' },
-        { id: 'reformerbot', name: 'ReformerBot', color: 'bg-orange-500' }
+        { id: 'reformerbot', name: 'ReformerBot', color: 'bg-green-500' }
     ];
 
     const handleStartDebate = async () => {
@@ -126,7 +126,7 @@ const Controls = () => {
                     <html>
                         <head><title>Debate Summary</title></head>
                         <body style="font-family: Arial, sans-serif; padding: 20px; background: #1e293b; color: white;">
-                            <h1>🧠 MindChain Debate Summary</h1>
+                            <h1>📊 StanceStream Debate Summary</h1>
                             <div style="background: #334155; padding: 20px; border-radius: 10px; margin: 20px 0;">
                                 <h2>Key Points</h2>
                                 <pre style="white-space: pre-wrap; background: #475569; padding: 15px; border-radius: 5px;">${result.summary}</pre>

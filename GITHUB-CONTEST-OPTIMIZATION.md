@@ -3,6 +3,7 @@
 ## 🏆 **Contest-Ready Repository Setup**
 
 ### **1. README.md Header Enhancement**
+
 Add these badges at the top of your README:
 
 ```markdown
@@ -22,15 +23,18 @@ Add these badges at the top of your README:
 ```
 
 ### **2. Visual Assets Needed**
+
 Create these images for maximum impact:
 
 #### **Architecture Diagram**
+
 - All 4 Redis modules clearly labeled
 - Data flow between components
 - Performance metrics overlay
 - Professional design with Redis branding
 
 #### **Screenshots**
+
 - Contest Showcase Dashboard in action
 - Multi-debate view with live metrics
 - Cache performance dashboard
@@ -38,12 +42,14 @@ Create these images for maximum impact:
 - Professional UI with branded icons
 
 #### **Performance Charts**
+
 - Cache hit rate over time
 - Cost savings progression
 - Response time benchmarks
 - Concurrent processing metrics
 
 ### **3. Repository Structure**
+
 ```
 📁 .github/
   📁 assets/
@@ -67,9 +73,11 @@ Create these images for maximum impact:
 ```
 
 ### **4. Demo Deployment**
+
 Set up automated demo deployment:
 
 #### **GitHub Actions Workflow**
+
 ```yaml
 name: Contest Demo Deployment
 on:
@@ -89,9 +97,9 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          cd mindchain-frontend && npm install
+          cd stancestream-frontend && npm install
       - name: Build frontend
-        run: cd mindchain-frontend && npm run build
+                  run: cd stancestream-frontend && npm run build
       - name: Deploy to demo server
         run: echo "Deploy to your hosting platform"
 ```
@@ -99,6 +107,7 @@ jobs:
 ### **5. Social Proof Elements**
 
 #### **Contributor Recognition**
+
 ```markdown
 ## 🏆 Contest Team
 
@@ -108,7 +117,7 @@ jobs:
 <img src="https://github.com/forbiddenlink.png" width="100px;" alt=""/><br />
 <b>Your Name</b><br />
 <i>Lead Developer</i><br />
-🧠 Redis Expert<br />
+📊 Redis Expert<br />
 🏆 Contest Innovator
 </td>
 </tr>
@@ -116,6 +125,7 @@ jobs:
 ```
 
 #### **Community Engagement**
+
 ```markdown
 ## 🌟 Community & Recognition
 
@@ -129,42 +139,47 @@ jobs:
 ### **6. Performance Documentation**
 
 #### **Benchmarks Table**
+
 ```markdown
 ## 📊 Performance Benchmarks
 
-| Metric | Current | Target | Status |
-|--------|---------|--------|--------|
-| Cache Hit Rate | 70.3% | 75% | 🟢 Excellent |
-| Response Time | 2.8s | <3s | 🟢 On Target |
-| Monthly Savings | $47 | $50+ | 🟡 Improving |
-| Concurrent Debates | 3 | 5+ | 🟢 Scalable |
-| Redis Operations | 1,200/min | 1,500/min | 🟡 Optimizing |
-| Uptime | 99.2% | 99.5% | 🟢 Reliable |
+| Metric             | Current   | Target    | Status        |
+| ------------------ | --------- | --------- | ------------- |
+| Cache Hit Rate     | 70.3%     | 75%       | 🟢 Excellent  |
+| Response Time      | 2.8s      | <3s       | 🟢 On Target  |
+| Monthly Savings    | $47       | $50+      | 🟡 Improving  |
+| Concurrent Debates | 3         | 5+        | 🟢 Scalable   |
+| Redis Operations   | 1,200/min | 1,500/min | 🟡 Optimizing |
+| Uptime             | 99.2%     | 99.5%     | 🟢 Reliable   |
 
-*Last updated: August 1, 2025*
+_Last updated: August 1, 2025_
 ```
 
 ### **7. Contest-Specific Content**
 
 #### **Contest Features Highlight**
+
 ```markdown
 ## 🏆 Redis AI Challenge Features
 
 ### **Real-Time AI Innovators Category**
+
 ✅ **Semantic Caching**: Vector-powered AI response optimization  
 ✅ **Cost Optimization**: 70% reduction in OpenAI API costs  
 ✅ **Performance**: Sub-3-second AI responses at scale  
-✅ **Innovation**: First multi-agent debate system with intelligent caching  
+✅ **Innovation**: First multi-agent debate system with intelligent caching
 
-### **Beyond the Cache Category**  
+### **Beyond the Cache Category**
+
 ✅ **Multi-Modal Redis**: All 4 modules meaningfully integrated  
 ✅ **Primary Database**: Complex data modeling beyond simple caching  
 ✅ **Real-Time Streams**: WebSocket broadcasting with persistence  
-✅ **Production Ready**: Enterprise-grade reliability and monitoring  
+✅ **Production Ready**: Enterprise-grade reliability and monitoring
 
 ### **Business Impact**
+
 - 💰 **$47/month** in documented API savings
-- 🚀 **10x faster** responses than traditional AI apps  
+- 🚀 **10x faster** responses than traditional AI apps
 - 📈 **Scalable** to millions of users with Redis Cluster
 - 🏢 **Enterprise ready** for corporate deployment
 ```
@@ -172,16 +187,18 @@ jobs:
 ### **8. Quick Start Optimization**
 
 #### **One-Command Demo**
+
 ```bash
 # Contest Quick Start (5 minutes to running system)
-curl -sSL https://raw.githubusercontent.com/forbiddenlink/mindchain/main/contest-setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/forbiddenlink/stancestream/main/contest-setup.sh | bash
 ```
 
 #### **Docker Compose for Judges**
+
 ```yaml
-version: '3.8'
+version: "3.8"
 services:
-  mindchain:
+  stancestream:
     build: .
     ports:
       - "3001:3001"
@@ -197,10 +214,11 @@ services:
 ### **9. Legal & Professional**
 
 #### **License File**
+
 ```
 MIT License
 
-Copyright (c) 2025 MindChain Contributors
+Copyright (c) 2025 StanceStream Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -213,11 +231,13 @@ furnished to do so, subject to the following conditions:
 ```
 
 #### **Code of Conduct**
+
 Standard professional code of conduct for open source projects.
 
 ### **10. Contest Submission Links**
 
 #### **Repository Footer**
+
 ```markdown
 ---
 
@@ -226,12 +246,14 @@ Standard professional code of conduct for open source projects.
 **StanceStream** is our submission to the Redis AI Challenge, demonstrating innovative use of Redis as an intelligent data platform for AI applications.
 
 **🔗 Contest Links:**
+
 - 📝 [DEV Post Submission](your-dev-post-link)
-- 🎥 [Demo Video](your-video-link) 
+- 🎥 [Demo Video](your-video-link)
 - 🌐 [Live Demo](your-demo-link)
 - 💬 [Community Discussion](discord-link)
 
 **📊 Key Metrics:**
+
 - Cache Hit Rate: **70.3%**
 - Monthly Savings: **$47**
 - Response Time: **<3 seconds**
@@ -239,24 +261,27 @@ Standard professional code of conduct for open source projects.
 
 Built with ❤️ and Redis expertise for the developer community.
 
-*Last updated: August 1, 2025*
+_Last updated: August 1, 2025_
 ```
 
 ## 🎯 **Implementation Priority**
 
 ### **Immediate (August 1-2):**
+
 1. Add contest badges to README
 2. Create architecture diagram
 3. Take professional screenshots
 4. Set up live demo deployment
 
 ### **Content (August 3-5):**
+
 1. Write performance benchmarks
 2. Create contest-specific documentation
 3. Add social proof elements
 4. Optimize quick start guide
 
 ### **Final Polish (August 6-8):**
+
 1. Professional visual assets
 2. Community engagement setup
 3. Legal documentation

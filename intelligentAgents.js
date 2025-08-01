@@ -30,7 +30,7 @@ class IntelligentAgentSystem {
         }
     }
 
-    // 🧠 Generate context-aware agent responses with Redis-powered intelligence
+    // 📊 Generate context-aware agent responses with Redis-powered intelligence
     async generateIntelligentResponse(agentId, debateId, topic, conversationHistory = []) {
         await this.connect();
 
@@ -211,7 +211,7 @@ class IntelligentAgentSystem {
         }
     }
 
-    // 🧠 Get strategic memory from Redis Streams
+            // 📊 Get strategic memory from Redis Streams
     async getStrategicMemory(agentId, debateId) {
         try {
             const memoryKey = `debate:${debateId}:agent:${agentId}:memory`;

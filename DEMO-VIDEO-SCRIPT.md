@@ -1,23 +1,27 @@
-# MindChain Demo Video Script
+# StanceStream Demo Video Script
+
 # Redis AI Challenge - 5-Minute Winning Presentation
 
 ## 🎬 **Video Structure (5 minutes total)**
 
 ### **Opening Hook (30 seconds)**
-**[Screen: MindChain logo with tagline]**
-**Narrator**: "What if AI applications could remember everything, cache intelligently, and process thousands of requests in real-time? Meet MindChain - the Redis-powered AI debate engine that's redefining what's possible."
+
+**[Screen: StanceStream logo with tagline]**
+**Narrator**: "What if AI applications could remember everything, cache intelligently, and process thousands of requests in real-time? Meet StanceStream - the Redis-powered AI debate engine that's redefining what's possible."
 
 **[Screen: Live cache hit rate showing 70%+ and cost savings]**
 **Narrator**: "Currently saving $47 per month in OpenAI API costs with 70% cache hit rates. But that's just the beginning."
 
 ### **Problem Statement (30 seconds)**
+
 **[Screen: Split view - expensive AI calls vs. Redis speed]**
 **Narrator**: "AI applications face three critical challenges: expensive API costs, slow response times, and memory limitations. Traditional solutions treat these as separate problems."
 
-**[Screen: MindChain architecture diagram]**
-**Narrator**: "MindChain solves all three with Redis as the intelligent data layer."
+**[Screen: StanceStream architecture diagram]**
+**Narrator**: "StanceStream solves all three with Redis as the intelligent data layer."
 
 ### **Core Demo - Multi-Agent Debates (2 minutes)**
+
 **[Screen: Contest Showcase Dashboard with Live Performance Overlay]**
 **Narrator**: "Watch all 4 Redis modules working together in real-time, with our mission control dashboard showing live performance metrics."
 
@@ -37,6 +41,7 @@
 **Narrator**: "Real-time fact-checking using Redis Vector search with semantic similarity - not just keyword matching."
 
 ### **Technical Innovation Deep Dive (1.5 minutes)**
+
 **[Screen: Live Redis CLI showing all 4 modules]**
 **Narrator**: "Let me show you what makes this special."
 
@@ -56,6 +61,7 @@
 **Narrator**: "Our optimization engine continuously tunes Redis performance. Currently processing 1,200 operations per minute across all modules."
 
 ### **Business Impact (45 seconds)**
+
 **[Screen: Cost savings dashboard]**
 **Narrator**: "The semantic caching alone saves 70% of OpenAI API costs. For enterprise deployment, that's thousands of dollars monthly."
 
@@ -66,18 +72,20 @@
 **Narrator**: "Sub-3-second response times, 99% uptime, and concurrent processing make this production-ready today."
 
 ### **Closing Impact (30 seconds)**
+
 **[Screen: GitHub repo with stars and activity]**
-**Narrator**: "MindChain isn't just a contest entry - it's the future of Redis-powered AI applications."
+**Narrator**: "StanceStream isn't just a contest entry - it's the future of Redis-powered AI applications."
 
 **[Screen: Live demo link and Contest Showcase]**
-**Narrator**: "Experience it yourself at mindchain-demo.com. This is what happens when you combine Redis expertise with AI innovation."
+**Narrator**: "Experience it yourself at stancestream-demo.com. This is what happens when you combine Redis expertise with AI innovation."
 
 **[Screen: "Redis AI Challenge Winner" graphic]**
-**Narrator**: "MindChain. Powered by Redis. Ready to transform how we build intelligent applications."
+**Narrator**: "StanceStream. Powered by Redis. Ready to transform how we build intelligent applications."
 
 ## 🎯 **Key Visual Elements**
 
 ### **Screen Recordings Needed:**
+
 1. **Contest Showcase Dashboard with Live Performance Overlay** - Mission control feel
 2. **Multi-debate concurrent processing** - Scalability demonstration
 3. **Live cache metrics in mission control** - Business value proof with 99.1% hit rates
@@ -88,6 +96,7 @@
 8. **Mission Control live metrics** - Redis Ops/sec, Response times, System health
 
 ### **Graphics to Create:**
+
 1. **Architecture diagram** - All 4 Redis modules
 2. **Cost comparison** - With vs. without caching
 3. **Performance benchmarks** - Speed and efficiency
@@ -97,6 +106,7 @@
 ## 📊 **Key Metrics to Display**
 
 ### **Performance Numbers:**
+
 - Cache hit rate: 99.1% (live updating in mission control)
 - Monthly savings: $47+ (calculated from real usage)
 - Response time: <3 seconds (live in mission control overlay)
@@ -105,6 +115,7 @@
 - System health: 99.7% uptime (mission control display)
 
 ### **Business Value:**
+
 - API cost reduction: 70%
 - Enterprise scalability: Millions of users
 - Use cases: 5+ industries
@@ -113,6 +124,7 @@
 ## 🎬 **Production Notes**
 
 ### **Technical Requirements:**
+
 - Screen recording: 1080p minimum
 - Audio: Clear narration with professional microphone
 - Editing: Smooth transitions, callout highlights
@@ -120,7 +132,8 @@
 - Export: High quality for DEV post embedding
 
 ### **Filming Checklist:**
-- [ ] Clear desktop with only MindChain open
+
+- [ ] Clear desktop with only StanceStream open
 - [ ] High contrast Redis CLI for visibility
 - [ ] Stable internet for live metrics
 - [ ] Practice script multiple times
@@ -130,6 +143,7 @@
 ## 🏆 **Contest Impact Strategy**
 
 This video will demonstrate:
+
 1. **Innovation**: Semantic caching breakthrough
 2. **Technical Mastery**: All 4 Redis modules meaningfully used
 3. **Business Value**: Real cost savings and ROI

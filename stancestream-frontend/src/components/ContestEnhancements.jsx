@@ -38,15 +38,15 @@ export function ContestReadyDashboard() {
     return (
         <div className="space-y-6">
             {/* Contest Score Banner */}
-            <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-xl p-4">
+            <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-lg font-bold text-yellow-300">🏆 Contest Performance Score</h2>
-                        <p className="text-sm text-yellow-200">Real-time Redis multi-modal usage evaluation</p>
+                        <h2 className="text-lg font-bold text-green-300">🏆 Contest Performance Score</h2>
+                        <p className="text-sm text-green-200">Real-time Redis multi-modal usage evaluation</p>
                     </div>
                     <div className="text-right">
-                        <div className="text-3xl font-bold text-yellow-300">{performanceScore}/100</div>
-                        <div className="text-sm text-yellow-400">
+                        <div className="text-3xl font-bold text-green-300">{performanceScore}/100</div>
+                        <div className="text-sm text-green-400">
                             {performanceScore >= 90 ? 'EXCELLENT' : performanceScore >= 75 ? 'GOOD' : 'FAIR'}
                         </div>
                     </div>
@@ -111,7 +111,7 @@ function RedisModuleVisualizer() {
 // 📈 Individual Module Usage Card with Animation
 function ModuleUsageCard({ module, usage, operations }) {
     const moduleColors = {
-        json: { bg: 'from-orange-500/20 to-orange-600/20', border: 'border-orange-500/30', text: 'text-orange-300' },
+                        json: { bg: 'from-green-500/20 to-green-600/20', border: 'border-green-500/30', text: 'text-green-300' },
         streams: { bg: 'from-green-500/20 to-green-600/20', border: 'border-green-500/30', text: 'text-green-300' },
         timeseries: { bg: 'from-purple-500/20 to-purple-600/20', border: 'border-purple-500/30', text: 'text-purple-300' },
         vector: { bg: 'from-blue-500/20 to-blue-600/20', border: 'border-blue-500/30', text: 'text-blue-300' }

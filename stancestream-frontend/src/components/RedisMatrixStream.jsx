@@ -49,7 +49,7 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
         },
         vector: {
             icon: 'target',
-            color: 'orange',
+            color: 'green',
             label: 'VECTOR',
             description: 'Cache Hits',
             examples: [
@@ -216,7 +216,7 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
 
     // Get phase styling
     const getPhaseStyle = (phase, isReal = false) => {
-        const baseStyle = isReal ? 'ring-2 ring-yellow-400/50 ' : '';
+        const baseStyle = isReal ? 'ring-2 ring-green-400/50 ' : '';
         
         switch (phase) {
             case 'starting':
@@ -238,7 +238,7 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
             json: phase === 'success' ? 'bg-green-400' : 'bg-green-500',
             streams: phase === 'success' ? 'bg-green-400' : 'bg-green-500',
             timeseries: phase === 'success' ? 'bg-purple-400' : 'bg-purple-500',
-            vector: phase === 'success' ? 'bg-orange-400' : 'bg-orange-500'
+            vector: phase === 'success' ? 'bg-green-400' : 'bg-green-500'
         };
         return colors[type] || 'bg-gray-500';
     };
@@ -318,14 +318,14 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
                                             {op.config.label}
                                         </span>
                                         {op.isReal && (
-                                            <span className="px-1 py-0.5 bg-yellow-600/30 border border-yellow-500/50 rounded text-xs text-yellow-300 font-bold">
+                                            <span className="px-1 py-0.5 bg-green-600/30 border border-green-500/50 rounded text-xs text-green-300 font-bold">
                                                 LIVE
                                             </span>
                                         )}
                                     </div>
                                     <div className="flex items-center gap-2 text-xs">
                                         {op.similarity && (
-                                            <span className="text-orange-300 font-mono">
+                                            <span className="text-green-300 font-mono">
                                                 {op.similarity.toFixed(1)}%
                                             </span>
                                         )}
@@ -358,7 +358,7 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
                                 {/* Phase Status */}
                                 <div className={`text-xs mt-1 font-mono ${
                                     op.phase === 'success' ? 'text-green-300' :
-                                    op.phase === 'completing' ? 'text-yellow-300' :
+                                    op.phase === 'completing' ? 'text-green-300' :
                                     op.phase === 'processing' ? 'text-green-300' :
                                     'text-gray-400'
                                 }`}>

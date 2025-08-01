@@ -10,7 +10,7 @@ const useWebSocket = (url) => {
         const ws = new WebSocket(url);
 
         ws.onopen = () => {
-            console.log('🔌 Connected to MindChain server');
+            console.log('🔌 Connected to StanceStream server');
             setConnectionStatus('Connected');
             setSocket(ws);
         };
@@ -26,7 +26,7 @@ const useWebSocket = (url) => {
         };
 
         ws.onclose = () => {
-            console.log('🔌 Disconnected from MindChain server');
+            console.log('🔌 Disconnected from StanceStream server');
             setConnectionStatus('Disconnected');
             setSocket(null);
         };

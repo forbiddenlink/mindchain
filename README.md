@@ -146,7 +146,7 @@ TS.ADD debate:live_debate:agent:senatorbot:stance:climate_policy * 0.6
 
 ---
 
-## 🧠 Redis Key Summary
+## 📊 Redis Key Summary
 
 | Key Pattern | Purpose | Redis Module |
 |-------------|---------|--------------|
@@ -214,7 +214,7 @@ OPENAI_API_KEY=sk-proj-...
 4. **Watch Connections**: Green indicators = system ready
 5. **Enhanced Features**:
    - 🎯 **4-Mode Navigation**: Switch between Standard, Multi-Debate, Analytics, and Contest Showcase views
-   - 🧠 **Intelligent Agents**: Redis-powered AI with emotional states and coalition analysis
+   - 📊 **Intelligent Agents**: Redis-powered AI with emotional states and coalition analysis
    - ⚡ **Live Optimization**: Real-time Redis performance improvements
    - 🔍 **Advanced Fact Checking**: Multi-source verification with cross-validation
    - 🚀 **Start Debate**: AI agents begin real-time discussion
