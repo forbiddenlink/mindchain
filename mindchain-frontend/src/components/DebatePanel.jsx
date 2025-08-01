@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Icon from './Icon';
+import SentimentBadge from './SentimentBadge';
 
 const DebatePanel = ({ messages = [] }) => {
     const messagesEndRef = useRef(null);
@@ -109,6 +110,19 @@ const DebatePanel = ({ messages = [] }) => {
                                             <p className="text-white text-sm leading-relaxed">
                                                 {msg.text}
                                             </p>
+
+                                            {/* Sentiment Badge with Sparkline */}
+                                            {msg.sentiment && (
+                                                <div className="mt-2 flex justify-start">
+                                                    <SentimentBadge
+                                                        sentiment={msg.sentiment.sentiment}
+                                                        confidence={msg.sentiment.confidence}
+                                                        debateId={msg.debateId}
+                                                        agentId={msg.agentId}
+                                                        timestamp={msg.timestamp}
+                                                    />
+                                                </div>
+                                            )}
 
                                             {/* Fact Check Indicator */}
                                             {msg.factCheck && (

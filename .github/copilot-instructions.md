@@ -11,6 +11,7 @@ MindChain is a **real-time multi-agent AI debate engine** built for the Redis AI
 - ✅ Real-time vector-based fact-checking with OpenAI embeddings
 - ✅ Semantic caching system with 85% similarity threshold (MAJOR SHOWCASE)
 - ✅ Professional UI with 47+ Lucide React icons (contest-ready)
+- ✅ **Live stance evolution chart with Recharts** - Election-night style visualization
 
 ## Critical Architecture Patterns
 
@@ -46,7 +47,15 @@ broadcast({
   type: 'new_message',
   debateId, agentId, message, timestamp,
   factCheck: {fact, score}, // from vector search
+  stance: {topic, value, change}, // for real-time stance chart updates
   metrics: {totalMessages, activeDebates}
+});
+
+// Optional dedicated stance update events
+broadcast({
+  type: 'debate:stance_update',
+  debateId, senatorbot: 0.6, reformerbot: -0.3,
+  timestamp, turn, topic
 });
 ```
 
@@ -93,6 +102,7 @@ cd mindchain-frontend && pnpm dev  # Port 5173
 - `factChecker.js` - Vector-based fact verification against knowledge base
 - `vectorsearch.js` - Creates Redis vector index (run once during setup)
 - `App.jsx` - React app with 3-mode navigation (Standard/Multi-Debate/Analytics)
+- `StanceEvolutionChart.jsx` - Real-time stance evolution chart with Recharts (election-night style)
 
 ### Multi-Debate System Architecture
 The system supports concurrent debates via `activeDebates` Map:
@@ -145,8 +155,8 @@ await client.hSet(`fact:${factId}`, {content, vector});
 ### Frontend Component Architecture
 ```javascript
 // 3-Mode Navigation System
-'standard' - Single debate with fact-checker sidebar
-'multi-debate' - TrueMultiDebateViewer for concurrent debates  
+'standard' - Single debate with fact-checker sidebar + stance evolution chart
+'multi-debate' - TrueMultiDebateViewer for concurrent debates + aggregated stance chart
 'analytics' - EnhancedPerformanceDashboard with Redis metrics
 
 // Message filtering by debate ID
@@ -156,6 +166,10 @@ const getFilteredMessages = () => {
   }
   return debateMessages; // All messages for multi-debate
 };
+
+// Stance data extraction from WebSocket messages
+// Converts 0-1 stance values to -1 to 1 for better visualization
+const stanceValue = (data.stance.value - 0.5) * 2;
 ```
 
 ### Enhanced AI Features (use `enhancedAI.js`)
@@ -169,6 +183,7 @@ const getFilteredMessages = () => {
 - `openai@5.10.2` for GPT-4 completions and text-embedding-ada-002
 - `@langchain/openai@0.6.3` for embeddings abstraction
 - `lucide-react@0.263.1` for professional icon system (47+ icons)
+- `recharts@3.1.0` for stance evolution chart visualization
 - React 19 with Vite 7 for frontend development
 - Environment variables: `REDIS_URL`, `OPENAI_API_KEY`
 

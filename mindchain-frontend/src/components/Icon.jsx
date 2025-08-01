@@ -50,7 +50,9 @@ import {
     Gavel,
     Loader2,
     Circle,
-    Save
+    Save,
+    Maximize2,
+    Minimize2
 } from 'lucide-react';
 
 // Icon mapping for topics and general use
@@ -106,6 +108,11 @@ const iconMap = {
     'group': Users2,
     'announce': Megaphone,
     'speak': Mic,
+    
+    // Chart and UI controls
+    'maximize2': Maximize2,
+    'minimize2': Minimize2,
+    'activity': Activity,
     
     // Agent personas
     'senator': Gavel,

@@ -6,6 +6,7 @@ import FactChecker from './components/FactChecker';
 import EnhancedControls from './components/EnhancedControls';
 import EnhancedPerformanceDashboard from './components/EnhancedPerformanceDashboard';
 import TrueMultiDebateViewer from './components/TrueMultiDebateViewer';
+import StanceEvolutionChart from './components/StanceEvolutionChart';
 import Icon from './components/Icon';
 import useWebSocket from './hooks/useWebSocket';
 import api from './services/api';
@@ -19,6 +20,8 @@ export default function App() {
   const [metricsUpdateTrigger, setMetricsUpdateTrigger] = useState(0);
   const [activeDebates, setActiveDebates] = useState(new Map()); // Track multiple debates
   const [currentDebateId, setCurrentDebateId] = useState(null); // Track current single debate
+  const [stanceData, setStanceData] = useState([]); // Track stance evolution for chart
+  const [currentStances, setCurrentStances] = useState({ senatorbot: 0, reformerbot: 0 }); // Track current stance values
 
   // WebSocket connection
   const wsUrl = window.location.hostname === '127.0.0.1'
@@ -40,10 +43,47 @@ export default function App() {
             text: data.message,
             timestamp: data.timestamp,
             debateId: data.debateId, // Include debate ID for proper separation
-            factCheck: data.factCheck
+            factCheck: data.factCheck,
+            sentiment: data.sentiment // Add sentiment data from RedisAI
           };
 
           setDebateMessages(prev => [...prev, newMessage]);
+
+          // Extract stance data from new_message and create stance update
+          if (data.stance && data.agentId && data.debateId) {
+            console.log('📊 Extracting stance from new_message:', data.stance);
+            
+            // Update current stances state
+            setCurrentStances(prev => {
+              const updated = {
+                ...prev,
+                [data.agentId]: (data.stance.value - 0.5) * 2 // Convert 0-1 to -1 to 1
+              };
+              
+              // Create new stance entry with both agents' current values
+              const newStanceEntry = {
+                timestamp: data.timestamp,
+                turn: Date.now(), // Use timestamp as unique turn identifier
+                debateId: data.debateId,
+                topic: data.stance.topic,
+                senatorbot: updated.senatorbot,
+                reformerbot: updated.reformerbot
+              };
+              
+              console.log('📊 Created stance entry from message:', newStanceEntry);
+              
+              // Add to stance data
+              setStanceData(prev => {
+                // Filter to current debate in standard mode
+                if (viewMode === 'standard' && currentDebateId) {
+                  return [...prev.filter(entry => entry.debateId === currentDebateId), newStanceEntry];
+                }
+                return [...prev, newStanceEntry].slice(-50);
+              });
+              
+              return updated;
+            });
+          }
 
           // Track active debates
           if (data.debateId) {
@@ -88,9 +128,11 @@ export default function App() {
               return updated;
             });
             
-            // If this is a single debate (standard mode), set it as current
+            // If this is a single debate (standard mode), set it as current and clear stance data
             if (viewMode === 'standard') {
               setCurrentDebateId(data.debateId);
+              setStanceData([]); // Clear previous stance data for new debate
+              setCurrentStances({ senatorbot: 0, reformerbot: 0 }); // Reset current stances
             }
           }
           break;
@@ -138,6 +180,36 @@ export default function App() {
             ...prev,
             [data.agentId]: data.profile
           }));
+          break;
+
+        case 'debate:stance_update':
+          // Handle real-time stance evolution for election-night style chart
+          console.log('📊 Received stance update:', data); // Debug log
+          const newStanceEntry = {
+            senatorbot: data.senatorbot,
+            reformerbot: data.reformerbot,
+            timestamp: data.timestamp,
+            turn: data.turn,
+            debateId: data.debateId,
+            topic: data.topic
+          };
+          
+          setStanceData(prev => {
+            console.log('📊 Previous stance data:', prev); // Debug log
+            console.log('📊 New stance entry:', newStanceEntry); // Debug log
+            // Filter to current debate in standard mode, keep all in multi-debate mode
+            if (viewMode === 'standard' && currentDebateId) {
+              const filtered = [...prev.filter(entry => entry.debateId === currentDebateId), newStanceEntry];
+              console.log('📊 Filtered stance data:', filtered); // Debug log
+              return filtered;
+            }
+            // In multi-debate mode, keep last 50 entries to prevent memory issues
+            const updated = [...prev, newStanceEntry].slice(-50);
+            console.log('📊 Updated stance data:', updated); // Debug log
+            return updated;
+          });
+          
+          console.log(`📊 Stance update: SenatorBot(${data.senatorbot.toFixed(2)}), ReformerBot(${data.reformerbot.toFixed(2)}) - Turn ${data.turn}`);
           break;
 
         case 'error':
@@ -306,30 +378,51 @@ export default function App() {
       {/* Dynamic Main Content Based on View Mode */}
       <main className="flex-1 container mx-auto px-4 py-4 max-w-7xl">
         {viewMode === 'standard' ? (
-          /* Standard Single-Debate Layout - Improved */
-          <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-200px)]">
-            <div className="flex-1 min-w-0">
-              <DebatePanel messages={getFilteredMessages()} />
+          /* Standard Single-Debate Layout - Improved with Stance Chart */
+          <div className="flex flex-col gap-4 h-[calc(100vh-200px)] overflow-hidden">
+            {/* Top row: Debate Panel and Fact Checker */}
+            <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
+              <div className="flex-1 min-w-0 min-h-0">
+                <DebatePanel messages={getFilteredMessages()} />
+              </div>
+              <div className="w-full lg:w-72 flex-shrink-0 min-h-0">
+                <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
+              </div>
             </div>
-            <div className="w-full lg:w-72 flex-shrink-0">
-              <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
+            
+            {/* Bottom row: Stance Evolution Chart */}
+            <div className="h-80 flex-shrink-0">
+              <StanceEvolutionChart 
+                stanceData={currentDebateId ? 
+                  stanceData.filter(entry => entry.debateId === currentDebateId) : 
+                  stanceData
+                } 
+              />
             </div>
           </div>
         ) : viewMode === 'multi-debate' ? (
-          /* Multi-Debate Layout - Full Width for Debates */
-          <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-200px)]">
-            {/* Main: Multi-Debate Viewer - Full Focus */}
-            <div className="flex-1 min-w-0">
-              <TrueMultiDebateViewer
-                messages={debateMessages}
-                activeDebates={activeDebates}
-                onMetricsUpdate={handleMetricsUpdate}
-              />
-            </div>
+          /* Multi-Debate Layout - Full Width for Debates with Stance Chart */
+          <div className="flex flex-col gap-4 h-[calc(100vh-200px)]">
+            {/* Top row: Multi-debate viewer and fact checker */}
+            <div className="flex flex-col lg:flex-row gap-4 flex-1">
+              {/* Main: Multi-Debate Viewer - Full Focus */}
+              <div className="flex-1 min-w-0">
+                <TrueMultiDebateViewer
+                  messages={debateMessages}
+                  activeDebates={activeDebates}
+                  onMetricsUpdate={handleMetricsUpdate}
+                />
+              </div>
 
-            {/* Side Panel: Just Fact Checker - Minimal */}
-            <div className="w-full lg:w-72 flex-shrink-0">
-              <FactChecker factChecks={factChecks} />
+              {/* Side Panel: Just Fact Checker - Minimal */}
+              <div className="w-full lg:w-72 flex-shrink-0">
+                <FactChecker factChecks={factChecks} />
+              </div>
+            </div>
+            
+            {/* Bottom row: Stance Evolution Chart for all debates */}
+            <div className="h-80 flex-shrink-0">
+              <StanceEvolutionChart stanceData={stanceData} />
             </div>
           </div>
         ) : (

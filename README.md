@@ -10,6 +10,8 @@
 **🏆 Contest Status: FULLY FUNCTIONAL & ENHANCED** - All major features complete!
 
 **Latest Updates:**
+- ✅ **Live Stance Evolution Chart** - Real-time visualization of agent position changes with Recharts (election-night style)
+- ✅ **Sentiment Analysis with Sparklines** - Real-time confidence scoring with historical trend micro-charts
 - ✅ **Semantic Cache System** - Redis Vector-powered prompt caching with 85% similarity threshold (MAJOR SHOWCASE)
 - ✅ **Cost Optimization** - Live tracking of OpenAI API savings with cache hit rates and cost reduction metrics
 - ✅ **Professional Icon System** - Complete replacement of emojis with Lucide React icons for contest-ready appearance
@@ -25,7 +27,8 @@
 - ✅ **Debate History Browser** - Navigate past debates with Redis Streams
 
 📁 **[View Complete Project Structure](docs/PROJECT-STRUCTURE.md)**  
-🎨 **[Professional Icon System Documentation](docs/ICON-SYSTEM.md)**
+🎨 **[Professional Icon System Documentation](docs/ICON-SYSTEM.md)**  
+📊 **[Sentiment Analysis & Sparklines Guide](docs/SENTIMENT-ANALYSIS.md)**
 
 ---
 
@@ -97,11 +100,20 @@ TS.ADD debate:live_debate:agent:senatorbot:stance:climate_policy * 0.6
 - **Performance Metrics**: Real-time hit rates, cost savings, and efficiency scores
 - **Vector Index**: `cache-index` with HNSW algorithm for fast retrieval
 
+### 7. **Real-Time Sentiment Analysis** (Redis JSON + TensorFlow.js Ready)
+- **Confidence Scoring**: Advanced rule-based sentiment analysis with confidence values
+- **Historical Sparklines**: Tiny SVG charts showing sentiment trends over time
+- **Redis Storage**: JSON arrays storing confidence history per agent per debate
+- **Live Badges**: Color-coded sentiment indicators with real-time updates
+- **TensorFlow Foundation**: Ready for ML model upgrades and adaptive learning
+
 ---
 
 ## 🎯 Live Demo Features
 
 ### Frontend (React 19 + Vite + Tailwind)
+- ✅ **Live Stance Evolution Chart**: Real-time visualization of agent position changes with election-night excitement
+- ✅ **Sentiment Analysis Sparklines**: Micro-charts showing confidence trends with color-coded badges
 - ✅ **Professional Icon System**: Complete Lucide React integration with 47+ semantic icons
 - ✅ **Enhanced Agent Avatars**: Gavel (SenatorBot) and Lightbulb (ReformerBot) for role clarity
 - ✅ **3-Mode Navigation**: Standard (single debate), Multi-Debate (concurrent), Analytics (metrics)
@@ -139,6 +151,7 @@ TS.ADD debate:live_debate:agent:senatorbot:stance:climate_policy * 0.6
 | `fact:001` | Fact with vector embedding | Vector + Hash |
 | `cache:prompt:abc123` | Cached AI response with embedding | Vector + Hash |
 | `cache:metrics` | Cache performance statistics | JSON |
+| `sentiment_history:debate123:senatorbot` | Confidence trend data | JSON |
 
 ---
 
@@ -212,6 +225,7 @@ The codebase has been cleaned and organized for optimal development:
 - `generateMessage.js` - AI message generation with semantic caching integration
 - `semanticCache.js` - Redis Vector-powered prompt caching system (MAJOR SHOWCASE)
 - `setupCacheIndex.js` - Cache vector index initialization for similarity search
+- `sentimentAnalysis.js` - Real-time sentiment analysis with Redis storage
 - `factChecker.js` - Vector-based fact verification system
 - `vectorsearch.js` - Redis vector index initialization
 

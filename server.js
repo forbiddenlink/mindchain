@@ -10,6 +10,7 @@ import { RedisMetricsCollector, generateContestAnalytics } from './advancedMetri
 // import { addFactToDatabase } from './addFactsEnhanced.js';
 // import { summarizeDebate } from './summarizeDebateEnhanced.js';
 import { createServer } from 'http';
+import sentimentAnalyzer from './sentimentAnalysis.js';
 
 const app = express();
 const server = createServer(app);
@@ -31,6 +32,14 @@ app.use(express.json());
 // Redis client
 const client = createClient({ url: process.env.REDIS_URL });
 await client.connect();
+
+// Initialize sentiment analyzer
+try {
+    await sentimentAnalyzer.initialize();
+    console.log('🧠 Sentiment analyzer initialized successfully');
+} catch (sentimentInitError) {
+    console.log('⚠️ Sentiment analyzer failed to initialize, will use fallback mode:', sentimentInitError.message);
+}
 
 // Store active WebSocket connections
 const connections = new Set();
@@ -75,6 +84,83 @@ function broadcast(data) {
 }
 
 // API Routes
+
+// Test endpoint for stance updates
+app.post('/api/test/stance', async (req, res) => {
+    try {
+        const timestamp = new Date().toISOString();
+        const testStanceData = {
+            type: 'debate:stance_update',
+            debateId: 'test_debug',
+            senatorbot: 0.6,
+            reformerbot: -0.3,
+            timestamp,
+            turn: 1,
+            topic: 'climate change policy',
+            metadata: {
+                round: 1,
+                totalRounds: 10,
+                totalMessages: 1
+            }
+        };
+
+        broadcast(testStanceData);
+        console.log('📊 Sent test stance update:', testStanceData);
+        
+        res.json({ 
+            success: true, 
+            message: 'Test stance update broadcasted',
+            data: testStanceData 
+        });
+    } catch (error) {
+        console.error('Error sending test stance update:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get sentiment confidence history for sparklines
+app.get('/api/sentiment/:debateId/:agentId/history', async (req, res) => {
+    try {
+        const { debateId, agentId } = req.params;
+        const points = parseInt(req.query.points) || 20;
+        
+        console.log(`📊 Fetching sentiment history for ${agentId} in debate ${debateId} (${points} points)`);
+        
+        if (!sentimentAnalyzer) {
+            console.error('❌ sentimentAnalyzer not available');
+            return res.status(500).json({ 
+                success: false, 
+                error: 'Sentiment analyzer not initialized',
+                debateId,
+                agentId,
+                history: [],
+                points: 0
+            });
+        }
+        
+        const history = await sentimentAnalyzer.getConfidenceHistory(debateId, agentId, points);
+        console.log(`📈 Retrieved ${history.length} history points for ${agentId}`);
+        
+        res.json({
+            success: true,
+            debateId,
+            agentId,
+            history,
+            points: history.length
+        });
+    } catch (error) {
+        console.error('❌ Error fetching sentiment history:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Internal server error',
+            message: error.message,
+            debateId: req.params.debateId,
+            agentId: req.params.agentId,
+            history: [],
+            points: 0
+        });
+    }
+});
 
 // Get agent profile
 app.get('/api/agent/:id/profile', async (req, res) => {
@@ -821,6 +907,22 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 // Fact-check the message
                 const factResult = await findClosestFact(message);
 
+                // 🧠 SENTIMENT ANALYSIS with RedisAI + TimeSeries
+                let sentimentResult;
+                try {
+                    sentimentResult = await sentimentAnalyzer.analyzeSentiment(message, debateId, agentId);
+                    console.log(`🧠 ${agentId} sentiment: ${sentimentResult.sentiment} (${sentimentResult.confidence} confidence, ${sentimentResult.model})`);
+                } catch (sentimentError) {
+                    console.log(`⚠️ Sentiment analysis failed: ${sentimentError.message}`);
+                    // Fallback sentiment data
+                    sentimentResult = {
+                        sentiment: 'neutral',
+                        confidence: 0.5,
+                        timestamp: Date.now(),
+                        model: 'Fallback'
+                    };
+                }
+
                 // 📊 UPDATE FACT-CHECK METRICS
                 if (factResult?.content) {
                     debateMetrics.factChecksPerformed++;
@@ -865,6 +967,11 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                         fact: factResult.content,
                         score: factResult.score
                     } : null,
+                    sentiment: {
+                        sentiment: sentimentResult.sentiment,
+                        confidence: sentimentResult.confidence,
+                        model: sentimentResult.model
+                    },
                     stance: {
                         topic: 'climate_policy',
                         value: stanceData.newStance,
@@ -877,6 +984,60 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                         thisDebateMessages: activeDebates.get(debateId)?.messageCount || 0
                     }
                 });
+
+                // 📊 INDIVIDUAL STANCE UPDATE BROADCAST - Send after each agent speaks
+                try {
+                    const timestamp = new Date().toISOString();
+                    
+                    // Get current stances for both agents to send complete picture
+                    const currentStances = {};
+                    for (const otherAgentId of agents) {
+                        try {
+                            const otherProfile = await client.json.get(`agent:${otherAgentId}:profile`);
+                            if (otherProfile && otherProfile.stance) {
+                                // Map topic to stance key
+                                const stanceKey = topic.includes('climate') ? 'climate_policy' : 
+                                                 topic.includes('ai') ? 'ai_policy' : 
+                                                 topic.includes('healthcare') ? 'healthcare_policy' : 'climate_policy';
+                                
+                                // Convert 0-1 range to -1 to 1 for better visualization
+                                const stanceValue = otherProfile.stance[stanceKey] || 0.5;
+                                currentStances[otherAgentId] = (stanceValue - 0.5) * 2; // Maps 0-1 to -1 to 1
+                            } else {
+                                currentStances[otherAgentId] = 0; // Neutral fallback
+                            }
+                        } catch (profileError) {
+                            console.log(`⚠️ Could not get stance for ${otherAgentId}: ${profileError.message}`);
+                            currentStances[otherAgentId] = 0; // Neutral fallback
+                        }
+                    }
+
+                    // Calculate turn number (round * agents.length + current agent index)
+                    const agentIndex = agents.indexOf(agentId);
+                    const currentTurn = round * agents.length + agentIndex + 1;
+
+                    // Broadcast stance update with election-night excitement
+                    broadcast({
+                        type: 'debate:stance_update',
+                        debateId,
+                        senatorbot: currentStances.senatorbot || 0,
+                        reformerbot: currentStances.reformerbot || 0,
+                        timestamp,
+                        turn: currentTurn,
+                        topic,
+                        // Add some election-night style metadata
+                        metadata: {
+                            round: round + 1,
+                            agentIndex: agentIndex,
+                            totalMessages: debateMetrics.messagesGenerated
+                        }
+                    });
+
+                    console.log(`📈 Stance broadcast sent - Turn ${currentTurn}: SenatorBot(${(currentStances.senatorbot || 0).toFixed(2)}), ReformerBot(${(currentStances.reformerbot || 0).toFixed(2)})`);
+
+                } catch (individualStanceError) {
+                    console.log(`⚠️ Failed to broadcast individual stance update: ${individualStanceError.message}`);
+                }
 
                 console.log(`✅ ${agentId}: ${message.substring(0, 50)}...`);
 
@@ -892,6 +1053,56 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     timestamp: new Date().toISOString()
                 });
             }
+        }
+
+        // 📊 STANCE UPDATE BROADCAST - Send combined stance data for election-night chart
+        try {
+            const currentStances = {};
+            const timestamp = new Date().toISOString();
+            
+            // Get current stance for each agent
+            for (const agentId of agents) {
+                try {
+                    const profile = await client.json.get(`agent:${agentId}:profile`);
+                    if (profile && profile.stance) {
+                        // Map topic to stance key (from the project instructions)
+                        const stanceKey = topic.includes('climate') ? 'climate_policy' : 
+                                         topic.includes('ai') ? 'ai_policy' : 
+                                         topic.includes('healthcare') ? 'healthcare_policy' : 'climate_policy';
+                        
+                        // Convert 0-1 range to -1 to 1 for better visualization
+                        const stanceValue = profile.stance[stanceKey] || 0.5;
+                        currentStances[agentId] = (stanceValue - 0.5) * 2; // Maps 0-1 to -1 to 1
+                    } else {
+                        currentStances[agentId] = 0; // Neutral fallback
+                    }
+                } catch (profileError) {
+                    console.log(`⚠️ Could not get stance for ${agentId}: ${profileError.message}`);
+                    currentStances[agentId] = 0; // Neutral fallback
+                }
+            }
+
+            // Broadcast stance update with election-night excitement
+            broadcast({
+                type: 'debate:stance_update',
+                debateId,
+                senatorbot: currentStances.senatorbot || 0,
+                reformerbot: currentStances.reformerbot || 0,
+                timestamp,
+                turn: round + 1,
+                topic,
+                // Add some election-night style metadata
+                metadata: {
+                    round: round + 1,
+                    totalRounds: rounds,
+                    totalMessages: debateMetrics.messagesGenerated
+                }
+            });
+
+            console.log(`📈 Stance broadcast sent - Round ${round + 1}: SenatorBot(${(currentStances.senatorbot || 0).toFixed(2)}), ReformerBot(${(currentStances.reformerbot || 0).toFixed(2)})`);
+
+        } catch (stanceError) {
+            console.log(`⚠️ Failed to broadcast stance update: ${stanceError.message}`);
         }
     }
 
@@ -921,6 +1132,7 @@ server.listen(PORT, () => {
 // Graceful shutdown
 process.on('SIGINT', async () => {
     console.log('Shutting down server...');
+    await sentimentAnalyzer.cleanup();
     await client.quit();
     server.close();
     process.exit(0);

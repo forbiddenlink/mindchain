@@ -44,7 +44,8 @@ mindchain-frontend/
     ├── components/
     │   ├── 🎛️  EnhancedControls.jsx   # Unified debate controls & topic selection
     │   ├── 🗣️  DebatePanel.jsx        # Live debate message display
-    │   ├── 📊 EnhancedPerformanceDashboard.jsx # Advanced Redis + Cache metrics
+    │   ├── � StanceEvolutionChart.jsx # Real-time stance visualization with Recharts
+    │   ├── �📊 EnhancedPerformanceDashboard.jsx # Advanced Redis + Cache metrics
     │   ├── 🎭 TrueMultiDebateViewer.jsx # Multi-debate concurrent display
     │   ├── ✅ FactChecker.jsx         # Fact verification display
     │   ├── 🏠 Header.jsx              # Application header with status
@@ -88,7 +89,7 @@ archive/
 
 ## 📦 Dependencies
 - **Backend**: Express.js, Redis, OpenAI, WebSocket, CORS
-- **Frontend**: React 19, Vite 7, Tailwind CSS, Lucide React (professional icons)
+- **Frontend**: React 19, Vite 7, Tailwind CSS, Lucide React (professional icons), Recharts (charts)
 - **AI**: GPT-4 for responses, text-embedding-ada-002 for vectors
 - **Database**: Redis with JSON, Streams, TimeSeries, Vector modules
 
