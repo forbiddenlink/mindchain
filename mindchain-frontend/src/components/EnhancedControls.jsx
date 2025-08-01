@@ -61,6 +61,31 @@ export default function EnhancedControls({
         }
     };
 
+    // Demo cache hit celebration for showcasing semantic caching business value
+    const triggerCacheHitDemo = async () => {
+        try {
+            const scenarios = [
+                { similarity: 0.95, cost_saved: 0.003 },
+                { similarity: 0.87, cost_saved: 0.002 },
+                { similarity: 0.92, cost_saved: 0.0025 }
+            ];
+            
+            const randomScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            
+            const response = await fetch('/api/demo/cache-hit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(randomScenario)
+            });
+            
+            if (response.ok) {
+                console.log(`🎯 Cache hit demo triggered: ${(randomScenario.similarity * 100).toFixed(1)}% similarity`);
+            }
+        } catch (error) {
+            console.error('Failed to trigger cache hit demo:', error);
+        }
+    };
+
     const startDebates = async () => {
         if (selectedTopics.length === 0) {
             alert('Please select at least one topic');
@@ -381,6 +406,15 @@ export default function EnhancedControls({
                                 Analytics View Active
                             </div>
                         )}
+
+                        {/* Cache Hit Demo Button - Showcase Semantic Caching Business Value */}
+                        <button
+                            onClick={triggerCacheHitDemo}
+                            className="w-full px-3 py-2 rounded-lg font-semibold transition-all text-sm flex items-center justify-center bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 border border-green-500/30"
+                        >
+                            <Icon name="target" size={16} className="mr-2" />
+                            🎯 Demo Cache Hit
+                        </button>
 
                         {/* Active Debates Compact View */}
                         {activeDebates.size > 0 && (

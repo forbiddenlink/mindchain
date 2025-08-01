@@ -10,6 +10,7 @@ import StanceEvolutionChart from './components/StanceEvolutionChart';
 import KeyMomentsPanel from './components/KeyMomentsPanel';
 import BusinessValueDashboard from './components/BusinessValueDashboard';
 import ContestShowcaseDashboard from './components/ContestShowcaseDashboard';
+import LivePerformanceOverlay from './components/LivePerformanceOverlay';
 import Icon from './components/Icon';
 import { ViewModeSelector, ToastProvider, useNotification, Container, Stack, Grid } from './components/ui';
 import useWebSocket from './hooks/useWebSocket';
@@ -462,7 +463,7 @@ export default function App() {
           <Container maxWidth="max-w-7xl" padding="px-2 sm:px-4 py-4" className="h-full">
             {viewMode === 'standard' ? (
               /* Standard Single-Debate Layout - Balanced Space Distribution */
-              <div className="flex flex-col gap-4 h-full min-h-screen pb-12 animate-fade-in-up">
+              <div className="flex flex-col gap-4 h-full min-h-screen pb-20 animate-fade-in-up">
                 {/* Main content row: 2-column layout with proper sizing */}
                 <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
                   {/* Left Column: Debate Panel (70% width) */}
@@ -470,16 +471,25 @@ export default function App() {
                     <DebatePanel messages={getFilteredMessages()} />
                   </div>
 
-                  {/* Right Column: Key Moments + Fact Checker (30% width) */}
+                  {/* Right Column: Semantic Cache Engine + Key Moments + Fact Checker (30% width) */}
                   <div className="w-full lg:w-[30%] lg:flex-[3] flex-shrink-0 min-h-[600px]">
-                    <Stack spacing="space-y-6">
+                    <Stack spacing="space-y-4">
+                      {/* Semantic Cache Engine - Business Value Showcase */}
+                      <div className="flex-shrink-0 animate-slide-in-right stagger-1">
+                        <LivePerformanceOverlay 
+                          position="embedded" 
+                          size="small"
+                          className="relative w-full"
+                        />
+                      </div>
+
                       {/* Key Moments - Enhanced with animations */}
-                      <div className="flex-[3] min-h-[350px] max-h-[400px] animate-slide-in-right stagger-1">
+                      <div className="flex-[3] min-h-[300px] max-h-[350px] animate-slide-in-right stagger-2">
                         <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
                       </div>
 
                       {/* Fact Checker - Enhanced with animations */}
-                      <div className="flex-[2] min-h-[240px] max-h-[300px] animate-slide-in-right stagger-2">
+                      <div className="flex-[2] min-h-[200px] max-h-[250px] animate-slide-in-right stagger-3">
                         <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
                       </div>
                     </Stack>
@@ -487,7 +497,7 @@ export default function App() {
                 </div>
 
                 {/* Bottom row: Stance Evolution Chart - Enhanced with animations */}
-                <div className="h-80 flex-shrink-0 mt-6 mb-8 animate-fade-in-up stagger-3">
+                <div className="h-80 flex-shrink-0 mt-6 mb-12 animate-fade-in-up stagger-3">
                   <StanceEvolutionChart
                     stanceData={currentDebateId ?
                       stanceData.filter(entry => entry.debateId === currentDebateId) :

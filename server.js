@@ -1258,6 +1258,10 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
 
             // 🧠 Use Enhanced AI Generation with emotional state and context
             let message;
+            let cacheHit = false;
+            let similarity = 0;
+            let costSaved = 0;
+            
             try {
                 // Check cancellation before expensive AI call
                 if (debateProcess.cancelled) {
@@ -1265,7 +1269,18 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     return;
                 }
                 
-                message = await generateEnhancedMessageOnly(agentId, debateId, topic);
+                const result = await generateEnhancedMessageOnly(agentId, debateId, topic);
+                
+                // Handle both new format (object) and old format (string)
+                if (typeof result === 'object' && result.message) {
+                    message = result.message;
+                    cacheHit = result.cacheHit || false;
+                    similarity = result.similarity || 0;
+                    costSaved = result.costSaved || 0;
+                } else {
+                    message = result; // Backwards compatibility
+                }
+                
                 console.log(`✨ Enhanced AI message generated for ${agentId}`);
             } catch (enhancedError) {
                 console.log(`⚠️ Enhanced AI failed, falling back to standard: ${enhancedError.message}`);
@@ -1276,7 +1291,17 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     return;
                 }
                 
-                message = await generateMessageOnly(agentId, debateId, topic);
+                const result = await generateMessageOnly(agentId, debateId, topic);
+                
+                // Handle both new format (object) and old format (string)
+                if (typeof result === 'object' && result.message) {
+                    message = result.message;
+                    cacheHit = result.cacheHit || false;
+                    similarity = result.similarity || 0;
+                    costSaved = result.costSaved || 0;
+                } else {
+                    message = result; // Backwards compatibility
+                }
             }
 
             // 💾 Store message in Redis streams (centralized storage)
@@ -1300,6 +1325,19 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     type: 'statement',
                     content: message,
                 });
+
+                // 🎯 Broadcast cache hit celebration if applicable
+                if (cacheHit) {
+                    console.log(`🎯 Broadcasting cache hit celebration: ${(similarity * 100).toFixed(1)}% similarity, $${costSaved.toFixed(3)} saved`);
+                    broadcast({
+                        type: 'cache_hit',
+                        debateId,
+                        agentId,
+                        similarity,
+                        cost_saved: costSaved,
+                        timestamp: new Date().toISOString()
+                    });
+                }
 
                 // 📊 UPDATE METRICS
                 debateMetrics.messagesGenerated++;
@@ -1909,6 +1947,43 @@ app.get('/api/optimization/metrics', async (req, res) => {
             success: false,
             error: error.message,
             optimization: { status: 'offline' }
+        });
+    }
+});
+
+// 🎯 Cache Hit Demo - Trigger cache hit celebrations for demonstration
+app.post('/api/demo/cache-hit', async (req, res) => {
+    try {
+        const { similarity = 0.92, cost_saved = 0.002 } = req.body;
+        
+        console.log(`🎯 Demo cache hit triggered: ${(similarity * 100).toFixed(1)}% similarity, $${cost_saved.toFixed(3)} saved`);
+        
+        // Broadcast cache hit celebration
+        broadcast({
+            type: 'cache_hit',
+            debateId: 'demo',
+            agentId: 'demo-agent',
+            similarity: parseFloat(similarity),
+            cost_saved: parseFloat(cost_saved),
+            timestamp: new Date().toISOString()
+        });
+
+        res.json({
+            success: true,
+            message: 'Cache hit celebration triggered',
+            data: {
+                similarity: parseFloat(similarity),
+                cost_saved: parseFloat(cost_saved),
+                percentage: `${(similarity * 100).toFixed(1)}%`
+            }
+        });
+        
+    } catch (error) {
+        console.error('❌ Error triggering cache hit demo:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to trigger cache hit demo',
+            message: error.message
         });
     }
 });

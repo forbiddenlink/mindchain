@@ -13,7 +13,7 @@ MindChain is a **production-ready multi-agent AI debate engine** built for the R
 - ✅ **Advanced Fact-Checking** - Multi-source verification with AI-powered cross-validation
 - ✅ **Contest Metrics Engine** - Live scoring aligned with Redis Challenge judging criteria
 - ✅ **Business Intelligence Dashboard** - ROI tracking, cost savings, enterprise scaling projections
-- ✅ **Live Performance Metrics Overlay** - Mission control dashboard with real-time Redis operations monitoring
+- ✅ **Semantic Cache Engine Dashboard** - Embedded mission control interface with real-time Redis operations monitoring
 - ✅ **Professional UI System** - 47+ Lucide React icons, responsive design, contest-ready presentation
 
 ## Redis Architecture (All 4 Modules)
@@ -159,7 +159,7 @@ cd mindchain-frontend && pnpm dev  # Frontend (port 5173)
 **Frontend Core:**
 - `App.jsx` - Main React app with 4-mode navigation and WebSocket integration
 - `ContestShowcaseDashboard.jsx` - Premium demonstration interface for contest judges
-- `LivePerformanceOverlay.jsx` - Mission control dashboard with real-time Redis operations monitoring
+- `LivePerformanceOverlay.jsx` - Semantic Cache Engine Dashboard with embedded layout and overlay modes
 - `StanceEvolutionChart.jsx` - Real-time stance visualization with Recharts
 - `EnhancedPerformanceDashboard.jsx` - Advanced Redis and cache metrics dashboard
 - `TrueMultiDebateViewer.jsx` - Concurrent debate management interface
@@ -214,10 +214,26 @@ await client.hSet(`fact:${factId}`, {content, vector});
 
 ### Frontend Component Architecture
 ```javascript
-// 3-Mode Navigation System
-'standard' - Single debate with fact-checker sidebar + stance evolution chart
+// 4-Mode Navigation System
+'standard' - Single debate with fact-checker sidebar + embedded semantic cache engine
 'multi-debate' - TrueMultiDebateViewer for concurrent debates + aggregated stance chart
 'analytics' - EnhancedPerformanceDashboard with Redis metrics
+'contest' - ContestShowcaseDashboard with premium demonstration interface
+
+// Semantic Cache Engine Layout Integration
+// Embedded in right column instead of overlay for better UX
+<div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-12rem)]">
+  <div className="lg:col-span-3">
+    {/* Main content area */}
+  </div>
+  <div className="lg:col-span-1 space-y-6">
+    <LivePerformanceOverlay position="embedded" />
+  </div>
+</div>
+
+// Responsive positioning modes
+position="embedded" - Layout-friendly integration with responsive grid
+position="top-right" - Traditional floating overlay (still supported)
 
 // Message filtering by debate ID
 const getFilteredMessages = () => {

@@ -76,6 +76,8 @@ Stay focused on this specific topic and maintain your character's perspective.
     await client.xAdd(debateStreamKey, '*', {
         agent_id: agentId,
         message,
+        cached: (cachedResult ? 'true' : 'false'),
+        similarity: (cachedResult ? cachedResult.similarity.toString() : '0')
     });
 
     // 💾 Step 5: Save to agent's memory stream
@@ -85,7 +87,13 @@ Stay focused on this specific topic and maintain your character's perspective.
     });
 
     await client.quit();
-    return message;
+    
+    return {
+        message,
+        cacheHit: !!cachedResult,
+        similarity: cachedResult ? cachedResult.similarity : 0,
+        costSaved: cachedResult ? 0.002 : 0 // Estimate cost per API call
+    };
 }
 
 // Generate message without storing to streams (for server-controlled storage)
@@ -119,9 +127,13 @@ ${memoryContext || 'This is the start of the debate.'}
 Respond with a thoughtful position on ${topic}. Be engaging but stay in character. Keep response under 200 words.`;
 
     // 🎯 Step 3: Check semantic cache for similar prompts
-    let message = await getCachedResponse(prompt, topic);
+    const cachedResult = await getCachedResponse(prompt, topic);
 
-    if (!message) {
+    let message;
+    if (cachedResult) {
+        message = cachedResult.response;
+        console.log(`🎯 Using cached response (${(cachedResult.similarity * 100).toFixed(1)}% similarity)`);
+    } else {
         console.log('💭 No cache hit, generating new AI response...');
 
         const chatResponse = await openai.chat.completions.create({
@@ -145,5 +157,11 @@ Respond with a thoughtful position on ${topic}. Be engaging but stay in characte
     console.log(`${agentId}: ${message}`);
 
     await client.quit();
-    return message;
+    
+    return {
+        message,
+        cacheHit: !!cachedResult,
+        similarity: cachedResult ? cachedResult.similarity : 0,
+        costSaved: cachedResult ? 0.002 : 0
+    };
 }
