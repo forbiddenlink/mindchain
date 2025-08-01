@@ -10,6 +10,8 @@
 **🏆 Contest Status: FULLY FUNCTIONAL & ENHANCED** - All major features complete!
 
 **Latest Updates:**
+- ✅ **Semantic Cache System** - Redis Vector-powered prompt caching with 85% similarity threshold (MAJOR SHOWCASE)
+- ✅ **Cost Optimization** - Live tracking of OpenAI API savings with cache hit rates and cost reduction metrics
 - ✅ **Professional Icon System** - Complete replacement of emojis with Lucide React icons for contest-ready appearance
 - ✅ **Enhanced Agent Representation** - Semantic icons for SenatorBot (Gavel) and ReformerBot (Lightbulb) personas
 - ✅ **Icon Semantic Accuracy** - All 47+ icons accurately represent their functionality and context
@@ -19,7 +21,7 @@
 - ✅ **Multi-Debate Focus** - Debates take center stage without analytics overwhelming the UI
 - ✅ **Topic Selection Fixed** - Agents now properly discuss selected topics (8+ predefined + custom)
 - ✅ **Stop Button Fixed** - Properly terminates debates via API calls
-- ✅ **Performance Dashboard** - Accessible via dedicated Analytics mode
+- ✅ **Performance Dashboard** - Accessible via dedicated Analytics mode with live cache metrics
 - ✅ **Debate History Browser** - Navigate past debates with Redis Streams
 
 📁 **[View Complete Project Structure](docs/PROJECT-STRUCTURE.md)**  
@@ -88,6 +90,13 @@ TS.ADD debate:live_debate:agent:senatorbot:stance:climate_policy * 0.6
 - **Semantic Search**: COSINE similarity matching
 - **Real-time Verification**: Every agent statement fact-checked
 
+### 6. **Semantic Caching System** (Redis Vector + Hash) - MAJOR SHOWCASE
+- **Prompt Caching**: AI responses cached with OpenAI embeddings
+- **Similarity Matching**: 85% threshold for cache hits using COSINE distance
+- **Cost Optimization**: Live tracking of API savings and token reduction
+- **Performance Metrics**: Real-time hit rates, cost savings, and efficiency scores
+- **Vector Index**: `cache-index` with HNSW algorithm for fast retrieval
+
 ---
 
 ## 🎯 Live Demo Features
@@ -128,6 +137,8 @@ TS.ADD debate:live_debate:agent:senatorbot:stance:climate_policy * 0.6
 | `debate:live_debate:agent:senatorbot:memory` | Private agent memory | Streams |
 | `debate:live_debate:agent:senatorbot:stance:climate_policy` | Position evolution | TimeSeries |
 | `fact:001` | Fact with vector embedding | Vector + Hash |
+| `cache:prompt:abc123` | Cached AI response with embedding | Vector + Hash |
+| `cache:metrics` | Cache performance statistics | JSON |
 
 ---
 
@@ -138,8 +149,9 @@ TS.ADD debate:live_debate:agent:senatorbot:stance:climate_policy * 0.6
 # Install dependencies
 pnpm install
 
-# Set up Redis indices
+# Set up Redis indices (including semantic cache)
 node vectorsearch.js
+node setupCacheIndex.js
 
 # Create agent profiles  
 node index.js
@@ -160,13 +172,15 @@ OPENAI_API_KEY=sk-proj-...
 ## 🏆 Contest-Winning Architecture
 
 ### Multi-Modal Redis Excellence
-- **RedisJSON**: Complex agent personality storage with nested configurations
+- **RedisJSON**: Complex agent personality storage + cache metrics with nested configurations
 - **Redis Streams**: Real-time messaging, private memories, and temporal navigation
 - **RedisTimeSeries**: Stance evolution tracking with performance monitoring  
-- **Redis Vector**: Semantic fact verification with OpenAI embeddings
+- **Redis Vector**: Semantic fact verification + AI response caching with OpenAI embeddings
 
 ### Advanced Demo Features (Contest-Ready)
-- **🚀 Performance Dashboard**: Real-time Redis metrics across all 4 modules
+- **🎯 Semantic Caching**: Redis Vector-powered AI response caching with 85% similarity threshold
+- **💰 Cost Optimization**: Live OpenAI API savings tracking with cache hit rates and financial metrics
+- **🚀 Performance Dashboard**: Real-time Redis metrics across all 4 modules + cache performance
 - **📜 History Browser**: Navigate Redis Streams with precision timeline control
 - **⚙️ Live Agent Config**: Dynamic personality editing with instant updates
 - **📝 Knowledge Expansion**: Add facts to Vector database with embeddings
@@ -195,7 +209,9 @@ The codebase has been cleaned and organized for optimal development:
 
 **🔧 Core Files (Root)**
 - `server.js` - Main backend server with WebSocket support
-- `generateMessage.js` - AI message generation with topic handling  
+- `generateMessage.js` - AI message generation with semantic caching integration
+- `semanticCache.js` - Redis Vector-powered prompt caching system (MAJOR SHOWCASE)
+- `setupCacheIndex.js` - Cache vector index initialization for similarity search
 - `factChecker.js` - Vector-based fact verification system
 - `vectorsearch.js` - Redis vector index initialization
 

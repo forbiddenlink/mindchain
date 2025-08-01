@@ -343,7 +343,11 @@ export async function updateStanceBasedOnDebate(agentId, debateId, topic) {
         
         // Store in TimeSeries
         const tsKey = `debate:${debateId}:agent:${agentId}:stance:${stanceKey}`;
-        await client.ts.add(tsKey, '*', newStance);
+        try {
+            await client.ts.add(tsKey, '*', parseFloat(newStance).toString());
+        } catch (tsError) {
+            console.log(`⚠️ TimeSeries add failed: ${tsError.message}`);
+        }
         
         await client.quit();
         return { oldStance: currentStance, newStance, shift: stanceShift };

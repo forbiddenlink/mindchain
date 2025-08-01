@@ -96,6 +96,11 @@ class MindChainAPI {
     async getEnhancedMetrics() {
         return this.get('/metrics/enhanced');
     }
+
+    // Get semantic cache metrics
+    async getCacheMetrics() {
+        return this.get('/cache/metrics');
+    }
 }
 
 export default new MindChainAPI();

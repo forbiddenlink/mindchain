@@ -534,6 +534,15 @@ app.get('/api/stats/redis', async (req, res) => {
         const metricsCollector = new RedisMetricsCollector();
         const advancedMetrics = await metricsCollector.getBenchmarkMetrics();
         
+        // Get cache metrics
+        let cacheMetrics = null;
+        try {
+            const { getCacheStats } = await import('./semanticCache.js');
+            cacheMetrics = await getCacheStats();
+        } catch (cacheError) {
+            console.log('ℹ️ Cache metrics not available:', cacheError.message);
+        }
+        
         // Combine with existing debate metrics
         const combinedStats = {
             ...advancedMetrics,
@@ -554,6 +563,13 @@ app.get('/api/stats/redis', async (req, res) => {
                         }
                     ])
                 )
+            },
+            cache: cacheMetrics || {
+                total_requests: 0,
+                cache_hits: 0,
+                hit_ratio: 0,
+                estimated_cost_saved: 0,
+                total_cache_entries: 0
             },
             system: {
                 status: 'connected',
@@ -599,6 +615,54 @@ app.get('/api/stats/redis', async (req, res) => {
         res.status(500).json({
             status: 'error',
             error: 'Failed to fetch Redis statistics',
+            message: error.message
+        });
+    }
+});
+
+// Get semantic cache metrics - SHOWCASE FEATURE
+app.get('/api/cache/metrics', async (req, res) => {
+    try {
+        console.log('🎯 Cache metrics requested');
+        
+        // Import cache metrics function
+        const { getCacheMetrics, getCacheStats } = await import('./semanticCache.js');
+        
+        // Get comprehensive cache statistics
+        const cacheStats = await getCacheStats();
+        
+        if (cacheStats) {
+            console.log(`📊 Cache metrics: ${cacheStats.cache_hits}/${cacheStats.total_requests} hits (${cacheStats.hit_ratio.toFixed(1)}%)`);
+            res.json({
+                success: true,
+                metrics: cacheStats,
+                timestamp: new Date().toISOString()
+            });
+        } else {
+            // Return empty metrics if cache not initialized
+            res.json({
+                success: true,
+                metrics: {
+                    total_requests: 0,
+                    cache_hits: 0,
+                    cache_misses: 0,
+                    hit_ratio: 0,
+                    total_tokens_saved: 0,
+                    estimated_cost_saved: 0,
+                    average_similarity: 0,
+                    total_cache_entries: 0,
+                    cache_efficiency: 0,
+                    memory_saved_mb: 0,
+                },
+                timestamp: new Date().toISOString()
+            });
+        }
+        
+    } catch (error) {
+        console.error('❌ Error fetching cache metrics:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch cache metrics',
             message: error.message
         });
     }
@@ -766,8 +830,10 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 }
 
                 // 🎯 Enhanced Stance Evolution based on debate dynamics
+                let stanceData = { oldStance: 0.5, newStance: 0.5, change: 0 }; // Default values
                 try {
                     const stanceUpdate = await updateStanceBasedOnDebate(agentId, debateId, topic);
+                    stanceData = stanceUpdate;
                     console.log(`📈 ${agentId} stance evolved: ${stanceUpdate.oldStance.toFixed(3)} → ${stanceUpdate.newStance.toFixed(3)}`);
                 } catch (stanceError) {
                     console.log(`⚠️ Stance evolution failed, using fallback: ${stanceError.message}`);
@@ -776,11 +842,12 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     const currentStance = profile.stance?.climate_policy || 0.5;
                     const stanceShift = (Math.random() - 0.5) * 0.1;
                     const newStance = Math.max(0, Math.min(1, currentStance + stanceShift));
+                    stanceData = { oldStance: currentStance, newStance, change: stanceShift };
 
                     // Store stance in TimeSeries
                     const stanceKey = `debate:${debateId}:agent:${agentId}:stance:climate_policy`;
                     try {
-                        await client.ts.add(stanceKey, '*', newStance);
+                        await client.ts.add(stanceKey, '*', parseFloat(stanceData.newStance).toString());
                     } catch (tsError) {
                         console.log(`⚠️ TimeSeries not available for ${stanceKey}`);
                     }
@@ -800,8 +867,8 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     } : null,
                     stance: {
                         topic: 'climate_policy',
-                        value: newStance,
-                        change: stanceShift
+                        value: stanceData.newStance,
+                        change: stanceData.change
                     },
                     // 📊 Include current metrics
                     metrics: {

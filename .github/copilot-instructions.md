@@ -9,6 +9,7 @@ MindChain is a **real-time multi-agent AI debate engine** built for the Redis AI
 - ✅ Redis multi-model integration (JSON, Streams, TimeSeries, Vector)
 - ✅ GPT-4 AI agents with memory-driven responses and stance evolution
 - ✅ Real-time vector-based fact-checking with OpenAI embeddings
+- ✅ Semantic caching system with 85% similarity threshold (MAJOR SHOWCASE)
 - ✅ Professional UI with 47+ Lucide React icons (contest-ready)
 
 ## Critical Architecture Patterns
@@ -31,6 +32,11 @@ await client.ts.add(`debate:${debateId}:agent:${agentId}:stance:${topic}`, '*', 
 // Vector facts (Hash + Vector) - semantic fact-checking with embeddings
 const vector = Buffer.from(new Float32Array(embedding).buffer);
 await client.hSet(`fact:${factId}`, {content, vector});
+
+// Semantic cache (Hash + Vector) - AI response caching with similarity search
+const cacheKey = `cache:prompt:${hash}`;
+await client.hSet(cacheKey, {content: prompt, response, vector: vectorBuffer});
+// Cache metrics stored in RedisJSON: cache:metrics
 ```
 
 ### WebSocket Message Flow (CORE SYSTEM)
@@ -47,12 +53,14 @@ broadcast({
 React components listen via `useWebSocket` hook and update state accordingly.
 
 ### Agent AI Generation Pattern
-1. Fetch agent profile from RedisJSON for personality context
-2. Retrieve conversation history from Redis Streams for memory
-3. Generate response using GPT-4 with enhanced prompts (`generateEnhancedMessage`)
-4. Fact-check against vector database (`findClosestFact`)
-5. Update stance in TimeSeries based on debate dynamics
-6. Store message in Streams and broadcast via WebSocket
+1. **Check semantic cache** for similar prompts (85% threshold)
+2. Fetch agent profile from RedisJSON for personality context
+3. Retrieve conversation history from Redis Streams for memory
+4. Generate response using GPT-4 with enhanced prompts (if cache miss)
+5. **Cache new response** with embeddings for future similarity matching
+6. Fact-check against vector database (`findClosestFact`)
+7. Update stance in TimeSeries based on debate dynamics
+8. Store message in Streams and broadcast via WebSocket
 
 ## Essential Development Workflow
 
@@ -61,8 +69,9 @@ React components listen via `useWebSocket` hook and update state accordingly.
 # 1. Install dependencies
 pnpm install
 
-# 2. Create Redis vector index (MUST run first)
+# 2. Create Redis vector indices (MUST run first)
 node vectorsearch.js
+node setupCacheIndex.js
 
 # 3. Initialize agent profiles
 node index.js         # Creates SenatorBot
@@ -77,7 +86,9 @@ cd mindchain-frontend && pnpm dev  # Port 5173
 
 ### Key Files & Their Purpose
 - `server.js` - Main Express + WebSocket server with all API endpoints
-- `generateMessage.js` - Basic AI message generation with memory context
+- `generateMessage.js` - AI message generation with semantic caching integration
+- `semanticCache.js` - Redis Vector-powered prompt caching system (MAJOR SHOWCASE)
+- `setupCacheIndex.js` - Cache vector index initialization for similarity search
 - `enhancedAI.js` - Advanced AI with emotional state, coalition building, similarity checking
 - `factChecker.js` - Vector-based fact verification against knowledge base
 - `vectorsearch.js` - Creates Redis vector index (run once during setup)

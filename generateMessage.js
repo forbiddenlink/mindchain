@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { createClient } from 'redis';
 import OpenAI from 'openai';
+import { getCachedResponse, cacheNewResponse } from './semanticCache.js';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -35,17 +36,38 @@ ${memoryContext
 Stay focused on this specific topic and maintain your character's perspective.
 `;
 
-    // 💬 Step 3: Generate AI message
-    const chatResponse = await openai.chat.completions.create({
-        model: 'gpt-4',
-        messages: [
-            { role: 'system', content: prompt },
-            { role: 'user', content: `What's your perspective on "${topic}"? Keep it brief and in character.` },
-        ],
-        temperature: 0.8, // Add some randomness to prevent repetition
-    });
+    // 🎯 Step 2.5: Check semantic cache for similar prompts
+    console.log('� Checking semantic cache for similar prompts...');
+    const cachedResult = await getCachedResponse(prompt, topic);
+    
+    let message;
+    if (cachedResult) {
+        message = cachedResult.response;
+        console.log(`🎯 Using cached response (${(cachedResult.similarity * 100).toFixed(1)}% similarity)`);
+        console.log(`💰 Saved OpenAI API call - Cache hit!`);
+    } else {
+        // �💬 Step 3: Generate AI message (cache miss)
+        console.log('🤖 Generating new AI response...');
+        const chatResponse = await openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [
+                { role: 'system', content: prompt },
+                { role: 'user', content: `What's your perspective on "${topic}"? Keep it brief and in character.` },
+            ],
+            temperature: 0.8, // Add some randomness to prevent repetition
+        });
 
-    const message = chatResponse.choices[0].message.content.trim();
+        message = chatResponse.choices[0].message.content.trim();
+        
+        // 💾 Cache the new response for future similarity searches
+        await cacheNewResponse(prompt, message, {
+            agentId,
+            debateId,
+            topic,
+            timestamp: new Date().toISOString(),
+        });
+        console.log('💾 Response cached for future similarity matching');
+    }
     console.log(`${agentId}: ${message}`);
 
     const debateStreamKey = `debate:${debateId}:messages`;

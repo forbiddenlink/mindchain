@@ -13,7 +13,9 @@ mindchain/
 ## 🔧 Core Backend Files
 ```
 ├── 🖥️  server.js                   # Main Express + WebSocket server
-├── 🤖 generateMessage.js          # AI message generation with topic support
+├── 🤖 generateMessage.js          # AI message generation with semantic caching
+├── 🎯 semanticCache.js             # Redis Vector-powered response caching (MAJOR SHOWCASE)
+├── ⚙️  setupCacheIndex.js          # Cache vector index initialization
 ├── ✅ factChecker.js               # Vector-based fact verification
 ├── 🔍 vectorsearch.js             # Redis vector index setup
 ├── 👤 addReformer.js              # Agent profile initialization
@@ -23,6 +25,8 @@ mindchain/
 ## 🧪 Testing & Enhanced Features
 ```
 ├── 🎭 simulateDebate.js           # Standalone debate simulation
+├── 🧪 testCache.js                # Semantic cache functionality testing
+├── 🧪 demoCache.js                # Quick cache demonstration script
 ├── 📊 addFactsEnhanced.js         # Advanced fact database management
 └── 📝 summarizeDebateEnhanced.js  # AI-powered debate summaries
 ```
@@ -40,7 +44,7 @@ mindchain-frontend/
     ├── components/
     │   ├── 🎛️  EnhancedControls.jsx   # Unified debate controls & topic selection
     │   ├── 🗣️  DebatePanel.jsx        # Live debate message display
-    │   ├── 📊 EnhancedPerformanceDashboard.jsx # Advanced Redis metrics
+    │   ├── 📊 EnhancedPerformanceDashboard.jsx # Advanced Redis + Cache metrics
     │   ├── 🎭 TrueMultiDebateViewer.jsx # Multi-debate concurrent display
     │   ├── ✅ FactChecker.jsx         # Fact verification display
     │   ├── 🏠 Header.jsx              # Application header with status
