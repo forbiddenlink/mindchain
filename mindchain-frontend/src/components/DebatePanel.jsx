@@ -11,8 +11,8 @@ const DebatePanel = ({ messages = [] }) => {
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
             setTimeout(() => {
-                messagesEndRef.current?.scrollIntoView({ 
-                    behavior: 'smooth', 
+                messagesEndRef.current?.scrollIntoView({
+                    behavior: 'smooth',
                     block: 'nearest',
                     inline: 'nearest'
                 });
@@ -81,7 +81,7 @@ const DebatePanel = ({ messages = [] }) => {
                             <p className="text-slate-400 text-sm">Real-time AI discussion</p>
                         </div>
                     </div>
-                    
+
                     {messages.length > 0 && (
                         <div className="flex items-center space-x-4">
                             <div className="glass-card px-3 py-1.5 rounded-lg border border-emerald-500/20">
@@ -101,7 +101,7 @@ const DebatePanel = ({ messages = [] }) => {
             </div>
 
             {/* Enhanced Messages Area */}
-            <div 
+            <div
                 ref={messagesContainerRef}
                 className="flex-1 overflow-y-auto scrollbar-thin p-6 space-y-6 min-h-0 bg-gradient-to-b from-slate-900/20 to-slate-900/40"
             >
@@ -117,7 +117,7 @@ const DebatePanel = ({ messages = [] }) => {
                             Ready for Intelligent Debate
                         </h3>
                         <p className="text-slate-400 max-w-md leading-relaxed">
-                            Select a topic and start a debate to watch AI agents engage in sophisticated 
+                            Select a topic and start a debate to watch AI agents engage in sophisticated
                             discussion with fact-checking, memory formation, and stance evolution.
                         </p>
                         <div className="mt-6 flex items-center space-x-6 text-slate-500 text-sm">
@@ -146,9 +146,8 @@ const DebatePanel = ({ messages = [] }) => {
                             return (
                                 <div
                                     key={msg.id || index}
-                                    className={`flex items-start space-x-4 animate-slide-up ${
-                                        isLeft ? 'flex-row' : 'flex-row-reverse space-x-reverse'
-                                    }`}
+                                    className={`flex items-start space-x-4 animate-slide-up ${isLeft ? 'flex-row' : 'flex-row-reverse space-x-reverse'
+                                        }`}
                                 >
                                     {/* Enhanced Avatar */}
                                     <div className={`flex-shrink-0 ${showAvatar ? 'opacity-100' : 'opacity-0'}`}>
@@ -163,9 +162,8 @@ const DebatePanel = ({ messages = [] }) => {
                                     {/* Enhanced Message Bubble */}
                                     <div className={`flex-1 max-w-3xl ${isLeft ? 'mr-12' : 'ml-12'}`}>
                                         {showAvatar && (
-                                            <div className={`flex items-center space-x-3 mb-2 ${
-                                                isLeft ? 'justify-start' : 'justify-end'
-                                            }`}>
+                                            <div className={`flex items-center space-x-3 mb-2 ${isLeft ? 'justify-start' : 'justify-end'
+                                                }`}>
                                                 <span className={`text-${agentStyle.accentColor} font-semibold text-sm`}>
                                                     {agentStyle.name}
                                                 </span>
@@ -177,14 +175,13 @@ const DebatePanel = ({ messages = [] }) => {
                                                 )}
                                             </div>
                                         )}
-                                        
-                                        <div className={`glass-card p-4 rounded-2xl border ${agentStyle.bgColor} ${
-                                            isLeft ? 'rounded-tl-md' : 'rounded-tr-md'
-                                        } hover:shadow-lg transition-all duration-300`}>
+
+                                        <div className={`glass-card p-4 rounded-2xl border ${agentStyle.bgColor} ${isLeft ? 'rounded-tl-md' : 'rounded-tr-md'
+                                            } hover:shadow-lg transition-all duration-300`}>
                                             <p className="text-white leading-relaxed text-base">
                                                 {msg.text}
                                             </p>
-                                            
+
                                             {/* Fact Check Indicator */}
                                             {msg.factCheck && (
                                                 <div className="mt-3 pt-3 border-t border-slate-600/30">

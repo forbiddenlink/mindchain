@@ -3,17 +3,17 @@ import React, { useEffect, useRef } from 'react';
 import Icon from '../Icon';
 
 // Base Modal Component
-export const Modal = ({ 
-    isOpen, 
-    onClose, 
-    children, 
+export const Modal = ({
+    isOpen,
+    onClose,
+    children,
     size = 'md',
     className = '',
     closeOnOverlay = true,
-    closeOnEscape = true 
+    closeOnEscape = true
 }) => {
     const modalRef = useRef(null);
-    
+
     const sizes = {
         sm: 'max-w-md',
         md: 'max-w-lg',
@@ -21,33 +21,33 @@ export const Modal = ({
         xl: 'max-w-4xl',
         full: 'max-w-7xl'
     };
-    
+
     useEffect(() => {
         const handleEscape = (e) => {
             if (e.key === 'Escape' && closeOnEscape) {
                 onClose();
             }
         };
-        
+
         if (isOpen) {
             document.addEventListener('keydown', handleEscape);
             document.body.style.overflow = 'hidden';
         }
-        
+
         return () => {
             document.removeEventListener('keydown', handleEscape);
             document.body.style.overflow = 'unset';
         };
     }, [isOpen, onClose, closeOnEscape]);
-    
+
     if (!isOpen) return null;
-    
+
     return (
-        <div 
+        <div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={closeOnOverlay ? onClose : undefined}
         >
-            <div 
+            <div
                 ref={modalRef}
                 className={`glass-panel rounded-2xl ${sizes[size]} w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100 ${className}`}
                 onClick={(e) => e.stopPropagation()}
@@ -59,12 +59,12 @@ export const Modal = ({
 };
 
 // Modal Header
-export const ModalHeader = ({ 
-    title, 
-    subtitle, 
+export const ModalHeader = ({
+    title,
+    subtitle,
     onClose,
     icon,
-    className = '' 
+    className = ''
 }) => {
     return (
         <div className={`flex items-center justify-between p-6 border-b border-slate-700/50 ${className}`}>
@@ -112,9 +112,9 @@ export const ModalFooter = ({ children, className = '' }) => {
 };
 
 // Confirmation Dialog
-export const ConfirmDialog = ({ 
-    isOpen, 
-    onClose, 
+export const ConfirmDialog = ({
+    isOpen,
+    onClose,
     onConfirm,
     title = 'Confirm Action',
     message = 'Are you sure you want to proceed?',
@@ -129,17 +129,17 @@ export const ConfirmDialog = ({
         warning: 'btn-warning',
         success: 'btn-success'
     };
-    
+
     const iconColors = {
         primary: 'text-blue-400',
         danger: 'text-red-400',
         warning: 'text-yellow-400',
         success: 'text-green-400'
     };
-    
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="sm">
-            <ModalHeader 
+            <ModalHeader
                 title={title}
                 icon={icon}
                 onClose={onClose}
@@ -151,11 +151,11 @@ export const ConfirmDialog = ({
                 <button onClick={onClose} className="btn-ghost">
                     {cancelText}
                 </button>
-                <button 
+                <button
                     onClick={() => {
                         onConfirm();
                         onClose();
-                    }} 
+                    }}
                     className={variants[variant]}
                 >
                     {confirmText}
@@ -166,8 +166,8 @@ export const ConfirmDialog = ({
 };
 
 // Info Dialog
-export const InfoDialog = ({ 
-    isOpen, 
+export const InfoDialog = ({
+    isOpen,
     onClose,
     title,
     message,
@@ -177,7 +177,7 @@ export const InfoDialog = ({
 }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="md">
-            <ModalHeader 
+            <ModalHeader
                 title={title}
                 icon={icon}
                 onClose={onClose}
@@ -206,8 +206,8 @@ export const InfoDialog = ({
 };
 
 // Input Dialog
-export const InputDialog = ({ 
-    isOpen, 
+export const InputDialog = ({
+    isOpen,
     onClose,
     onSubmit,
     title,
@@ -219,7 +219,7 @@ export const InputDialog = ({
     icon = 'edit-3'
 }) => {
     const [value, setValue] = React.useState(defaultValue);
-    
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (required && !value.trim()) return;
@@ -227,16 +227,16 @@ export const InputDialog = ({
         onClose();
         setValue(defaultValue);
     };
-    
+
     useEffect(() => {
         if (isOpen) {
             setValue(defaultValue);
         }
     }, [isOpen, defaultValue]);
-    
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="sm">
-            <ModalHeader 
+            <ModalHeader
                 title={title}
                 icon={icon}
                 onClose={onClose}

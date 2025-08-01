@@ -3,16 +3,16 @@ import React from 'react';
 import { cn } from '../ui';
 
 // Main Container Component
-export const Container = ({ 
-    children, 
-    className = '', 
+export const Container = ({
+    children,
+    className = '',
     maxWidth = 'max-w-7xl',
     padding = 'px-4 sm:px-6 lg:px-8',
     animate = true,
-    ...props 
+    ...props
 }) => {
     return (
-        <div 
+        <div
             className={cn(
                 'mx-auto w-full',
                 maxWidth,
@@ -28,13 +28,13 @@ export const Container = ({
 };
 
 // Section Container
-export const Section = ({ 
-    children, 
-    className = '', 
+export const Section = ({
+    children,
+    className = '',
     background = 'transparent',
     spacing = 'py-12',
     animate = true,
-    ...props 
+    ...props
 }) => {
     const backgroundClasses = {
         transparent: '',
@@ -44,7 +44,7 @@ export const Section = ({
     };
 
     return (
-        <section 
+        <section
             className={cn(
                 'relative',
                 spacing,
@@ -60,17 +60,17 @@ export const Section = ({
 };
 
 // Grid Container
-export const Grid = ({ 
-    children, 
+export const Grid = ({
+    children,
     columns = 1,
     gap = 'gap-6',
     className = '',
     responsive = true,
-    ...props 
+    ...props
 }) => {
     const getGridCols = () => {
         if (!responsive) return `grid-cols-${columns}`;
-        
+
         switch (columns) {
             case 1: return 'grid-cols-1';
             case 2: return 'grid-cols-1 md:grid-cols-2';
@@ -82,7 +82,7 @@ export const Grid = ({
     };
 
     return (
-        <div 
+        <div
             className={cn(
                 'grid',
                 getGridCols(),
@@ -97,15 +97,15 @@ export const Grid = ({
 };
 
 // Flex Container
-export const Flex = ({ 
-    children, 
+export const Flex = ({
+    children,
     direction = 'row',
     align = 'start',
     justify = 'start',
     wrap = false,
     gap = 'gap-4',
     className = '',
-    ...props 
+    ...props
 }) => {
     const directionClass = direction === 'col' ? 'flex-col' : 'flex-row';
     const alignClass = `items-${align}`;
@@ -113,7 +113,7 @@ export const Flex = ({
     const wrapClass = wrap ? 'flex-wrap' : '';
 
     return (
-        <div 
+        <div
             className={cn(
                 'flex',
                 directionClass,
@@ -131,14 +131,14 @@ export const Flex = ({
 };
 
 // Stack Container (Vertical spacing)
-export const Stack = ({ 
-    children, 
+export const Stack = ({
+    children,
     spacing = 'space-y-4',
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
-        <div 
+        <div
             className={cn(
                 spacing,
                 className
@@ -151,13 +151,13 @@ export const Stack = ({
 };
 
 // Hero Container
-export const Hero = ({ 
-    children, 
+export const Hero = ({
+    children,
     className = '',
     background = 'gradient',
     height = 'min-h-screen',
     overlay = true,
-    ...props 
+    ...props
 }) => {
     const backgroundClasses = {
         gradient: 'bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900',
@@ -167,7 +167,7 @@ export const Hero = ({
     };
 
     return (
-        <div 
+        <div
             className={cn(
                 'relative flex items-center justify-center',
                 height,
@@ -187,15 +187,15 @@ export const Hero = ({
 };
 
 // Card Grid Container
-export const CardGrid = ({ 
-    children, 
+export const CardGrid = ({
+    children,
     columns = 3,
     className = '',
     animated = true,
-    ...props 
+    ...props
 }) => {
     return (
-        <Grid 
+        <Grid
             columns={columns}
             gap="gap-6"
             className={cn(
@@ -205,7 +205,7 @@ export const CardGrid = ({
             {...props}
         >
             {React.Children.map(children, (child, index) => (
-                <div 
+                <div
                     className={animated ? `animate-fade-in-up stagger-${Math.min(index + 1, 5)}` : ''}
                     key={index}
                 >
@@ -217,15 +217,15 @@ export const CardGrid = ({
 };
 
 // Sidebar Layout
-export const SidebarLayout = ({ 
-    sidebar, 
-    children, 
+export const SidebarLayout = ({
+    sidebar,
+    children,
     sidebarWidth = 'w-64',
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
-        <div 
+        <div
             className={cn(
                 'flex min-h-screen',
                 className
@@ -243,15 +243,15 @@ export const SidebarLayout = ({
 };
 
 // Dashboard Layout
-export const DashboardLayout = ({ 
-    header, 
-    sidebar, 
-    children, 
+export const DashboardLayout = ({
+    header,
+    sidebar,
+    children,
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
-        <div 
+        <div
             className={cn(
                 'min-h-screen bg-gray-50',
                 className

@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import Icon from '../Icon';
 
 // Base Input Component
-export const Input = ({ 
+export const Input = ({
     label,
     error,
     icon,
     iconPosition = 'left',
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
         <div className="space-y-2">
@@ -25,13 +25,10 @@ export const Input = ({
                     </div>
                 )}
                 <input
-                    className={`input-professional ${
-                        icon && iconPosition === 'left' ? 'pl-10' : ''
-                    } ${
-                        icon && iconPosition === 'right' ? 'pr-10' : ''
-                    } ${
-                        error ? 'border-red-500 focus:ring-red-500' : ''
-                    } ${className}`}
+                    className={`input-professional ${icon && iconPosition === 'left' ? 'pl-10' : ''
+                        } ${icon && iconPosition === 'right' ? 'pr-10' : ''
+                        } ${error ? 'border-red-500 focus:ring-red-500' : ''
+                        } ${className}`}
                     {...props}
                 />
                 {icon && iconPosition === 'right' && (
@@ -48,19 +45,19 @@ export const Input = ({
 };
 
 // Search Input
-export const SearchInput = ({ 
-    placeholder = 'Search...', 
-    onSearch, 
+export const SearchInput = ({
+    placeholder = 'Search...',
+    onSearch,
     className = '',
-    ...props 
+    ...props
 }) => {
     const [value, setValue] = useState('');
-    
+
     const handleSubmit = (e) => {
         e.preventDefault();
         onSearch?.(value);
     };
-    
+
     return (
         <form onSubmit={handleSubmit} className={`relative ${className}`}>
             <div className="relative">
@@ -81,12 +78,12 @@ export const SearchInput = ({
 };
 
 // Textarea Component
-export const Textarea = ({ 
+export const Textarea = ({
     label,
     error,
     rows = 4,
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
         <div className="space-y-2">
@@ -97,9 +94,8 @@ export const Textarea = ({
             )}
             <textarea
                 rows={rows}
-                className={`input-professional resize-none ${
-                    error ? 'border-red-500 focus:ring-red-500' : ''
-                } ${className}`}
+                className={`input-professional resize-none ${error ? 'border-red-500 focus:ring-red-500' : ''
+                    } ${className}`}
                 {...props}
             />
             {error && (
@@ -110,13 +106,13 @@ export const Textarea = ({
 };
 
 // Select Component
-export const Select = ({ 
+export const Select = ({
     label,
     error,
     options = [],
     placeholder = 'Select option...',
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
         <div className="space-y-2">
@@ -127,9 +123,8 @@ export const Select = ({
             )}
             <div className="relative">
                 <select
-                    className={`input-professional appearance-none pr-10 ${
-                        error ? 'border-red-500 focus:ring-red-500' : ''
-                    } ${className}`}
+                    className={`input-professional appearance-none pr-10 ${error ? 'border-red-500 focus:ring-red-500' : ''
+                        } ${className}`}
                     {...props}
                 >
                     {placeholder && (
@@ -155,13 +150,13 @@ export const Select = ({
 };
 
 // Toggle Switch
-export const Toggle = ({ 
+export const Toggle = ({
     label,
     description,
     checked,
     onChange,
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
         <div className={`flex items-center justify-between ${className}`}>
@@ -180,15 +175,13 @@ export const Toggle = ({
                 role="switch"
                 aria-checked={checked}
                 onClick={() => onChange?.(!checked)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${
-                    checked ? 'bg-blue-600' : 'bg-slate-600'
-                }`}
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${checked ? 'bg-blue-600' : 'bg-slate-600'
+                    }`}
                 {...props}
             >
                 <span
-                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        checked ? 'translate-x-5' : 'translate-x-0'
-                    }`}
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${checked ? 'translate-x-5' : 'translate-x-0'
+                        }`}
                 />
             </button>
         </div>
@@ -196,13 +189,13 @@ export const Toggle = ({
 };
 
 // Radio Group
-export const RadioGroup = ({ 
+export const RadioGroup = ({
     label,
     options = [],
     value,
     onChange,
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
         <div className={`space-y-3 ${className}`}>
@@ -231,13 +224,13 @@ export const RadioGroup = ({
 };
 
 // Checkbox
-export const Checkbox = ({ 
+export const Checkbox = ({
     label,
     description,
     checked,
     onChange,
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
         <label className={`flex items-start space-x-3 cursor-pointer ${className}`}>

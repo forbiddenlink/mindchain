@@ -3,7 +3,7 @@ export const enhancedColors = {
     // Primary palette with more sophistication
     primary: {
         50: '#eff6ff',
-        100: '#dbeafe', 
+        100: '#dbeafe',
         200: '#bfdbfe',
         300: '#93c5fd',
         400: '#60a5fa',
@@ -14,7 +14,7 @@ export const enhancedColors = {
         900: '#1e3a8a',
         950: '#172554'
     },
-    
+
     // Professional secondary palette
     secondary: {
         50: '#fdf4ff',
@@ -28,7 +28,7 @@ export const enhancedColors = {
         800: '#86198f',
         900: '#701a75'
     },
-    
+
     // Enterprise-grade neutrals
     neutral: {
         50: '#fafafa',
@@ -43,7 +43,7 @@ export const enhancedColors = {
         900: '#171717',
         950: '#0a0a0a'
     },
-    
+
     // Professional surface colors
     surface: {
         'card-light': 'rgba(248, 250, 252, 0.95)',
@@ -54,30 +54,30 @@ export const enhancedColors = {
         'glass-light': 'rgba(255, 255, 255, 0.10)',
         'glass-dark': 'rgba(0, 0, 0, 0.20)'
     },
-    
+
     // Status indicators
     status: {
-        success: { 
-            50: '#f0fdf4', 
-            500: '#22c55e', 
+        success: {
+            50: '#f0fdf4',
+            500: '#22c55e',
             600: '#16a34a',
             900: '#14532d'
         },
-        warning: { 
-            50: '#fffbeb', 
-            500: '#f59e0b', 
+        warning: {
+            50: '#fffbeb',
+            500: '#f59e0b',
             600: '#d97706',
             900: '#78350f'
         },
-        error: { 
-            50: '#fef2f2', 
-            500: '#ef4444', 
+        error: {
+            50: '#fef2f2',
+            500: '#ef4444',
             600: '#dc2626',
             900: '#7f1d1d'
         },
-        info: { 
-            50: '#eff6ff', 
-            500: '#3b82f6', 
+        info: {
+            50: '#eff6ff',
+            500: '#3b82f6',
             600: '#2563eb',
             900: '#1e3a8a'
         }
@@ -92,7 +92,7 @@ export const enhancedGradients = {
         success: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
         dark: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0c0c0c 100%)'
     },
-    
+
     // Card backgrounds
     cards: {
         glass: 'linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
@@ -100,7 +100,7 @@ export const enhancedGradients = {
         subtle: 'linear-gradient(145deg, rgba(248,250,252,0.95) 0%, rgba(241,245,249,0.95) 100%)',
         darkSubtle: 'linear-gradient(145deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.95) 100%)'
     },
-    
+
     // Interactive elements
     interactive: {
         button: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -115,7 +115,7 @@ export const typography = {
         mono: ['JetBrains Mono', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
         display: ['Poppins', 'Inter', 'system-ui', 'sans-serif']
     },
-    
+
     fontSize: {
         xs: '0.75rem',     // 12px
         sm: '0.875rem',    // 14px
@@ -127,7 +127,7 @@ export const typography = {
         '4xl': '2.25rem',  // 36px
         '5xl': '3rem',     // 48px
     },
-    
+
     fontWeight: {
         light: '300',
         normal: '400',
@@ -148,7 +148,7 @@ export const spacing = {
         '2xl': '3rem',   // 48px
         '3xl': '4rem'    // 64px
     },
-    
+
     layout: {
         sidebar: '20rem',     // 320px
         header: '4rem',       // 64px
@@ -171,15 +171,15 @@ export const shadows = {
     // Subtle elevation
     xs: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
     sm: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-    
+
     // Standard elevation
     md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
     lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-    
+
     // High elevation
     xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
     '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    
+
     // Special effects
     glow: '0 0 20px rgba(59, 130, 246, 0.3)',
     glowHover: '0 0 30px rgba(59, 130, 246, 0.4)',
@@ -192,7 +192,7 @@ export const animations = {
         normal: 'all 0.25s ease-in-out',
         slow: 'all 0.4s ease-in-out'
     },
-    
+
     keyframes: {
         fadeIn: 'fadeIn 0.3s ease-in-out',
         slideUp: 'slideUp 0.4s ease-out',
@@ -214,14 +214,14 @@ export const breakpoints = {
 export const components = {
     button: {
         base: 'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
-        
+
         variants: {
             primary: 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl',
             secondary: 'bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30',
             ghost: 'hover:bg-white/10 text-white',
             danger: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white'
         },
-        
+
         sizes: {
             sm: 'px-3 py-1.5 text-sm rounded-md',
             md: 'px-4 py-2 text-sm rounded-lg',
@@ -229,17 +229,17 @@ export const components = {
             xl: 'px-8 py-4 text-lg rounded-xl'
         }
     },
-    
+
     card: {
         base: 'backdrop-blur-sm border border-white/10 shadow-xl transition-all duration-300',
-        
+
         variants: {
             glass: 'bg-gradient-to-br from-white/10 to-white/5',
             solid: 'bg-slate-800/95',
             elevated: 'bg-gradient-to-br from-slate-800/95 to-slate-900/95 shadow-2xl'
         }
     },
-    
+
     input: {
         base: 'w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200'
     }

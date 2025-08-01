@@ -25,20 +25,17 @@ export const CardSkeleton = ({ className = '' }) => {
 // Chat Message Skeleton
 export const MessageSkeleton = ({ isLeft = true, className = '' }) => {
     return (
-        <div className={`flex items-start space-x-4 animate-pulse ${
-            isLeft ? 'flex-row' : 'flex-row-reverse space-x-reverse'
-        } ${className}`}>
+        <div className={`flex items-start space-x-4 animate-pulse ${isLeft ? 'flex-row' : 'flex-row-reverse space-x-reverse'
+            } ${className}`}>
             <div className="w-12 h-12 bg-slate-700/50 rounded-xl"></div>
             <div className={`flex-1 max-w-3xl ${isLeft ? 'mr-12' : 'ml-12'}`}>
-                <div className={`flex items-center space-x-3 mb-2 ${
-                    isLeft ? 'justify-start' : 'justify-end'
-                }`}>
+                <div className={`flex items-center space-x-3 mb-2 ${isLeft ? 'justify-start' : 'justify-end'
+                    }`}>
                     <div className="h-3 bg-slate-700/50 rounded-lg w-20"></div>
                     <div className="h-3 bg-slate-700/50 rounded-lg w-16"></div>
                 </div>
-                <div className={`glass-card p-4 rounded-2xl ${
-                    isLeft ? 'rounded-tl-md' : 'rounded-tr-md'
-                }`}>
+                <div className={`glass-card p-4 rounded-2xl ${isLeft ? 'rounded-tl-md' : 'rounded-tr-md'
+                    }`}>
                     <div className="space-y-2">
                         <div className="h-3 bg-slate-700/50 rounded-lg w-full"></div>
                         <div className="h-3 bg-slate-700/50 rounded-lg w-5/6"></div>
@@ -58,7 +55,7 @@ export const Spinner = ({ size = 'md', className = '' }) => {
         lg: 'w-8 h-8',
         xl: 'w-12 h-12'
     };
-    
+
     return (
         <div className={`${sizes[size]} ${className}`}>
             <div className="w-full h-full border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -67,14 +64,14 @@ export const Spinner = ({ size = 'md', className = '' }) => {
 };
 
 // Loading Overlay
-export const LoadingOverlay = ({ 
-    message = 'Loading...', 
+export const LoadingOverlay = ({
+    message = 'Loading...',
     submessage,
     visible = false,
-    className = '' 
+    className = ''
 }) => {
     if (!visible) return null;
-    
+
     return (
         <div className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center ${className}`}>
             <div className="glass-panel rounded-2xl p-8 max-w-sm w-full mx-4">
@@ -96,12 +93,12 @@ export const LoadingOverlay = ({
 };
 
 // Progress Bar
-export const ProgressBar = ({ 
-    progress = 0, 
+export const ProgressBar = ({
+    progress = 0,
     label,
     showPercentage = true,
     variant = 'primary',
-    className = '' 
+    className = ''
 }) => {
     const variants = {
         primary: 'from-blue-500 to-purple-600',
@@ -109,7 +106,7 @@ export const ProgressBar = ({
         warning: 'from-yellow-500 to-orange-600',
         danger: 'from-red-500 to-pink-600'
     };
-    
+
     return (
         <div className={className}>
             {(label || showPercentage) && (
@@ -123,7 +120,7 @@ export const ProgressBar = ({
                 </div>
             )}
             <div className="w-full bg-slate-700/50 rounded-full h-2 overflow-hidden">
-                <div 
+                <div
                     className={`h-full bg-gradient-to-r ${variants[variant]} rounded-full transition-all duration-500 ease-out`}
                     style={{ width: `${Math.min(Math.max(progress, 0), 100)}%` }}
                 ></div>
@@ -148,11 +145,11 @@ export const DotLoader = ({ className = '' }) => {
 };
 
 // Loading Card Component
-export const LoadingCard = ({ 
-    title = 'Loading...', 
+export const LoadingCard = ({
+    title = 'Loading...',
     subtitle,
     icon = 'loader-2',
-    className = '' 
+    className = ''
 }) => {
     return (
         <div className={`glass-panel rounded-xl p-8 ${className}`}>

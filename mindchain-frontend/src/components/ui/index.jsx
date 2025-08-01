@@ -6,16 +6,16 @@ import Icon from '../Icon';
 // Core Components
 export { default as ViewModeSelector } from '../ViewModeSelector';
 export { default as Navigation } from './Navigation';
-export { 
-    Container, 
-    Section, 
-    Grid, 
-    Flex, 
-    Stack, 
-    Hero, 
-    CardGrid, 
-    SidebarLayout, 
-    DashboardLayout 
+export {
+    Container,
+    Section,
+    Grid,
+    Flex,
+    Stack,
+    Hero,
+    CardGrid,
+    SidebarLayout,
+    DashboardLayout
 } from './Layout';
 
 // Feedback Components
@@ -23,7 +23,7 @@ export { default as Loading } from './Loading';
 export { default as Toast, ToastProvider, useToast, useNotification } from './Toast';
 
 // Individual component exports for convenience
-export { 
+export {
     // Buttons
     Button,
     FloatingActionButton,
@@ -187,7 +187,7 @@ export const withLoading = (Component) => {
 export const withTooltip = (Component) => {
     return ({ tooltip, ...props }) => {
         if (!tooltip) return <Component {...props} />;
-        
+
         return (
             <div className="relative group">
                 <Component {...props} />
@@ -209,7 +209,7 @@ export const StatusBadge = ({ status, label, className = '' }) => {
         info: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
         neutral: 'bg-slate-500/20 text-slate-400 border-slate-500/30'
     };
-    
+
     return (
         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${statusColors[status] || statusColors.neutral} ${className}`}>
             {label}
@@ -233,7 +233,7 @@ export const DataTable = ({ columns, data, loading = false }) => {
             </div>
         );
     }
-    
+
     return (
         <div className="glass-panel rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
@@ -273,7 +273,7 @@ export default {
     getSizeClasses,
     withLoading,
     withTooltip,
-    
+
     // Compositions
     StatusBadge,
     DataTable

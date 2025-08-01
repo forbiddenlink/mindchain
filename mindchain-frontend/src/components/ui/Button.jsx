@@ -3,19 +3,19 @@ import React from 'react';
 import Icon from '../Icon';
 
 // Base Button Component with Multiple Variants
-export const Button = ({ 
-    variant = 'primary', 
-    size = 'md', 
-    children, 
-    icon, 
+export const Button = ({
+    variant = 'primary',
+    size = 'md',
+    children,
+    icon,
     iconPosition = 'left',
     loading = false,
     disabled = false,
     className = '',
-    ...props 
+    ...props
 }) => {
     const baseClasses = 'professional-button focus-ring interactive-scale';
-    
+
     const variants = {
         primary: 'button-primary',
         secondary: 'button-secondary',
@@ -24,22 +24,21 @@ export const Button = ({
         success: 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-lg hover:shadow-xl',
         warning: 'bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl'
     };
-    
+
     const sizes = {
         sm: 'px-3 py-1.5 text-sm rounded-md',
         md: 'px-4 py-2 text-sm rounded-lg',
         lg: 'px-6 py-3 text-base rounded-lg',
         xl: 'px-8 py-4 text-lg rounded-xl'
     };
-    
+
     const variantClass = variants[variant] || variants.primary;
     const sizeClass = sizes[size] || sizes.md;
-    
+
     return (
         <button
-            className={`${baseClasses} ${variantClass} ${sizeClass} ${className} ${
-                disabled || loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`${baseClasses} ${variantClass} ${sizeClass} ${className} ${disabled || loading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
             disabled={disabled || loading}
             {...props}
         >
@@ -75,11 +74,10 @@ export const ToggleButton = ({ pressed, onToggle, children, icon, className = ''
     return (
         <button
             onClick={onToggle}
-            className={`professional-button px-4 py-2 text-sm rounded-lg transition-all duration-200 focus-ring ${
-                pressed 
-                    ? 'bg-blue-600 text-white shadow-lg' 
+            className={`professional-button px-4 py-2 text-sm rounded-lg transition-all duration-200 focus-ring ${pressed
+                    ? 'bg-blue-600 text-white shadow-lg'
                     : 'bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30'
-            } ${className}`}
+                } ${className}`}
         >
             {icon && <Icon name={icon} size={16} className="mr-2" />}
             {children}
@@ -95,7 +93,7 @@ export const GradientButton = ({ children, gradient = 'hero', className = '', ..
         warning: 'from-yellow-600 via-orange-600 to-yellow-700',
         danger: 'from-red-600 via-pink-600 to-red-700'
     };
-    
+
     return (
         <button
             className={`relative professional-button px-6 py-3 text-base rounded-xl text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden group ${className}`}
@@ -115,13 +113,13 @@ export const IconButton = ({ icon, size = 'md', variant = 'ghost', className = '
         md: 'w-10 h-10 p-2',
         lg: 'w-12 h-12 p-3'
     };
-    
+
     const variants = {
         ghost: 'hover:bg-white/10 text-white',
         primary: 'bg-blue-600 hover:bg-blue-700 text-white',
         secondary: 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
     };
-    
+
     return (
         <button
             className={`professional-button rounded-lg transition-all duration-200 focus-ring interactive-scale ${sizes[size]} ${variants[variant]} ${className}`}
@@ -136,7 +134,7 @@ export const IconButton = ({ icon, size = 'md', variant = 'ghost', className = '
 export const ButtonGroup = ({ children, className = '' }) => {
     return (
         <div className={`flex rounded-lg overflow-hidden border border-white/20 ${className}`}>
-            {React.Children.map(children, (child, index) => 
+            {React.Children.map(children, (child, index) =>
                 React.cloneElement(child, {
                     className: `${child.props.className || ''} ${index > 0 ? 'border-l border-white/20' : ''} rounded-none`
                 })
@@ -145,11 +143,11 @@ export const ButtonGroup = ({ children, className = '' }) => {
     );
 };
 
-export default { 
-    Button, 
-    FloatingActionButton, 
-    ToggleButton, 
-    GradientButton, 
-    IconButton, 
-    ButtonGroup 
+export default {
+    Button,
+    FloatingActionButton,
+    ToggleButton,
+    GradientButton,
+    IconButton,
+    ButtonGroup
 };

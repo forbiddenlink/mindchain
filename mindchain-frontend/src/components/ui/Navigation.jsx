@@ -3,19 +3,19 @@ import React from 'react';
 import Icon from '../Icon';
 
 // Tab Navigation
-export const TabNavigation = ({ 
-    tabs, 
-    activeTab, 
-    onTabChange, 
+export const TabNavigation = ({
+    tabs,
+    activeTab,
+    onTabChange,
     variant = 'default',
-    className = '' 
+    className = ''
 }) => {
     const variants = {
         default: 'bg-slate-800/50 border border-slate-700/50',
         glass: 'glass-panel',
         minimal: 'border-b border-slate-700/50'
     };
-    
+
     return (
         <div className={`${variants[variant]} ${variant === 'minimal' ? '' : 'rounded-xl p-1'} ${className}`}>
             <nav className="flex space-x-1">
@@ -25,8 +25,8 @@ export const TabNavigation = ({
                         onClick={() => onTabChange(tab.id)}
                         className={`
                             flex items-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-200
-                            ${activeTab === tab.id 
-                                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' 
+                            ${activeTab === tab.id
+                                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
                                 : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                             }
                             ${tab.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
@@ -34,10 +34,10 @@ export const TabNavigation = ({
                         disabled={tab.disabled}
                     >
                         {tab.icon && (
-                            <Icon 
-                                name={tab.icon} 
-                                size={18} 
-                                className={activeTab === tab.id ? 'text-white' : 'text-slate-400'} 
+                            <Icon
+                                name={tab.icon}
+                                size={18}
+                                className={activeTab === tab.id ? 'text-white' : 'text-slate-400'}
                             />
                         )}
                         <span>{tab.label}</span>
@@ -63,7 +63,7 @@ export const Breadcrumb = ({ items, separator = 'chevron-right', className = '' 
                         <Icon name={separator} size={14} className="text-slate-500" />
                     )}
                     {item.href ? (
-                        <a 
+                        <a
                             href={item.href}
                             className="text-slate-400 hover:text-white transition-colors"
                             onClick={item.onClick}
@@ -82,12 +82,12 @@ export const Breadcrumb = ({ items, separator = 'chevron-right', className = '' 
 };
 
 // Sidebar Navigation
-export const SidebarNav = ({ 
-    items, 
-    activeItem, 
+export const SidebarNav = ({
+    items,
+    activeItem,
     onItemClick,
     collapsed = false,
-    className = '' 
+    className = ''
 }) => {
     return (
         <nav className={`space-y-1 ${className}`}>
@@ -97,8 +97,8 @@ export const SidebarNav = ({
                         onClick={() => onItemClick?.(item.id)}
                         className={`
                             w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-200
-                            ${activeItem === item.id 
-                                ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-blue-500/30' 
+                            ${activeItem === item.id
+                                ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-blue-500/30'
                                 : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                             }
                             ${item.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
@@ -107,10 +107,10 @@ export const SidebarNav = ({
                         title={collapsed ? item.label : undefined}
                     >
                         {item.icon && (
-                            <Icon 
-                                name={item.icon} 
-                                size={20} 
-                                className={activeItem === item.id ? 'text-blue-400' : 'text-slate-400'} 
+                            <Icon
+                                name={item.icon}
+                                size={20}
+                                className={activeItem === item.id ? 'text-blue-400' : 'text-slate-400'}
                             />
                         )}
                         {!collapsed && (
@@ -127,7 +127,7 @@ export const SidebarNav = ({
                             </>
                         )}
                     </button>
-                    
+
                     {/* Submenu items */}
                     {item.submenu && !collapsed && activeItem === item.id && (
                         <div className="ml-6 mt-2 space-y-1">
@@ -152,40 +152,40 @@ export const SidebarNav = ({
 };
 
 // Pagination Component
-export const Pagination = ({ 
-    currentPage, 
-    totalPages, 
+export const Pagination = ({
+    currentPage,
+    totalPages,
     onPageChange,
     showFirstLast = true,
     showPrevNext = true,
     maxVisible = 5,
-    className = '' 
+    className = ''
 }) => {
     const getVisiblePages = () => {
         const pages = [];
         const half = Math.floor(maxVisible / 2);
         let start = Math.max(1, currentPage - half);
         let end = Math.min(totalPages, start + maxVisible - 1);
-        
+
         if (end - start + 1 < maxVisible) {
             start = Math.max(1, end - maxVisible + 1);
         }
-        
+
         for (let i = start; i <= end; i++) {
             pages.push(i);
         }
-        
+
         return pages;
     };
-    
+
     const PageButton = ({ page, active = false, disabled = false, children, onClick }) => (
         <button
             onClick={onClick}
             disabled={disabled}
             className={`
                 w-10 h-10 rounded-lg font-medium transition-all duration-200 flex items-center justify-center
-                ${active 
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' 
+                ${active
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
                     : disabled
                         ? 'text-slate-600 cursor-not-allowed'
                         : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
@@ -195,27 +195,27 @@ export const Pagination = ({
             {children || page}
         </button>
     );
-    
+
     return (
         <div className={`flex items-center space-x-1 ${className}`}>
             {showFirstLast && currentPage > 1 && (
-                <PageButton 
+                <PageButton
                     onClick={() => onPageChange(1)}
                     disabled={currentPage === 1}
                 >
                     <Icon name="chevrons-left" size={16} />
                 </PageButton>
             )}
-            
+
             {showPrevNext && (
-                <PageButton 
+                <PageButton
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                 >
                     <Icon name="chevron-left" size={16} />
                 </PageButton>
             )}
-            
+
             {getVisiblePages().map(page => (
                 <PageButton
                     key={page}
@@ -224,18 +224,18 @@ export const Pagination = ({
                     onClick={() => onPageChange(page)}
                 />
             ))}
-            
+
             {showPrevNext && (
-                <PageButton 
+                <PageButton
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
                 >
                     <Icon name="chevron-right" size={16} />
                 </PageButton>
             )}
-            
+
             {showFirstLast && currentPage < totalPages && (
-                <PageButton 
+                <PageButton
                     onClick={() => onPageChange(totalPages)}
                     disabled={currentPage === totalPages}
                 >
@@ -247,12 +247,12 @@ export const Pagination = ({
 };
 
 // Step Navigation (Wizard)
-export const StepNavigation = ({ 
-    steps, 
-    currentStep, 
+export const StepNavigation = ({
+    steps,
+    currentStep,
     onStepClick,
     allowClickBack = true,
-    className = '' 
+    className = ''
 }) => {
     return (
         <div className={`flex items-center justify-between ${className}`}>
@@ -261,7 +261,7 @@ export const StepNavigation = ({
                 const isActive = stepNumber === currentStep;
                 const isCompleted = stepNumber < currentStep;
                 const isClickable = allowClickBack && (isCompleted || isActive);
-                
+
                 return (
                     <React.Fragment key={step.id}>
                         <div className="flex flex-col items-center">
@@ -270,8 +270,8 @@ export const StepNavigation = ({
                                 disabled={!isClickable}
                                 className={`
                                     w-12 h-12 rounded-full flex items-center justify-center font-semibold transition-all duration-200
-                                    ${isActive 
-                                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-110' 
+                                    ${isActive
+                                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-110'
                                         : isCompleted
                                             ? 'bg-green-500 text-white'
                                             : 'bg-slate-700 text-slate-400'
@@ -289,7 +289,7 @@ export const StepNavigation = ({
                                 {step.label}
                             </span>
                         </div>
-                        
+
                         {index < steps.length - 1 && (
                             <div className={`flex-1 h-0.5 mx-4 ${isCompleted ? 'bg-green-500' : 'bg-slate-700'}`} />
                         )}

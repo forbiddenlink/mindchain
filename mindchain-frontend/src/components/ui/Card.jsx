@@ -3,12 +3,12 @@ import React from 'react';
 import Icon from '../Icon';
 
 // Base Card Component
-export const Card = ({ 
-    children, 
-    variant = 'default', 
-    hover = true, 
+export const Card = ({
+    children,
+    variant = 'default',
+    hover = true,
     className = '',
-    ...props 
+    ...props
 }) => {
     const variants = {
         default: 'glass-panel rounded-xl',
@@ -16,9 +16,9 @@ export const Card = ({
         flat: 'bg-slate-800/50 border border-slate-700/50 rounded-xl',
         gradient: 'bg-gradient-to-br from-slate-800/95 to-slate-900/95 border border-slate-700/50 rounded-xl shadow-2xl'
     };
-    
+
     const hoverClass = hover ? 'hover:shadow-glow transition-all duration-300' : '';
-    
+
     return (
         <div
             className={`${variants[variant]} ${hoverClass} ${className}`}
@@ -30,16 +30,16 @@ export const Card = ({
 };
 
 // Card Header
-export const CardHeader = ({ 
-    title, 
-    subtitle, 
-    icon, 
-    action, 
+export const CardHeader = ({
+    title,
+    subtitle,
+    icon,
+    action,
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
-        <div 
+        <div
             className={`flex items-center justify-between p-6 border-b border-slate-700/50 ${className}`}
             {...props}
         >
@@ -75,8 +75,8 @@ export const CardContent = ({ children, className = '', ...props }) => {
 // Card Footer
 export const CardFooter = ({ children, className = '', ...props }) => {
     return (
-        <div 
-            className={`p-6 pt-0 border-t border-slate-700/50 ${className}`} 
+        <div
+            className={`p-6 pt-0 border-t border-slate-700/50 ${className}`}
             {...props}
         >
             {children}
@@ -85,21 +85,21 @@ export const CardFooter = ({ children, className = '', ...props }) => {
 };
 
 // Metric Card
-export const MetricCard = ({ 
-    title, 
-    value, 
-    change, 
+export const MetricCard = ({
+    title,
+    value,
+    change,
     changeType = 'neutral',
-    icon, 
+    icon,
     className = '',
-    ...props 
+    ...props
 }) => {
     const changeColors = {
         positive: 'text-emerald-400',
         negative: 'text-red-400',
         neutral: 'text-slate-400'
     };
-    
+
     return (
         <Card variant="elevated" className={`p-6 ${className}`} {...props}>
             <div className="flex items-center justify-between">
@@ -123,14 +123,14 @@ export const MetricCard = ({
 };
 
 // Status Card
-export const StatusCard = ({ 
-    status = 'success', 
-    title, 
-    message, 
+export const StatusCard = ({
+    status = 'success',
+    title,
+    message,
     icon,
     action,
     className = '',
-    ...props 
+    ...props
 }) => {
     const statusStyles = {
         success: {
@@ -154,12 +154,12 @@ export const StatusCard = ({
             title: 'text-blue-400'
         }
     };
-    
+
     const style = statusStyles[status];
-    
+
     return (
-        <Card 
-            variant="flat" 
+        <Card
+            variant="flat"
             className={`p-6 ${style.bg} border ${className}`}
             {...props}
         >
@@ -192,18 +192,18 @@ export const LoadingCard = ({ title = 'Loading...', className = '' }) => {
 };
 
 // Feature Card
-export const FeatureCard = ({ 
-    icon, 
-    title, 
-    description, 
+export const FeatureCard = ({
+    icon,
+    title,
+    description,
     badge,
     onClick,
     className = '',
-    ...props 
+    ...props
 }) => {
     return (
-        <Card 
-            variant="elevated" 
+        <Card
+            variant="elevated"
             className={`p-6 cursor-pointer group ${className}`}
             onClick={onClick}
             {...props}

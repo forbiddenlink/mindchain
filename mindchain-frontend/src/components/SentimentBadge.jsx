@@ -63,6 +63,10 @@ export default function SentimentBadge({ sentiment, confidence, debateId, agentI
   const [sparklineData, setSparklineData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Add safety checks for confidence
+  const safeConfidence = typeof confidence === 'number' ? confidence : 0;
+  const safeSentiment = sentiment || 'neutral';
+
   // Fetch sparkline data
   useEffect(() => {
     const fetchSparklineData = async () => {
@@ -145,7 +149,11 @@ export default function SentimentBadge({ sentiment, confidence, debateId, agentI
 
   // Get sentiment color and icon
   const getSentimentDisplay = (sentiment, confidence) => {
-    if (confidence < 0.6) {
+    // Add safety checks
+    const safeConfidence = typeof confidence === 'number' ? confidence : 0;
+    const safeSentiment = sentiment || 'neutral';
+    
+    if (safeConfidence < 0.6) {
       return {
         color: 'text-gray-400',
         bgColor: 'bg-gray-500/20',
@@ -156,7 +164,7 @@ export default function SentimentBadge({ sentiment, confidence, debateId, agentI
       };
     }
 
-    switch (sentiment) {
+    switch (safeSentiment) {
       case 'positive':
         return {
           color: 'text-emerald-400',
@@ -187,7 +195,7 @@ export default function SentimentBadge({ sentiment, confidence, debateId, agentI
     }
   };
 
-  const display = getSentimentDisplay(sentiment, confidence);
+  const display = getSentimentDisplay(safeSentiment, safeConfidence);
 
   return (
     <div className="inline-flex flex-col items-start gap-1">
@@ -198,7 +206,7 @@ export default function SentimentBadge({ sentiment, confidence, debateId, agentI
         backdrop-blur-sm transition-all duration-200
       `}>
         <span className="text-[10px]">{display.emoji}</span>
-        <span className="font-mono text-[10px]">{confidence.toFixed(2)}</span>
+        <span className="font-mono text-[10px]">{safeConfidence.toFixed(2)}</span>
         <span className="text-[9px] opacity-75">confidence</span>
         {isLoading && <Icon name="loading" className="w-3 h-3 animate-spin opacity-50" />}
       </div>

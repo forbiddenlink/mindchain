@@ -196,19 +196,19 @@ export default function App() {
         case 'debate:stance_update':
           // Handle real-time stance evolution for election-night style chart
           console.log('📊 Received stance update:', data); // Debug log
-          
+
           // Prevent duplicate stance updates by checking if we already have this turn data
-          const isDuplicate = stanceData.some(entry => 
-            entry.debateId === data.debateId && 
-            entry.turn === data.turn && 
+          const isDuplicate = stanceData.some(entry =>
+            entry.debateId === data.debateId &&
+            entry.turn === data.turn &&
             entry.timestamp === data.timestamp
           );
-          
+
           if (isDuplicate) {
             console.log('⚠️ Duplicate stance update detected, skipping...');
             break;
           }
-          
+
           const newStanceEntry = {
             senatorbot: data.senatorbot,
             reformerbot: data.reformerbot,
@@ -289,7 +289,7 @@ export default function App() {
 
         // Keep the messages visible but stop generating new ones
         console.log(`✅ Successfully stopped debate ${currentDebateId} - messages remain visible`);
-        
+
       } catch (error) {
         console.error('❌ Failed to stop current debate:', error);
         // Force update the UI state even if API call failed
@@ -329,270 +329,266 @@ export default function App() {
   return (
     <ToastProvider>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col animate-fade-in-up overflow-x-hidden">
-      <Header connectionStatus={connectionStatus} backendHealth={connectionHealth} />
+        <Header connectionStatus={connectionStatus} backendHealth={connectionHealth} />
 
-      {/* Enhanced Controls Bar - Improved Visual Hierarchy */}
-      <div className="flex-shrink-0 border-b border-slate-700/50 bg-gradient-to-r from-slate-800/40 via-slate-800/30 to-slate-800/40 backdrop-blur-md overflow-x-hidden">
-        <Container maxWidth="max-w-7xl" padding="px-2 sm:px-4 py-3">
-          <Stack spacing="space-y-4">
-            {/* Top Row: Enhanced Controls - Full Width */}
-            <div className="w-full animate-slide-in-left">
-              <EnhancedControls
-                viewMode={viewMode}
-                activeDebates={activeDebates}
-                currentDebateId={currentDebateId}
-                debateMessages={debateMessages}
-                isDebating={currentDebateId && activeDebates.has(currentDebateId)}
-                onMetricsUpdate={handleMetricsUpdate}
-                onStopCurrentDebate={handleStopCurrentDebate}
-                onClearConversation={() => {
-                  setDebateMessages([]);
-                  setCurrentDebateId(null);
-                  console.log('🧹 Conversation cleared from Enhanced Controls');
-                }}
-                onDebateStarted={(debateId) => {
-                  if (viewMode === 'standard') {
-                    // Clear previous messages when starting a new debate
-                    setDebateMessages([]);
-                    setCurrentDebateId(debateId);
-                    console.log(`🚀 Started new debate ${debateId} - cleared previous messages`);
-                  }
-                }}
-              />
-            </div>
-
-            {/* Bottom Row: Mode Toggle + Enhanced Quick Stats */}
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-              {/* Left: Enhanced Quick Stats with System Health - More Space */}
-              <div className="flex items-center gap-3 flex-1 w-full lg:w-auto overflow-hidden">
-                <div className="flex items-center gap-3 text-sm">
-                  <div className="text-center px-3 py-2 bg-blue-500/10 rounded-lg border border-blue-500/20 flex-shrink-0">
-                    <div className="text-lg font-bold text-blue-400">{activeDebates.size}</div>
-                    <div className="text-xs text-gray-400">Sessions</div>
-                  </div>
-                  <div className="text-center px-3 py-2 bg-green-500/10 rounded-lg border border-green-500/20 flex-shrink-0">
-                    <div className="text-lg font-bold text-green-400">{debateMessages.length}</div>
-                    <div className="text-xs text-gray-400">Messages</div>
-                  </div>
-                  <div className="text-center px-3 py-2 bg-purple-500/10 rounded-lg border border-purple-500/20 flex-shrink-0">
-                    <div className="text-lg font-bold text-purple-400">{factChecks.length}</div>
-                    <div className="text-xs text-gray-400">Facts</div>
-                  </div>
-                  {/* System Health Indicator - Integrated with stats */}
-                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-700/30 rounded-lg border border-slate-600/30 flex-shrink-0">
-                    <div className={`w-2 h-2 rounded-full ${connectionStatus === 'Connected' && connectionHealth === 'healthy'
-                        ? 'bg-emerald-400 animate-pulse'
-                        : 'bg-red-400'
-                      }`}></div>
-                    <span className="text-xs text-gray-400 whitespace-nowrap">
-                      {connectionStatus === 'Connected' && connectionHealth === 'healthy' ? 'Online' : 'Issues'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Compact View Mode Selector */}
-              <div className="flex-shrink-0 w-full lg:w-auto mt-2 lg:mt-0">
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => setViewMode('standard')}
-                    className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${
-                      viewMode === 'standard'
-                        ? 'bg-blue-600/30 border-blue-500/30 text-blue-200 shadow-lg'
-                        : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-blue-600/20 hover:border-blue-500/20'
-                    }`}
-                  >
-                    Standard
-                  </button>
-                  <button
-                    onClick={() => setViewMode('multi-debate')}
-                    className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${
-                      viewMode === 'multi-debate'
-                        ? 'bg-purple-600/30 border-purple-500/30 text-purple-200 shadow-lg'
-                        : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-purple-600/20 hover:border-purple-500/20'
-                    }`}
-                  >
-                    Multi-Debate
-                  </button>
-                  <button
-                    onClick={() => setViewMode('analytics')}
-                    className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${
-                      viewMode === 'analytics'
-                        ? 'bg-green-600/30 border-green-500/30 text-green-200 shadow-lg'
-                        : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-green-600/20 hover:border-green-500/20'
-                    }`}
-                  >
-                    Analytics
-                  </button>
-                  <button
-                    onClick={() => setViewMode('contest-showcase')}
-                    className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${
-                      viewMode === 'contest-showcase'
-                        ? 'bg-gradient-to-r from-yellow-600/30 to-orange-600/30 border-yellow-500/30 text-yellow-200 shadow-lg'
-                        : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-gradient-to-r hover:from-yellow-600/20 hover:to-orange-600/20 hover:border-yellow-500/20'
-                    }`}
-                  >
-                    Contest
-                  </button>
-                </div>
-              </div>
-            </div>
-          </Stack>
-        </Container>
-      </div>
-
-      {/* Dynamic Main Content Based on View Mode */}
-      <main className="flex-1 overflow-x-hidden">
-        <Container maxWidth="max-w-7xl" padding="px-2 sm:px-4 py-4" className="h-full">
-        {viewMode === 'standard' ? (
-          /* Standard Single-Debate Layout - Balanced Space Distribution */
-          <div className="flex flex-col gap-4 h-full min-h-screen pb-12 animate-fade-in-up">
-            {/* Main content row: 2-column layout with proper sizing */}
-            <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
-              {/* Left Column: Debate Panel (70% width) */}
-              <div className="flex-1 lg:flex-[7] min-w-0 min-h-[500px]">
-                <DebatePanel messages={getFilteredMessages()} />
-              </div>
-
-              {/* Right Column: Key Moments + Fact Checker (30% width) */}
-              <div className="w-full lg:w-[30%] lg:flex-[3] flex-shrink-0 min-h-[600px]">
-                <Stack spacing="space-y-6">
-                  {/* Key Moments - Enhanced with animations */}
-                  <div className="flex-[3] min-h-[350px] max-h-[400px] animate-slide-in-right stagger-1">
-                    <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
-                  </div>
-
-                  {/* Fact Checker - Enhanced with animations */}
-                  <div className="flex-[2] min-h-[240px] max-h-[300px] animate-slide-in-right stagger-2">
-                    <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
-                  </div>
-                </Stack>
-              </div>
-            </div>
-
-            {/* Bottom row: Stance Evolution Chart - Enhanced with animations */}
-            <div className="h-80 flex-shrink-0 mt-6 mb-8 animate-fade-in-up stagger-3">
-              <StanceEvolutionChart
-                stanceData={currentDebateId ?
-                  stanceData.filter(entry => entry.debateId === currentDebateId) :
-                  stanceData
-                }
-              />
-            </div>
-          </div>
-        ) : viewMode === 'multi-debate' ? (
-          /* Multi-Debate Layout - Perfectly even spacing with consistent margins */
-          <div className="space-y-6 p-6">
-            {/* Top row: Key Moments - Consistent container */}
-            <div className="min-h-[300px] bg-gray-800/50 rounded-xl p-4">
-              <KeyMomentsPanel viewMode="multi-debate" />
-            </div>
-
-            {/* Middle row: Multi-debate viewer and fact checker - Consistent containers */}
-            <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6">
-              {/* Main: Multi-Debate Viewer - Consistent container */}
-              <div className="flex-1 lg:flex-[7] min-h-[600px] bg-gray-800/50 rounded-xl p-4 animate-slide-in-left">
-                <TrueMultiDebateViewer
-                  messages={debateMessages}
+        {/* Enhanced Controls Bar - Improved Visual Hierarchy */}
+        <div className="flex-shrink-0 border-b border-slate-700/50 bg-gradient-to-r from-slate-800/40 via-slate-800/30 to-slate-800/40 backdrop-blur-md overflow-x-hidden">
+          <Container maxWidth="max-w-7xl" padding="px-2 sm:px-4 py-3">
+            <Stack spacing="space-y-4">
+              {/* Top Row: Enhanced Controls - Full Width */}
+              <div className="w-full animate-slide-in-left">
+                <EnhancedControls
+                  viewMode={viewMode}
                   activeDebates={activeDebates}
+                  currentDebateId={currentDebateId}
+                  debateMessages={debateMessages}
+                  isDebating={currentDebateId && activeDebates.has(currentDebateId)}
                   onMetricsUpdate={handleMetricsUpdate}
+                  onStopCurrentDebate={handleStopCurrentDebate}
+                  onClearConversation={() => {
+                    setDebateMessages([]);
+                    setCurrentDebateId(null);
+                    console.log('🧹 Conversation cleared from Enhanced Controls');
+                  }}
+                  onDebateStarted={(debateId) => {
+                    if (viewMode === 'standard') {
+                      // Clear previous messages when starting a new debate
+                      setDebateMessages([]);
+                      setCurrentDebateId(debateId);
+                      console.log(`🚀 Started new debate ${debateId} - cleared previous messages`);
+                    }
+                  }}
                 />
               </div>
 
-              {/* Side Panel: Fact Checker - Consistent container */}
-              <div className="w-full lg:w-[450px] lg:flex-[3] min-h-[600px] bg-gray-800/50 rounded-xl p-4 animate-slide-in-right">
-                <FactChecker factChecks={factChecks} />
-              </div>
-            </div>
-
-            {/* Bottom row: Stance Evolution Chart - Consistent container */}
-            <div className="min-h-[400px] bg-gray-800/50 rounded-xl p-4">
-              <StanceEvolutionChart stanceData={stanceData} />
-            </div>
-          </div>
-        ) : viewMode === 'contest-showcase' ? (
-          /* Contest Showcase - Premium Full Screen Experience */
-          <div className="animate-fade-in-up">
-            <ContestShowcaseDashboard />
-          </div>
-        ) : viewMode === 'business' ? (
-          /* Business Intelligence Dashboard */
-          <div className="space-y-6">
-            <BusinessValueDashboard />
-          </div>
-        ) : (
-          /* Analytics Dashboard Layout - Enhanced with animations */
-          <Stack spacing="space-y-6" className="animate-fade-in-up">
-            {/* Top Row: Key Moments Analytics - Enhanced */}
-            <div className="w-full animate-slide-in-down stagger-1">
-              <KeyMomentsPanel viewMode="analytics" />
-            </div>
-
-            {/* Middle Row: Performance Dashboard - Enhanced */}
-            <div className="w-full animate-scale-in stagger-2">
-              <EnhancedPerformanceDashboard key={metricsUpdateTrigger} />
-            </div>
-
-            {/* Bottom Row: Quick Actions and Stats - Enhanced Grid */}
-            <Grid columns={2} gap="gap-6" className="animate-fade-in-up stagger-3">
-              {/* Quick Actions */}
-              <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-                  <Icon name="analytics" size={20} className="text-blue-400" />
-                  Quick Actions
-                </h3>
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    onClick={() => setViewMode('multi-debate')}
-                    className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/20 rounded-lg text-sm text-purple-300 transition-colors"
-                  >
-                    <Icon name="multi-debate" size={16} className="mr-1" />
-                    Multi-Debate View
-                  </button>
-                  <button
-                    onClick={() => setViewMode('standard')}
-                    className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/20 rounded-lg text-sm text-blue-300 transition-colors"
-                  >
-                    <Icon name="target" size={16} className="mr-1" />
-                    Standard View
-                  </button>
-                  <button
-                    onClick={handleMetricsUpdate}
-                    className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/20 rounded-lg text-sm text-green-300 transition-colors"
-                  >
-                    <Icon name="refresh" size={16} className="mr-1" />
-                    Refresh Data
-                  </button>
+              {/* Bottom Row: Mode Toggle + Enhanced Quick Stats */}
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                {/* Left: Enhanced Quick Stats with System Health - More Space */}
+                <div className="flex items-center gap-3 flex-1 w-full lg:w-auto overflow-hidden">
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="text-center px-3 py-2 bg-blue-500/10 rounded-lg border border-blue-500/20 flex-shrink-0">
+                      <div className="text-lg font-bold text-blue-400">{activeDebates.size}</div>
+                      <div className="text-xs text-gray-400">Sessions</div>
+                    </div>
+                    <div className="text-center px-3 py-2 bg-green-500/10 rounded-lg border border-green-500/20 flex-shrink-0">
+                      <div className="text-lg font-bold text-green-400">{debateMessages.length}</div>
+                      <div className="text-xs text-gray-400">Messages</div>
+                    </div>
+                    <div className="text-center px-3 py-2 bg-purple-500/10 rounded-lg border border-purple-500/20 flex-shrink-0">
+                      <div className="text-lg font-bold text-purple-400">{factChecks.length}</div>
+                      <div className="text-xs text-gray-400">Facts</div>
+                    </div>
+                    {/* System Health Indicator - Integrated with stats */}
+                    <div className="flex items-center gap-2 px-3 py-2 bg-slate-700/30 rounded-lg border border-slate-600/30 flex-shrink-0">
+                      <div className={`w-2 h-2 rounded-full ${connectionStatus === 'Connected' && connectionHealth === 'healthy'
+                        ? 'bg-emerald-400 animate-pulse'
+                        : 'bg-red-400'
+                        }`}></div>
+                      <span className="text-xs text-gray-400 whitespace-nowrap">
+                        {connectionStatus === 'Connected' && connectionHealth === 'healthy' ? 'Online' : 'Issues'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Live Stats */}
-              <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-                  <Icon name="bar-chart" size={20} className="text-green-400" />
-                  Live Statistics
-                </h3>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-400">{activeDebates.size}</div>
-                    <div className="text-xs text-gray-400">Active Debates</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-400">{debateMessages.length}</div>
-                    <div className="text-xs text-gray-400">Total Messages</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-400">{factChecks.length}</div>
-                    <div className="text-xs text-gray-400">Fact Checks</div>
+                {/* Right: Compact View Mode Selector */}
+                <div className="flex-shrink-0 w-full lg:w-auto mt-2 lg:mt-0">
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setViewMode('standard')}
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${viewMode === 'standard'
+                          ? 'bg-blue-600/30 border-blue-500/30 text-blue-200 shadow-lg'
+                          : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-blue-600/20 hover:border-blue-500/20'
+                        }`}
+                    >
+                      Standard
+                    </button>
+                    <button
+                      onClick={() => setViewMode('multi-debate')}
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${viewMode === 'multi-debate'
+                          ? 'bg-purple-600/30 border-purple-500/30 text-purple-200 shadow-lg'
+                          : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-purple-600/20 hover:border-purple-500/20'
+                        }`}
+                    >
+                      Multi-Debate
+                    </button>
+                    <button
+                      onClick={() => setViewMode('analytics')}
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${viewMode === 'analytics'
+                          ? 'bg-green-600/30 border-green-500/30 text-green-200 shadow-lg'
+                          : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-green-600/20 hover:border-green-500/20'
+                        }`}
+                    >
+                      Analytics
+                    </button>
+                    <button
+                      onClick={() => setViewMode('contest-showcase')}
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${viewMode === 'contest-showcase'
+                          ? 'bg-gradient-to-r from-yellow-600/30 to-orange-600/30 border-yellow-500/30 text-yellow-200 shadow-lg'
+                          : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-gradient-to-r hover:from-yellow-600/20 hover:to-orange-600/20 hover:border-yellow-500/20'
+                        }`}
+                    >
+                      Contest
+                    </button>
                   </div>
                 </div>
               </div>
-            </Grid>
-          </Stack>
-        )}
-        </Container>
-      </main>
-    </div>
+            </Stack>
+          </Container>
+        </div>
+
+        {/* Dynamic Main Content Based on View Mode */}
+        <main className="flex-1 overflow-x-hidden">
+          <Container maxWidth="max-w-7xl" padding="px-2 sm:px-4 py-4" className="h-full">
+            {viewMode === 'standard' ? (
+              /* Standard Single-Debate Layout - Balanced Space Distribution */
+              <div className="flex flex-col gap-4 h-full min-h-screen pb-12 animate-fade-in-up">
+                {/* Main content row: 2-column layout with proper sizing */}
+                <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
+                  {/* Left Column: Debate Panel (70% width) */}
+                  <div className="flex-1 lg:flex-[7] min-w-0 min-h-[500px]">
+                    <DebatePanel messages={getFilteredMessages()} />
+                  </div>
+
+                  {/* Right Column: Key Moments + Fact Checker (30% width) */}
+                  <div className="w-full lg:w-[30%] lg:flex-[3] flex-shrink-0 min-h-[600px]">
+                    <Stack spacing="space-y-6">
+                      {/* Key Moments - Enhanced with animations */}
+                      <div className="flex-[3] min-h-[350px] max-h-[400px] animate-slide-in-right stagger-1">
+                        <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
+                      </div>
+
+                      {/* Fact Checker - Enhanced with animations */}
+                      <div className="flex-[2] min-h-[240px] max-h-[300px] animate-slide-in-right stagger-2">
+                        <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
+                      </div>
+                    </Stack>
+                  </div>
+                </div>
+
+                {/* Bottom row: Stance Evolution Chart - Enhanced with animations */}
+                <div className="h-80 flex-shrink-0 mt-6 mb-8 animate-fade-in-up stagger-3">
+                  <StanceEvolutionChart
+                    stanceData={currentDebateId ?
+                      stanceData.filter(entry => entry.debateId === currentDebateId) :
+                      stanceData
+                    }
+                  />
+                </div>
+              </div>
+            ) : viewMode === 'multi-debate' ? (
+              /* Multi-Debate Layout - Perfectly even spacing with consistent margins */
+              <div className="space-y-6 p-6">
+                {/* Top row: Key Moments - Consistent container */}
+                <div className="min-h-[300px] bg-gray-800/50 rounded-xl p-4">
+                  <KeyMomentsPanel viewMode="multi-debate" />
+                </div>
+
+                {/* Middle row: Multi-debate viewer and fact checker - Consistent containers */}
+                <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6">
+                  {/* Main: Multi-Debate Viewer - Consistent container */}
+                  <div className="flex-1 lg:flex-[7] min-h-[600px] bg-gray-800/50 rounded-xl p-4 animate-slide-in-left">
+                    <TrueMultiDebateViewer
+                      messages={debateMessages}
+                      activeDebates={activeDebates}
+                      onMetricsUpdate={handleMetricsUpdate}
+                    />
+                  </div>
+
+                  {/* Side Panel: Fact Checker - Consistent container */}
+                  <div className="w-full lg:w-[450px] lg:flex-[3] min-h-[600px] bg-gray-800/50 rounded-xl p-4 animate-slide-in-right">
+                    <FactChecker factChecks={factChecks} />
+                  </div>
+                </div>
+
+                {/* Bottom row: Stance Evolution Chart - Consistent container */}
+                <div className="min-h-[400px] bg-gray-800/50 rounded-xl p-4">
+                  <StanceEvolutionChart stanceData={stanceData} />
+                </div>
+              </div>
+            ) : viewMode === 'contest-showcase' ? (
+              /* Contest Showcase - Premium Full Screen Experience */
+              <div className="animate-fade-in-up">
+                <ContestShowcaseDashboard />
+              </div>
+            ) : viewMode === 'business' ? (
+              /* Business Intelligence Dashboard */
+              <div className="space-y-6">
+                <BusinessValueDashboard />
+              </div>
+            ) : (
+              /* Analytics Dashboard Layout - Enhanced with animations */
+              <Stack spacing="space-y-6" className="animate-fade-in-up">
+                {/* Top Row: Key Moments Analytics - Enhanced */}
+                <div className="w-full animate-slide-in-down stagger-1">
+                  <KeyMomentsPanel viewMode="analytics" />
+                </div>
+
+                {/* Middle Row: Performance Dashboard - Enhanced */}
+                <div className="w-full animate-scale-in stagger-2">
+                  <EnhancedPerformanceDashboard key={metricsUpdateTrigger} />
+                </div>
+
+                {/* Bottom Row: Quick Actions and Stats - Enhanced Grid */}
+                <Grid columns={2} gap="gap-6" className="animate-fade-in-up stagger-3">
+                  {/* Quick Actions */}
+                  <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
+                    <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                      <Icon name="analytics" size={20} className="text-blue-400" />
+                      Quick Actions
+                    </h3>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => setViewMode('multi-debate')}
+                        className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/20 rounded-lg text-sm text-purple-300 transition-colors"
+                      >
+                        <Icon name="multi-debate" size={16} className="mr-1" />
+                        Multi-Debate View
+                      </button>
+                      <button
+                        onClick={() => setViewMode('standard')}
+                        className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/20 rounded-lg text-sm text-blue-300 transition-colors"
+                      >
+                        <Icon name="target" size={16} className="mr-1" />
+                        Standard View
+                      </button>
+                      <button
+                        onClick={handleMetricsUpdate}
+                        className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/20 rounded-lg text-sm text-green-300 transition-colors"
+                      >
+                        <Icon name="refresh" size={16} className="mr-1" />
+                        Refresh Data
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Live Stats */}
+                  <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
+                    <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                      <Icon name="bar-chart" size={20} className="text-green-400" />
+                      Live Statistics
+                    </h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-400">{activeDebates.size}</div>
+                        <div className="text-xs text-gray-400">Active Debates</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-green-400">{debateMessages.length}</div>
+                        <div className="text-xs text-gray-400">Total Messages</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-purple-400">{factChecks.length}</div>
+                        <div className="text-xs text-gray-400">Fact Checks</div>
+                      </div>
+                    </div>
+                  </div>
+                </Grid>
+              </Stack>
+            )}
+          </Container>
+        </main>
+      </div>
     </ToastProvider>
   );
 }

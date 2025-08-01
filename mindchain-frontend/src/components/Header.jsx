@@ -85,18 +85,17 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
 
                         {/* Compact Live Indicator */}
                         <div className="flex items-center space-x-3 glass-card px-4 py-2 rounded-lg border border-slate-600/50 hover:border-slate-500/50 transition-all duration-300">
-                            <div className={`w-3 h-3 rounded-full ${
-                                connectionStatus === 'Connected' && backendHealth === 'healthy'
+                            <div className={`w-3 h-3 rounded-full ${connectionStatus === 'Connected' && backendHealth === 'healthy'
                                     ? 'bg-emerald-400 shadow-glow animate-pulse'
                                     : 'bg-red-400'
-                            }`}></div>
+                                }`}></div>
                             <div className="flex flex-col">
                                 <span className="text-slate-200 text-sm font-semibold">
                                     Contest Ready
                                 </span>
                                 <span className="text-slate-400 text-xs">
-                                    {connectionStatus === 'Connected' && backendHealth === 'healthy' 
-                                        ? 'All Systems Online' 
+                                    {connectionStatus === 'Connected' && backendHealth === 'healthy'
+                                        ? 'All Systems Online'
                                         : 'System Check Required'
                                     }
                                 </span>
@@ -111,7 +110,7 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
                     </Flex>
                 </Flex>
             </Container>
-            
+
             {/* Subtle bottom gradient */}
             <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-500/20 to-transparent"></div>
         </header>

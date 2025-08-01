@@ -93,7 +93,7 @@ const KeyMomentsPanel = ({ debateId, viewMode = 'standard' }) => {
     };
 
     const getMomentStyle = (type, significance) => {
-        const base = 'p-3 rounded-lg border transition-all hover:shadow-lg';
+        const base = 'relative p-3 rounded-lg border transition-all hover:shadow-lg hover:z-30 z-10';
         
         if (type === 'stance_flip') {
             return significance === 'major' 
@@ -163,7 +163,7 @@ const KeyMomentsPanel = ({ debateId, viewMode = 'standard' }) => {
     };
 
     return (
-        <section className="h-full flex flex-col bg-gradient-to-br from-neutral-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50 overflow-hidden">
+        <section className="relative h-full flex flex-col bg-gradient-to-br from-neutral-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50 overflow-hidden z-20">
             {/* Enhanced Header */}
             <div className="flex flex-col gap-2 mb-4 flex-shrink-0">
                 <div className="flex items-center justify-between">
@@ -225,7 +225,7 @@ const KeyMomentsPanel = ({ debateId, viewMode = 'standard' }) => {
                         </p>
                     </div>
                 ) : (
-                    <div className="space-y-3 overflow-y-auto overflow-x-hidden flex-1">
+                    <div className="space-y-3 overflow-y-auto overflow-x-hidden flex-1 relative z-10">
                         {keyMoments.map((moment, index) => (
                             <div key={`${moment.id}_${index}_${moment.timestamp || Date.now()}`} className={getMomentStyle(moment.type, moment.significance)}>
                                 {/* Enhanced Header with Better Visual Hierarchy */}

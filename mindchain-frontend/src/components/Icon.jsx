@@ -60,7 +60,8 @@ import {
     User,
     ShieldCheck,
     ExternalLink,
-    PlayCircle
+    PlayCircle,
+    Trash2
 } from 'lucide-react';
 
 // Icon mapping for topics and general use
@@ -74,7 +75,7 @@ const iconMap = {
     'taxation': DollarSign,
     'privacy': Lock,
     'space': Rocket,
-    
+
     // Action icons
     'analytics': BarChart3,
     'bar-chart': BarChart3,  // Add alias for bar-chart
@@ -101,7 +102,7 @@ const iconMap = {
     'star': Star,
     'refresh': RefreshCw,
     'clock': Clock,
-    
+
     // Tech icons
     'database': Database,
     'performance': Zap,
@@ -124,7 +125,7 @@ const iconMap = {
     'group': Users2,
     'announce': Megaphone,
     'speak': Mic,
-    
+
     // Missing icon mappings
     'user': User,
     'users': Users,
@@ -143,42 +144,47 @@ const iconMap = {
     'alert-circle': AlertCircle,
     'refresh-cw': RefreshCw,
     'external-link': ExternalLink,
-    
+
+    // Missing icons that were causing errors
+    'alert-triangle': AlertTriangle,
+    'shield': Shield,
+    'trash': Trash2,
+
     // Chart and UI controls
     'maximize2': Maximize2,
     'minimize2': Minimize2,
     'Maximize2': Maximize2,  // Support both cases
     'Activity': Activity,    // Support both cases
-    
+
     // Agent personas
     'senator': Gavel,
     'reformer': Lightbulb,
     'citizen': UserCircle,
     'leader': Crown,
-    
+
     // Stance indicators
     'against': X,
     'neutral': Circle,
     'support': CheckCircle
 };
 
-const Icon = ({ 
-    name, 
-    size = 16, 
-    className = '', 
+const Icon = ({
+    name,
+    size = 16,
+    className = '',
     color = 'currentColor',
-    ...props 
+    ...props
 }) => {
     const IconComponent = iconMap[name];
-    
+
     if (!IconComponent) {
         console.warn(`Icon "${name}" not found in iconMap`);
         return null;
     }
-    
+
     return (
-        <IconComponent 
-            size={size} 
+        <IconComponent
+            size={size}
             className={className}
             color={color}
             {...props}

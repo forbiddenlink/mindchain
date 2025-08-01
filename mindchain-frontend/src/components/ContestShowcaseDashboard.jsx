@@ -45,9 +45,9 @@ export default function SystemShowcaseDashboard() {
         // Automatic polling disabled to reduce server load
         // const interval = setInterval(fetchShowcaseData, 15000);
         // return () => clearInterval(interval);
-        
+
         // Only update on manual interaction
-        return () => {}; // No cleanup needed
+        return () => { }; // No cleanup needed
     }, []);
 
     // Run demonstration scenario
@@ -355,8 +355,8 @@ export default function SystemShowcaseDashboard() {
                                 onClick={() => runDemo(demo.id)}
                                 disabled={demoRunning}
                                 className={`w-full px-4 py-2 rounded-lg font-medium transition-all ${demoRunning && activeDemo === demo.id
-                                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                        : `bg-${demo.color}-600 hover:bg-${demo.color}-700 text-white`
+                                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                    : `bg-${demo.color}-600 hover:bg-${demo.color}-700 text-white`
                                     }`}
                             >
                                 {demoRunning && activeDemo === demo.id ? (

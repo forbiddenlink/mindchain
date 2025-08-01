@@ -23,13 +23,14 @@ const wss = new WebSocketServer({
     server,
     verifyClient: (info) => {
         const origin = info.origin;
-        return origin === 'http://localhost:5173' || origin === 'http://127.0.0.1:5173';
+        return origin === 'http://localhost:5173' || origin === 'http://127.0.0.1:5173' || 
+               origin === 'http://localhost:5174' || origin === 'http://127.0.0.1:5174';
     }
 });
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Vite dev server (both localhost and 127.0.0.1)
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174', 'http://127.0.0.1:5174'], // Vite dev server (both localhost and 127.0.0.1)
     credentials: true
 }));
 app.use(express.json());

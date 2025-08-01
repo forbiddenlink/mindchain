@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from './Icon';
 import { Card, CardHeader, CardContent, StatusBadge, Stack } from './ui';
 
-const FactChecker = ({factChecks = []}) => {
+const FactChecker = ({ factChecks = [] }) => {
     const getFactCheckConfig = (score) => {
         if (score >= 0.8) {
             return {
@@ -39,9 +39,9 @@ const FactChecker = ({factChecks = []}) => {
                         <h3 className="text-lg font-semibold text-white">Fact Checker</h3>
                         <p className="text-slate-400 text-sm">Real-time verification</p>
                     </div>
-                    <StatusBadge 
-                        status={factChecks.length > 0 ? "success" : "neutral"} 
-                        label={`${factChecks.length} checks`} 
+                    <StatusBadge
+                        status={factChecks.length > 0 ? "success" : "neutral"}
+                        label={`${factChecks.length} checks`}
                     />
                 </div>
             </CardHeader>
@@ -60,18 +60,18 @@ const FactChecker = ({factChecks = []}) => {
                     <div className="space-y-3 h-full overflow-y-auto">
                         {factChecks.slice(-5).map((check) => {
                             const config = getFactCheckConfig(check.score);
-                            
+
                             return (
                                 <div key={check.id || check.timestamp} className={`glass-card p-4 rounded-xl ${config.cardClass}`}>
                                     <div className="flex items-start space-x-3">
                                         <div className="flex-shrink-0 mt-1">
                                             <Icon name={config.icon} size={18} className={
                                                 config.variant === 'success' ? 'text-green-400' :
-                                                config.variant === 'warning' ? 'text-yellow-400' :
-                                                'text-red-400'
+                                                    config.variant === 'warning' ? 'text-yellow-400' :
+                                                        'text-red-400'
                                             } />
                                         </div>
-                                        
+
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center justify-between mb-2">
                                                 <StatusBadge status={config.variant} label={config.label} />
@@ -79,11 +79,11 @@ const FactChecker = ({factChecks = []}) => {
                                                     {(check.score * 100).toFixed(1)}%
                                                 </span>
                                             </div>
-                                            
+
                                             <p className="text-sm text-slate-300 leading-relaxed mb-3">
                                                 {check.fact}
                                             </p>
-                                            
+
                                             {check.source && (
                                                 <div className="flex items-center space-x-2 text-xs text-slate-400">
                                                     <Icon name="external-link" size={12} />
