@@ -140,6 +140,81 @@ Instructions:
     }
 }
 
+// Enhanced message generation without storing to streams (for server-controlled storage)
+export async function generateEnhancedMessageOnly(agentId, debateId, topic = 'general policy') {
+    const client = createClient({ url: process.env.REDIS_URL });
+    await client.connect();
+
+    try {
+        // Get agent profile and debate context
+        const profile = await client.json.get(`agent:${agentId}:profile`);
+        if (!profile) {
+            throw new Error(`No profile found for agent: ${agentId}`);
+        }
+
+        // Get recent debate messages for context
+        const debateMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 5 });
+        const recentContext = debateMessages.reverse().map(entry => 
+            `${entry.message.agent_id}: ${entry.message.message}`
+        ).join('\n');
+
+        // Determine emotional state based on recent context
+        const emotionalState = determineEmotionalState(recentContext, profile);
+
+        // Enhanced prompt with emotional context
+        const enhancedPrompt = `
+You are ${profile.name}, a ${profile.tone} ${profile.role} currently feeling ${emotionalState}.
+You believe in ${profile.biases.join(', ')}.
+Debate topic: ${topic}.
+
+Recent debate context:
+${recentContext || 'This is the start of the debate.'}
+
+Current emotional state: ${emotionalState}
+Respond thoughtfully about ${topic}, incorporating your emotional state. Keep under 200 words.`;
+
+        // Generate response
+        const completion = await openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [{ role: 'user', content: enhancedPrompt }],
+            max_tokens: 300,
+            temperature: 0.7 + (emotionalState === 'passionate' ? 0.2 : 0),
+        });
+
+        let message = completion.choices[0].message.content.trim();
+
+        // Check for similarity to recent messages and regenerate if too similar
+        if (debateMessages.length > 0) {
+            const lastMessage = debateMessages[debateMessages.length - 1]?.message?.message || '';
+            const similarity = calculateSimilarity(message, lastMessage);
+            
+            if (similarity > 0.7) {
+                console.log(`🔄 Message too similar (${similarity.toFixed(2)}), regenerating...`);
+                
+                const retryResponse = await openai.chat.completions.create({
+                    model: 'gpt-4',
+                    messages: [
+                        { role: 'user', content: enhancedPrompt },
+                        { role: 'assistant', content: message },
+                        { role: 'user', content: 'That response is too similar to recent messages. Please provide a completely different perspective or approach to the topic.' }
+                    ],
+                    temperature: 1.0,
+                    max_tokens: 150
+                });
+                
+                message = retryResponse.choices[0].message.content.trim();
+            }
+        }
+
+        await client.quit();
+        return message;
+
+    } catch (error) {
+        await client.quit();
+        throw error;
+    }
+}
+
 // 🤝 Find agents with similar stances for coalition building
 async function findPotentialAllies(client, agentId, debateId, topic) {
     try {

@@ -87,3 +87,63 @@ Stay focused on this specific topic and maintain your character's perspective.
     await client.quit();
     return message;
 }
+
+// Generate message without storing to streams (for server-controlled storage)
+export async function generateMessageOnly(agentId, debateId, topic = 'general policy') {
+    const client = createClient({ url: process.env.REDIS_URL });
+    await client.connect();
+
+    const profileKey = `agent:${agentId}:profile`;
+    const profile = await client.json.get(profileKey);
+
+    const memoryStreamKey = `debate:${debateId}:agent:${agentId}:memory`;
+
+    // ⏪ Step 1: Get last 3 entries from this agent's private memory
+    const memories = await client.xRevRange(memoryStreamKey, '+', '-', { COUNT: 3 });
+
+    const memoryContext = memories
+        .reverse()
+        .map(entry => entry.message.content)
+        .map((msg, i) => `Memory ${i + 1}: ${msg}`)
+        .join('\n');
+
+    // 🧠 Step 2: Construct prompt with memory + profile + dynamic topic
+    const prompt = `
+You are ${profile.name}, a ${profile.tone} ${profile.role}.
+You believe in ${profile.biases.join(', ')}.
+Debate topic: ${topic}.
+
+Your recent memories:
+${memoryContext || 'This is the start of the debate.'}
+
+Respond with a thoughtful position on ${topic}. Be engaging but stay in character. Keep response under 200 words.`;
+
+    // 🎯 Step 3: Check semantic cache for similar prompts
+    let message = await getCachedResponse(prompt, topic);
+
+    if (!message) {
+        console.log('💭 No cache hit, generating new AI response...');
+
+        const chatResponse = await openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [{ role: 'user', content: prompt }],
+            max_tokens: 300,
+            temperature: 0.7,
+        });
+
+        message = chatResponse.choices[0].message.content.trim();
+        
+        // 💾 Cache the new response for future similarity searches
+        await cacheNewResponse(prompt, message, {
+            agentId,
+            debateId,
+            topic,
+            timestamp: new Date().toISOString(),
+        });
+        console.log('💾 Response cached for future similarity matching');
+    }
+    console.log(`${agentId}: ${message}`);
+
+    await client.quit();
+    return message;
+}

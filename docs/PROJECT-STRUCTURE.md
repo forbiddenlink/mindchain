@@ -12,8 +12,13 @@ mindchain/
 
 ## 🔧 Core Backend Files
 ```
-├── 🖥️  server.js                   # Main Express + WebSocket server
-├── 🤖 generateMessage.js          # AI message generation with semantic caching
+├── 🖥️  server.js                   # Main Express + WebSocket server with centralized message storage
+├── 🤖 generateMessage.js          # AI message generation with semantic caching (+ storage-free versions)
+├── 🧠 enhancedAI.js               # Enhanced AI with emotional states (+ storage-free versions)
+├── 🧠 intelligentAgents.js        # Redis-powered intelligent agents with coalition analysis
+├── ⚡ redisOptimizer.js           # Real-time Redis performance optimization engine
+├── 🔍 advancedFactChecker.js      # Multi-source fact verification with cross-validation
+├── 📊 contestMetricsEngine.js     # Live contest scoring and evaluation system
 ├── 🎯 semanticCache.js             # Redis Vector-powered response caching (MAJOR SHOWCASE)
 ├── ⚙️  setupCacheIndex.js          # Cache vector index initialization
 ├── ✅ factChecker.js               # Vector-based fact verification

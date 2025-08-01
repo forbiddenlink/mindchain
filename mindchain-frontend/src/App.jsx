@@ -8,6 +8,7 @@ import EnhancedPerformanceDashboard from './components/EnhancedPerformanceDashbo
 import TrueMultiDebateViewer from './components/TrueMultiDebateViewer';
 import StanceEvolutionChart from './components/StanceEvolutionChart';
 import KeyMomentsPanel from './components/KeyMomentsPanel';
+import ContestShowcaseDashboard from './components/ContestShowcaseDashboard';
 import Icon from './components/Icon';
 import useWebSocket from './hooks/useWebSocket';
 import api from './services/api';
@@ -17,7 +18,7 @@ export default function App() {
   const [agents, setAgents] = useState({});
   const [factChecks, setFactChecks] = useState([]);
   const [connectionHealth, setConnectionHealth] = useState('checking');
-  const [viewMode, setViewMode] = useState('standard'); // 'standard', 'multi-debate', or 'analytics'
+  const [viewMode, setViewMode] = useState('standard'); // 'standard', 'multi-debate', 'analytics', or 'contest'
   const [metricsUpdateTrigger, setMetricsUpdateTrigger] = useState(0);
   const [activeDebates, setActiveDebates] = useState(new Map()); // Track multiple debates
   const [currentDebateId, setCurrentDebateId] = useState(null); // Track current single debate
@@ -379,6 +380,19 @@ export default function App() {
                     <Icon name="analytics" size={16} className="mr-1" />
                     Analytics
                   </button>
+                  <button
+                    onClick={() => setViewMode('contest')}
+                    className={`
+                      px-3 py-2 rounded-lg text-sm font-medium transition-all
+                      ${viewMode === 'contest'
+                        ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      }
+                    `}
+                  >
+                    <Icon name="award" size={16} className="mr-1" />
+                    Contest Showcase
+                  </button>
                 </div>
               </div>
             </div>
@@ -449,6 +463,9 @@ export default function App() {
               <StanceEvolutionChart stanceData={stanceData} />
             </div>
           </div>
+        ) : viewMode === 'contest' ? (
+          /* Contest Showcase Dashboard - Full screen premium experience */
+          <ContestShowcaseDashboard />
         ) : (
           /* Analytics Dashboard Layout - Key Moments as Primary Feature */
           <div className="space-y-6">
