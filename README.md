@@ -1,4 +1,7 @@
-# 🧠 MindChain – Real-Time Multi-Agent AI Debate Engine
+# 🧠 MindChain – Real-Time Multi-Agen📋 **[Technical Documentation](TECHNICAL-DOCS.md)** - Architecture, setup, and implementation details  
+🏆 **[Feature Overview](FEATURE-OVERVIEW.md)** - Contest-winning features and capabilities  
+📝 **[Development Changelog](CHANGELOG.md)** - Recent updates and improvements  
+✅ **[Contest Checklist](CONTEST-CHECKLIST.md)** - Pre-demo verification and testing Debate Engine
 
 **MindChain** is a real-time AI policy debate simulator powered by Redis. Each AI agent is capable of:
 - Holding a persistent profile (RedisJSON)
@@ -292,10 +295,16 @@ The codebase has been cleaned and organized for optimal development:
 - 7 optimized components for debate management and monitoring
 - Tailwind CSS styling with responsive design and semantic iconography
 
-**📚 Documentation (`docs/`)**
-- `PROJECT-STRUCTURE.md` - Complete file organization guide
-- `ENHANCEMENT-SUMMARY.md` - Feature development history
-- `LATEST-FIXES.md` - Recent updates and bug fixes
+## 📚 **Documentation Structure**
+
+Our documentation has been consolidated for professional presentation:
+
+- **📋 [TECHNICAL-DOCS.md](TECHNICAL-DOCS.md)** - Complete architecture and implementation guide
+- **🏆 [FEATURE-OVERVIEW.md](FEATURE-OVERVIEW.md)** - Contest-winning features and Redis showcase
+- **📝 [CHANGELOG.md](CHANGELOG.md)** - Development history and recent updates  
+- **✅ [CONTEST-CHECKLIST.md](CONTEST-CHECKLIST.md)** - Pre-demo verification checklist
+- **🎬 [CONTEST-DEMO-SCRIPT.md](CONTEST-DEMO-SCRIPT.md)** - Judge presentation guide
+- **💻 [.github/copilot-instructions.md](.github/copilot-instructions.md)** - Development instructions
 
 **🗄️ Archive (`archive/`)**
 - Legacy files safely preserved for reference
