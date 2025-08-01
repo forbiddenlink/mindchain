@@ -7,6 +7,7 @@ import EnhancedControls from './components/EnhancedControls';
 import EnhancedPerformanceDashboard from './components/EnhancedPerformanceDashboard';
 import TrueMultiDebateViewer from './components/TrueMultiDebateViewer';
 import StanceEvolutionChart from './components/StanceEvolutionChart';
+import KeyMomentsPanel from './components/KeyMomentsPanel';
 import Icon from './components/Icon';
 import useWebSocket from './hooks/useWebSocket';
 import api from './services/api';
@@ -215,6 +216,16 @@ export default function App() {
         case 'error':
           console.error('WebSocket error:', data.message);
           break;
+
+        case 'key_moment_created':
+          // Handle new key moment creation
+          console.log('🔍 Key moment created:', data.moment);
+          
+          // Dispatch custom event for KeyMomentsPanel to listen to
+          window.dispatchEvent(new CustomEvent('websocket-message', {
+            detail: { type: 'key_moment_created', ...data }
+          }));
+          break;
       }
     }
   }, [lastMessage]);
@@ -378,20 +389,28 @@ export default function App() {
       {/* Dynamic Main Content Based on View Mode */}
       <main className="flex-1 container mx-auto px-4 py-4 max-w-7xl">
         {viewMode === 'standard' ? (
-          /* Standard Single-Debate Layout - Improved with Stance Chart */
+          /* Standard Single-Debate Layout - Optimized 3-Column Layout */
           <div className="flex flex-col gap-4 h-[calc(100vh-200px)] overflow-hidden">
-            {/* Top row: Debate Panel and Fact Checker */}
-            <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
-              <div className="flex-1 min-w-0 min-h-0">
+            {/* Main content row: 3-column layout */}
+            <div className="flex flex-col xl:flex-row gap-4 flex-1 min-h-0">
+              {/* Left Column: Debate Panel (60% width) */}
+              <div className="flex-1 xl:flex-[3] min-w-0 min-h-0">
                 <DebatePanel messages={getFilteredMessages()} />
               </div>
-              <div className="w-full lg:w-72 flex-shrink-0 min-h-0">
+              
+              {/* Middle Column: Key Moments (25% width) */}
+              <div className="w-full xl:w-80 xl:flex-[1.5] flex-shrink-0 min-h-0">
+                <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
+              </div>
+              
+              {/* Right Column: Fact Checker (15% width) */}
+              <div className="w-full xl:w-64 xl:flex-[1] flex-shrink-0 min-h-0">
                 <FactChecker factChecks={factChecks.filter(fc => !currentDebateId || fc.debateId === currentDebateId)} />
               </div>
             </div>
             
             {/* Bottom row: Stance Evolution Chart */}
-            <div className="h-80 flex-shrink-0">
+            <div className="h-72 flex-shrink-0">
               <StanceEvolutionChart 
                 stanceData={currentDebateId ? 
                   stanceData.filter(entry => entry.debateId === currentDebateId) : 
@@ -401,11 +420,16 @@ export default function App() {
             </div>
           </div>
         ) : viewMode === 'multi-debate' ? (
-          /* Multi-Debate Layout - Full Width for Debates with Stance Chart */
+          /* Multi-Debate Layout - Optimized for Multiple Debates with Key Moments Prominence */
           <div className="flex flex-col gap-4 h-[calc(100vh-200px)]">
-            {/* Top row: Multi-debate viewer and fact checker */}
+            {/* Top row: Key Moments across all debates - Prominent position */}
+            <div className="h-64 flex-shrink-0">
+              <KeyMomentsPanel viewMode="multi-debate" />
+            </div>
+            
+            {/* Middle row: Multi-debate viewer and fact checker */}
             <div className="flex flex-col lg:flex-row gap-4 flex-1">
-              {/* Main: Multi-Debate Viewer - Full Focus */}
+              {/* Main: Multi-Debate Viewer */}
               <div className="flex-1 min-w-0">
                 <TrueMultiDebateViewer
                   messages={debateMessages}
@@ -414,63 +438,82 @@ export default function App() {
                 />
               </div>
 
-              {/* Side Panel: Just Fact Checker - Minimal */}
+              {/* Side Panel: Fact Checker */}
               <div className="w-full lg:w-72 flex-shrink-0">
                 <FactChecker factChecks={factChecks} />
               </div>
             </div>
             
             {/* Bottom row: Stance Evolution Chart for all debates */}
-            <div className="h-80 flex-shrink-0">
+            <div className="h-72 flex-shrink-0">
               <StanceEvolutionChart stanceData={stanceData} />
             </div>
           </div>
         ) : (
-          /* Analytics Dashboard Layout */
+          /* Analytics Dashboard Layout - Key Moments as Primary Feature */
           <div className="space-y-6">
-            {/* Full Analytics Dashboard */}
+            {/* Top Row: Key Moments Analytics - Full Width Featured */}
+            <div className="w-full">
+              <KeyMomentsPanel viewMode="analytics" />
+            </div>
+            
+            {/* Middle Row: Performance Dashboard */}
             <div className="w-full">
               <EnhancedPerformanceDashboard key={metricsUpdateTrigger} />
             </div>
             
-            {/* Quick Actions Bar */}
-            <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <Icon name="analytics" size={20} className="text-blue-400" />
-                    Performance Analytics
-                  </h3>
-                  <div className="flex items-center gap-3 text-sm">
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-blue-400">{activeDebates.size}</div>
-                      <div className="text-xs text-gray-400">Active</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-green-400">{debateMessages.length}</div>
-                      <div className="text-xs text-gray-400">Messages</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-purple-400">{factChecks.length}</div>
-                      <div className="text-xs text-gray-400">Facts</div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-2">
+            {/* Bottom Row: Quick Actions and Stats */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Quick Actions */}
+              <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                  <Icon name="analytics" size={20} className="text-blue-400" />
+                  Quick Actions
+                </h3>
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     onClick={() => setViewMode('multi-debate')}
                     className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/20 rounded-lg text-sm text-purple-300 transition-colors"
                   >
                     <Icon name="multi-debate" size={16} className="mr-1" />
-                    Back to Debates
+                    Multi-Debate View
                   </button>
                   <button
                     onClick={() => setViewMode('standard')}
                     className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/20 rounded-lg text-sm text-blue-300 transition-colors"
                   >
-                    � Standard View
+                    <Icon name="target" size={16} className="mr-1" />
+                    Standard View
                   </button>
+                  <button
+                    onClick={handleMetricsUpdate}
+                    className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/20 rounded-lg text-sm text-green-300 transition-colors"
+                  >
+                    <Icon name="refresh" size={16} className="mr-1" />
+                    Refresh Data
+                  </button>
+                </div>
+              </div>
+              
+              {/* Live Stats */}
+              <div className="bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                  <Icon name="bar-chart" size={20} className="text-green-400" />
+                  Live Statistics
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-400">{activeDebates.size}</div>
+                    <div className="text-xs text-gray-400">Active Debates</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-400">{debateMessages.length}</div>
+                    <div className="text-xs text-gray-400">Total Messages</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-400">{factChecks.length}</div>
+                    <div className="text-xs text-gray-400">Fact Checks</div>
+                  </div>
                 </div>
               </div>
             </div>

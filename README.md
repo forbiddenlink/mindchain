@@ -10,6 +10,9 @@
 **🏆 Contest Status: FULLY FUNCTIONAL & ENHANCED** - All major features complete!
 
 **Latest Updates:**
+- ✅ **Key Moments Detection System** - Intelligent RedisJSON storage of significant debate events with AI-powered analysis
+- ✅ **Smart Event Thresholds** - Stores summaries only on major stance flips (>0.3) or questionable claims (<0.7 fact confidence)
+- ✅ **Memory-Driven Logic** - Ties key moments to actual app memory thresholds, not arbitrary counts
 - ✅ **Live Stance Evolution Chart** - Real-time visualization of agent position changes with Recharts (election-night style)
 - ✅ **Sentiment Analysis with Sparklines** - Real-time confidence scoring with historical trend micro-charts
 - ✅ **Semantic Cache System** - Redis Vector-powered prompt caching with 85% similarity threshold (MAJOR SHOWCASE)
@@ -57,7 +60,7 @@ Navigate to `http://localhost:5173` or `http://127.0.0.1:5173`
 
 ### 1. **Express.js API Server** (`server.js`)
 - **WebSocket Support**: Real-time message broadcasting
-- **REST Endpoints**: `/api/debate/start`, `/api/agent/:id/profile`, `/api/health`
+- **REST Endpoints**: `/api/debate/start`, `/api/agent/:id/profile`, `/api/debate/:id/key-moments`, `/api/health`
 - **CORS Configured**: Supports both localhost and 127.0.0.1 origins
 - **Error Handling**: Graceful shutdown and connection management
 
@@ -93,14 +96,23 @@ TS.ADD debate:live_debate:agent:senatorbot:stance:climate_policy * 0.6
 - **Semantic Search**: COSINE similarity matching
 - **Real-time Verification**: Every agent statement fact-checked
 
-### 6. **Semantic Caching System** (Redis Vector + Hash) - MAJOR SHOWCASE
+### 6. **Key Moments Detection System** (Redis JSON) - INTELLIGENT SHOWCASE
+- **Smart Event Detection**: Automatically identifies significant debate moments based on actual logic
+- **Stance Flip Threshold**: Triggers on agent position changes >0.3 (meaningful shift detection)
+- **Fact Confidence Filter**: Captures questionable claims with <0.7 fact-check confidence
+- **Memory Integration**: Ties to app memory thresholds, not arbitrary message counts
+- **AI Summarization**: GPT-4 powered analysis of each key moment with context
+- **RedisJSON Storage**: `keymoments:{debateId}` with structured metadata and statistics
+- **Real-time Display**: Live sidebar updates via WebSocket with formatted moment cards
+
+### 7. **Semantic Caching System** (Redis Vector + Hash) - MAJOR SHOWCASE
 - **Prompt Caching**: AI responses cached with OpenAI embeddings
 - **Similarity Matching**: 85% threshold for cache hits using COSINE distance
 - **Cost Optimization**: Live tracking of API savings and token reduction
 - **Performance Metrics**: Real-time hit rates, cost savings, and efficiency scores
 - **Vector Index**: `cache-index` with HNSW algorithm for fast retrieval
 
-### 7. **Real-Time Sentiment Analysis** (Redis JSON + TensorFlow.js Ready)
+### 8. **Real-Time Sentiment Analysis** (Redis JSON + TensorFlow.js Ready)
 - **Confidence Scoring**: Advanced rule-based sentiment analysis with confidence values
 - **Historical Sparklines**: Tiny SVG charts showing sentiment trends over time
 - **Redis Storage**: JSON arrays storing confidence history per agent per debate
@@ -185,12 +197,13 @@ OPENAI_API_KEY=sk-proj-...
 ## 🏆 Contest-Winning Architecture
 
 ### Multi-Modal Redis Excellence
-- **RedisJSON**: Complex agent personality storage + cache metrics with nested configurations
+- **RedisJSON**: Complex agent personality storage + cache metrics + Key Moments with intelligent event detection
 - **Redis Streams**: Real-time messaging, private memories, and temporal navigation
 - **RedisTimeSeries**: Stance evolution tracking with performance monitoring  
 - **Redis Vector**: Semantic fact verification + AI response caching with OpenAI embeddings
 
 ### Advanced Demo Features (Contest-Ready)
+- **🧠 Key Moments Detection**: Intelligent RedisJSON storage of significant events (stance flip >0.3, fact confidence <0.7)
 - **🎯 Semantic Caching**: Redis Vector-powered AI response caching with 85% similarity threshold
 - **💰 Cost Optimization**: Live OpenAI API savings tracking with cache hit rates and financial metrics
 - **🚀 Performance Dashboard**: Real-time Redis metrics across all 4 modules + cache performance

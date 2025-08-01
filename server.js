@@ -11,6 +11,7 @@ import { RedisMetricsCollector, generateContestAnalytics } from './advancedMetri
 // import { summarizeDebate } from './summarizeDebateEnhanced.js';
 import { createServer } from 'http';
 import sentimentAnalyzer from './sentimentAnalysis.js';
+import keyMomentsDetector, { processDebateEvent, getKeyMoments, getAllKeyMoments } from './keyMoments.js';
 
 const app = express();
 const server = createServer(app);
@@ -805,6 +806,108 @@ app.post('/api/debate/:id/summarize', async (req, res) => {
     }
 });
 
+// 🔍 KEY MOMENTS API ENDPOINTS - RedisJSON Showcase
+
+// Get key moments for a specific debate
+app.get('/api/debate/:id/key-moments', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const limit = parseInt(req.query.limit) || 10;
+        
+        console.log(`🔍 Fetching key moments for debate: ${id} (limit: ${limit})`);
+        
+        const keyMomentsData = await getKeyMoments(id, limit);
+        
+        res.json({
+            success: true,
+            debateId: id,
+            ...keyMomentsData,
+            timestamp: new Date().toISOString()
+        });
+        
+    } catch (error) {
+        console.error('❌ Error fetching key moments:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch key moments',
+            debateId: req.params.id,
+            moments: [],
+            stats: { total_moments: 0 }
+        });
+    }
+});
+
+// Get all key moments across debates (for analytics view)
+app.get('/api/key-moments/all', async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 20;
+        
+        console.log(`🔍 Fetching all key moments (limit: ${limit})`);
+        
+        const allMoments = await getAllKeyMoments(limit);
+        
+        res.json({
+            success: true,
+            moments: allMoments,
+            total: allMoments.length,
+            timestamp: new Date().toISOString()
+        });
+        
+    } catch (error) {
+        console.error('❌ Error fetching all key moments:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch key moments',
+            moments: [],
+            total: 0
+        });
+    }
+});
+
+// Manually trigger key moment detection for testing
+app.post('/api/debug/key-moment', async (req, res) => {
+    try {
+        const { debateId, agentId, message, factCheckScore, stance } = req.body;
+        
+        console.log('🔧 Manual key moment detection triggered');
+        
+        const result = await processDebateEvent({
+            type: 'manual',
+            debateId,
+            agentId,
+            message,
+            factCheckScore,
+            stance,
+            recentMessages: [] // Could fetch from Redis if needed
+        });
+        
+        if (result.created) {
+            // Broadcast the new key moment
+            broadcast({
+                type: 'key_moment_created',
+                debateId,
+                moment: result.moment,
+                totalMoments: result.totalMoments,
+                timestamp: new Date().toISOString()
+            });
+        }
+        
+        res.json({
+            success: true,
+            ...result,
+            timestamp: new Date().toISOString()
+        });
+        
+    } catch (error) {
+        console.error('❌ Error in manual key moment detection:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to process key moment',
+            created: false
+        });
+    }
+});
+
 // 🔧 ENHANCED METRICS FUNCTION
 function getEnhancedMetrics() {
     const uptimeMs = new Date() - new Date(debateMetrics.startTime);
@@ -953,6 +1056,46 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     } catch (tsError) {
                         console.log(`⚠️ TimeSeries not available for ${stanceKey}`);
                     }
+                }
+
+                // 🔍 KEY MOMENTS DETECTION - Process debate event for significant moments
+                try {
+                    // Get recent messages for context
+                    const recentMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 10 });
+                    const contextMessages = recentMessages.reverse().map(entry => ({
+                        agentId: entry.message.agent_id,
+                        message: entry.message.message,
+                        timestamp: new Date(parseInt(entry.id.split('-')[0])).toISOString()
+                    }));
+
+                    const keyMomentResult = await processDebateEvent({
+                        type: 'new_message',
+                        debateId,
+                        agentId,
+                        message,
+                        factCheckScore: factResult?.score,
+                        stance: {
+                            topic: 'climate_policy',
+                            value: stanceData.newStance,
+                            change: stanceData.change
+                        },
+                        recentMessages: contextMessages
+                    });
+
+                    if (keyMomentResult.created) {
+                        console.log(`🔍 KEY MOMENT CREATED: ${keyMomentResult.moment.type} in debate ${debateId}`);
+                        
+                        // Broadcast key moment to all clients
+                        broadcast({
+                            type: 'key_moment_created',
+                            debateId,
+                            moment: keyMomentResult.moment,
+                            totalMoments: keyMomentResult.totalMoments,
+                            timestamp: new Date().toISOString()
+                        });
+                    }
+                } catch (keyMomentError) {
+                    console.log(`⚠️ Key moment detection failed: ${keyMomentError.message}`);
                 }
 
                 // Broadcast the new message to all clients
@@ -1133,6 +1276,7 @@ server.listen(PORT, () => {
 process.on('SIGINT', async () => {
     console.log('Shutting down server...');
     await sentimentAnalyzer.cleanup();
+    await keyMomentsDetector.disconnect();
     await client.quit();
     server.close();
     process.exit(0);

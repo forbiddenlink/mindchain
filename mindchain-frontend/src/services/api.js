@@ -101,6 +101,23 @@ class MindChainAPI {
     async getCacheMetrics() {
         return this.get('/cache/metrics');
     }
+
+    // 🔍 KEY MOMENTS API METHODS
+
+    // Get key moments for a specific debate
+    async getKeyMoments(debateId, limit = 10) {
+        return this.get(`/debate/${debateId}/key-moments?limit=${limit}`);
+    }
+
+    // Get all key moments across debates
+    async getAllKeyMoments(limit = 20) {
+        return this.get(`/key-moments/all?limit=${limit}`);
+    }
+
+    // Manually trigger key moment detection (for testing)
+    async triggerKeyMoment(data) {
+        return this.post('/debug/key-moment', data);
+    }
 }
 
 export default new MindChainAPI();

@@ -220,7 +220,7 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
     };
 
     return (
-        <div className="h-full flex flex-col max-w-full overflow-hidden">
+        <div className="h-full flex flex-col max-w-full overflow-hidden bg-gradient-to-br from-neutral-900/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-neutral-600/50">
             {/* Header */}
             <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <h2 className="text-xl font-bold text-slate-200 flex items-center gap-2">
