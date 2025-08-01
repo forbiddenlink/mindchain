@@ -1,4 +1,4 @@
-# MindChain Feature Overview
+# StanceStream Feature Overview
 *Contest-Winning Redis AI Challenge Submission*
 
 ## 🏆 **System Status: PRODUCTION READY FOR CONTEST**
@@ -26,7 +26,7 @@
 - **🎯 Cache Hit Celebrations** - Real-time bouncing popup celebrations with "CACHE HIT! Saved $0.002 • 92.1% match"
 - **Live Similarity Scores** - Real-time percentage display with animated trending arrows
 - **Running Cost Savings Counter** - Live total in header: "$0.34 SAVED" with proper spacing
-- **Traditional AI vs MindChain Comparison** - Side-by-side cost bars with real-time savings percentage
+- **Traditional AI vs StanceStream Comparison** - Side-by-side cost bars with real-time savings percentage
 - **Enterprise Projections** - Annual savings projections for medium enterprise scale
 - **Recent Cache Hits Log** - Scrollable history with timestamps, similarity scores, and cost values
 - **Trending Indicators** - Animated arrows showing performance trends (↗ 5.2%, ↗ 12.7%)
@@ -232,7 +232,7 @@
 ## 🎯 **Contest Demonstration Strategy**
 
 ### **Opening (30 seconds)**
-"MindChain demonstrates all 4 Redis modules in a sophisticated AI debate system with semantic caching, intelligent agents, and real-time optimization."
+"StanceStream demonstrates all 4 Redis modules in a sophisticated AI debate system with semantic caching, intelligent agents, and real-time optimization."
 
 ### **Core Demo (3 minutes)**
 1. **Start concurrent debates** showing multi-modal Redis usage

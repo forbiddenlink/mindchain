@@ -3,7 +3,7 @@
 ## 🎯 **FOR CONTEST JUDGES - Redis AI Challenge**
 
 ### **What You're Seeing**
-The **Redis Operations Matrix** is MindChain's showcase of all 4 Redis data models working together in real-time:
+The **Redis Operations Matrix** is StanceStream's showcase of all 4 Redis data models working together in real-time:
 
 - **🔵 RedisJSON** - Complex agent profiles, cache metrics, contest scoring
 - **🟢 Redis Streams** - Real-time message flow, agent memories, strategic insights  
@@ -11,7 +11,7 @@ The **Redis Operations Matrix** is MindChain's showcase of all 4 Redis data mode
 - **🟠 Redis Vector** - Semantic caching, fact-checking, similarity matching
 
 ### **How to Access the Matrix**
-1. **Open MindChain** - Navigate to http://localhost:5173
+1. **Open StanceStream** - Navigate to http://localhost:5173
 2. **Click the MATRIX button** - Green button in the top navigation
 3. **Trigger Demo Operations** - Click "TRIGGER DEMO OPERATIONS" for live showcase
 

@@ -526,7 +526,7 @@ app.get('/api/health', async (req, res) => {
     const health = {
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        server: 'MindChain API',
+        server: 'StanceStream API',
         version: '1.0.0',
         services: {
             redis: 'unknown',
@@ -1680,7 +1680,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
 const PORT = process.env.PORT || 3001;
 
 server.listen(PORT, () => {
-    console.log(`🚀 MindChain API server running on http://localhost:${PORT}`);
+    console.log(`🚀 StanceStream API server running on http://localhost:${PORT}`);
     console.log(`🔌 WebSocket server ready for connections`);
 });
 

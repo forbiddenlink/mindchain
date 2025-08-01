@@ -1,8 +1,8 @@
 #!/bin/bash
-# MindChain Production Demo Setup Script
+# StanceStream Production Demo Setup Script
 # Optimizes system for maximum performance and impressive metrics
 
-echo "🧠 MindChain Production Demo Setup"
+echo "🎯 StanceStream Production Demo Setup"
 echo "=================================="
 echo ""
 
@@ -17,9 +17,9 @@ if [ ! -d "node_modules" ]; then
     npm install
 fi
 
-if [ ! -d "mindchain-frontend/node_modules" ]; then
+if [ ! -d "stancestream-frontend/node_modules" ]; then
     echo "📦 Installing frontend dependencies..."
-    cd mindchain-frontend && npm install && cd ..
+    cd stancestream-frontend && npm install && cd ..
 fi
 
 # Check environment variables
@@ -111,11 +111,11 @@ import('./semanticCache.js').then(({getCacheStats}) => {
 "
 
 echo ""
-echo "🚀 MindChain is ready for production demonstration!"
+echo "🚀 StanceStream is ready for production demonstration!"
 echo ""
 echo "Next steps:"
 echo "1. Terminal 1: node server.js"
-echo "2. Terminal 2: cd mindchain-frontend && npm run dev"
+echo "2. Terminal 2: cd stancestream-frontend && npm run dev"
 echo "3. Browser: http://localhost:5173"
 echo ""
 echo "💡 For best demo results:"

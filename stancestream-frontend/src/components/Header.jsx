@@ -45,7 +45,7 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
                         </div>
                         <div className="flex flex-col min-w-0">
                             <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent font-mono tracking-wider">
-                                MINDCHAIN
+                                STANCESTREAM
                             </h1>
                             <p className="text-gray-400 text-xs sm:text-sm lg:text-base font-medium font-mono">
                                 REDIS AI CHALLENGE 2025

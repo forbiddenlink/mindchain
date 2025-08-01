@@ -1,6 +1,6 @@
-# 🧠 MindChain – Real-Time Multi-Agent AI Debate Engine
+# 🎯 StanceStream – Real-Time Multi-Agent AI Debate Engine
 
-**MindChain** is a production-ready AI policy debate simulator powered by Redis. Each AI agent is capable of:
+**StanceStream** is a production-ready AI policy debate simulator powered by Redis. Each AI agent is capable of:
 - Holding a persistent profile (RedisJSON)
 - Logging and recalling memories (Redis Streams)
 - Evolving positions in real-time (RedisTimeSeries)
@@ -43,7 +43,7 @@ chmod +x setup-demo.sh && ./setup-demo.sh
 ```bash
 # 1. Install dependencies
 pnpm install
-cd mindchain-frontend && pnpm install && cd ..
+cd stancestream-frontend; pnpm install; cd ..
 
 # 2. Initialize Redis indices and optimize performance
 node vectorsearch.js
@@ -54,7 +54,7 @@ node presentationOptimizer.js
 
 # 3. Start the system
 # Terminal 1: node server.js
-# Terminal 2: cd mindchain-frontend && pnpm dev
+# Terminal 2: cd stancestream-frontend; pnpm dev
 # Browser: http://localhost:5173
 ```
 
@@ -209,7 +209,7 @@ OPENAI_API_KEY=sk-proj-...
 ## 🎮 Demo Workflow
 
 1. **Start Backend**: `node server.js` (Terminal 1)
-2. **Start Frontend**: `cd mindchain-frontend && pnpm dev` (Terminal 2)
+2. **Start Frontend**: `cd stancestream-frontend; pnpm dev` (Terminal 2)
 3. **Open Browser**: `http://localhost:5173`
 4. **Watch Connections**: Green indicators = system ready
 5. **Enhanced Features**:

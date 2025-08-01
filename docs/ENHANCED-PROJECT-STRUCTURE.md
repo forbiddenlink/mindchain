@@ -1,9 +1,9 @@
-# MindChain Project Structure - Enhanced Architecture
+# StanceStream Project Structure - Enhanced Architecture
 
 ## 📁 Updated Frontend Structure
 
 ```
-mindchain-frontend/src/
+stancestream-frontend/src/
 ├── 🏠 App.jsx                          # Main application with enhanced layout
 ├── 🎯 main.jsx                         # React entry point
 ├── 🎨 App.css                          # Global styles

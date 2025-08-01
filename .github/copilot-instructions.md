@@ -1,7 +1,7 @@
-# MindChain AI Copilot Instructions
+# StanceStream AI Copilot Instructions
 
 ## Project Overview
-MindChain is a **production-ready multi-agent AI debate engine** built for the Redis AI Challenge (August 10, 2025). It showcases all 4 Redis data models through real-time political debates between intelligent AI agents with persistent personalities, memory, fact-checking, and business intelligence.
+StanceStream is a **production-ready multi-agent AI debate engine** built for the Redis AI Challenge (August 10, 2025). It showcases all 4 Redis data models through real-time political debates between intelligent AI agents with persistent personalities, memory, fact-checking, and business intelligence.
 
 **🏆 STATUS: PRODUCTION-READY CONTEST SUBMISSION**
 - ✅ **Express.js + WebSocket Server** - Real-time concurrent debate support with enterprise-grade reliability
@@ -127,9 +127,9 @@ React components use `useWebSocket` hook for real-time state management.
 
 ### Production Setup (REQUIRED SEQUENCE)
 ```bash
-# 1. Install dependencies
+# Install dependencies
 pnpm install
-cd mindchain-frontend && pnpm install && cd ..
+cd stancestream-frontend; pnpm install; cd ..
 
 # 2. Create Redis vector indices (MUST run first)
 node vectorsearch.js       # Creates facts-index
@@ -142,7 +142,7 @@ node presentationOptimizer.js  # Optimizes for demo performance
 
 # 4. Start production services
 node server.js             # Backend (port 3001)
-cd mindchain-frontend && pnpm dev  # Frontend (port 5173)
+cd stancestream-frontend; pnpm dev  # Frontend (port 5173)
 ```
 
 ### Key System Files

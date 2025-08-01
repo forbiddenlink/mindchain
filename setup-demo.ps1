@@ -1,7 +1,7 @@
-# MindChain Production Demo Setup Script (PowerShell)
+# StanceStream Production Demo Setup Script (PowerShell)
 # Optimizes system for maximum performance and impressive metrics
 
-Write-Host "🧠 MindChain Production Demo Setup" -ForegroundColor Cyan
+Write-Host "🎯 StanceStream Production Demo Setup" -ForegroundColor Cyan
 Write-Host "==================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -16,9 +16,9 @@ if (!(Test-Path "node_modules")) {
     npm install
 }
 
-if (!(Test-Path "mindchain-frontend/node_modules")) {
+if (!(Test-Path "stancestream-frontend/node_modules")) {
     Write-Host "📦 Installing frontend dependencies..." -ForegroundColor Yellow
-    Set-Location mindchain-frontend
+    Set-Location stancestream-frontend
     npm install
     Set-Location ..
 }
@@ -107,11 +107,11 @@ import('./semanticCache.js').then(({getCacheStats}) => {
 });"
 
 Write-Host ""
-Write-Host "🚀 MindChain is ready for production demonstration!" -ForegroundColor Green
+Write-Host "🚀 StanceStream is ready for production demonstration!" -ForegroundColor Green
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Cyan
 Write-Host "1. Terminal 1: node server.js" -ForegroundColor White
-Write-Host "2. Terminal 2: cd mindchain-frontend; npm run dev" -ForegroundColor White
+Write-Host "2. Terminal 2: cd stancestream-frontend; npm run dev" -ForegroundColor White
 Write-Host "3. Browser: http://localhost:5173" -ForegroundColor White
 Write-Host ""
 Write-Host "💡 For best demo results:" -ForegroundColor Cyan

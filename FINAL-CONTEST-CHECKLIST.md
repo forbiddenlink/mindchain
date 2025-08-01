@@ -6,7 +6,7 @@
 ### **System Health Check**
 - [ ] Run `node quickTest.js` - Verify 99%+ cache hit rate
 - [ ] Start backend: `node server.js` 
-- [ ] Start frontend: `cd mindchain-frontend && pnpm dev`
+- [ ] Start frontend: `cd stancestream-frontend && pnpm dev`
 - [ ] Test WebSocket connection (green indicators)
 - [ ] Verify all 4 Redis modules responding
 
@@ -19,7 +19,7 @@
 ## 🎯 **Winning Demo Script (5 minutes)**
 
 ### **Opening Hook (30 seconds)**
-"MindChain achieves a **99.1% cache hit rate** using Redis Vector search for semantic AI response caching. This isn't just a demo - it's a production system saving real money."
+"StanceStream achieves a **99.1% cache hit rate** using Redis Vector search for semantic AI response caching. This isn't just a demo - it's a production system saving real money."
 
 ### **Technical Excellence (2 minutes)**
 1. **Open Contest Showcase with Live Performance Overlay**

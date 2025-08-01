@@ -6,7 +6,7 @@
 Add these badges at the top of your README:
 
 ```markdown
-# 🧠 MindChain – Redis AI Challenge Winner 🏆
+# 🎯 StanceStream – Redis AI Challenge Winner 🏆
 
 [![Redis AI Challenge](https://img.shields.io/badge/Redis_AI_Challenge-2025-red.svg)](https://dev.to/challenges/redis)
 [![Contest Category](https://img.shields.io/badge/Category-Real--Time_AI_Innovators-blue.svg)](https://dev.to/challenges/redis)
@@ -223,7 +223,7 @@ Standard professional code of conduct for open source projects.
 
 ## 🏆 Redis AI Challenge 2025
 
-**MindChain** is our submission to the Redis AI Challenge, demonstrating innovative use of Redis as an intelligent data platform for AI applications.
+**StanceStream** is our submission to the Redis AI Challenge, demonstrating innovative use of Redis as an intelligent data platform for AI applications.
 
 **🔗 Contest Links:**
 - 📝 [DEV Post Submission](your-dev-post-link)

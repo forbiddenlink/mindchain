@@ -1,9 +1,9 @@
-# MindChain Technical Documentation
+# StanceStream Technical Documentation
 *Redis AI Challenge ├── 📊 StanceEvolutionChart.jsx # Real-time stance visualization with Recharts
     │   ├── 📊 EnhancedPerformanceDashboard.jsx # Advanced Redis +## 🎯 Semantic Cache Engine Dashboard - Business Value Showcase
 
 ### **Enhanced Layout Integration**
-The `LivePerformanceOverlay` component now supports both embedded layout integration and floating overlay modes, showcasing MindChain's semantic caching business value with adaptive visualizations and real-time metrics.
+The `LivePerformanceOverlay` component now supports both embedded layout integration and floating overlay modes, showcasing StanceStream's semantic caching business value with adaptive visualizations and real-time metrics.
 
 ### **Responsive Layout Modes**
 ```javascript
@@ -42,7 +42,7 @@ const getContainerClasses = () => {
 
 ### **Root Directory**
 ```
-mindchain/
+stancestream/
 ├── 📄 README.md                    # Main project documentation
 ├── ⚙️ package.json                 # Node.js dependencies & scripts
 ├── 🔒 .env                         # Environment variables (Redis, OpenAI)
@@ -71,7 +71,7 @@ mindchain/
 
 ### **Frontend Application**
 ```
-mindchain-frontend/
+stancestream-frontend/
 ├── 📄 package.json                # React + Vite dependencies
 ├── ⚙️ vite.config.js              # Vite build configuration
 ├── 🎨 tailwind.config.js          # Tailwind CSS setup
@@ -106,7 +106,7 @@ mindchain-frontend/
 ## 🔄 Message Generation Architecture
 
 ### **Enterprise-Grade Message Flow**
-MindChain implements a sophisticated message generation architecture that separates AI generation from data persistence, ensuring enterprise-grade reliability and eliminating race conditions.
+StanceStream implements a sophisticated message generation architecture that separates AI generation from data persistence, ensuring enterprise-grade reliability and eliminating race conditions.
 
 ### **Standard AI Generation Functions**
 ```javascript
@@ -188,7 +188,7 @@ setTimeout(() => runDebateRounds(debateId, agents, topic), 2000);
 ## 🎯 Semantic Cache System (MAJOR SHOWCASE)
 
 ### **Feature Overview**
-The semantic caching system is MindChain's **biggest Redis showcase feature**, demonstrating advanced Vector Search capabilities for AI response optimization. It caches OpenAI GPT-4 responses based on prompt similarity using embeddings and COSINE distance matching.
+The semantic caching system is StanceStream's **biggest Redis showcase feature**, demonstrating advanced Vector Search capabilities for AI response optimization. It caches OpenAI GPT-4 responses based on prompt similarity using embeddings and COSINE distance matching.
 
 ### **Core Architecture**
 ```javascript
@@ -244,7 +244,7 @@ Index: cache-index
 ## � Live Performance Overlay - Business Value Showcase
 
 ### **Enhanced Semantic Caching Display**
-The `LivePerformanceOverlay` component showcases MindChain's semantic caching business value with compelling visualizations, real-time metrics, trending arrows, and professional mission control aesthetics.
+The `LivePerformanceOverlay` component showcases StanceStream's semantic caching business value with compelling visualizations, real-time metrics, trending arrows, and professional mission control aesthetics.
 
 ### **Component Features**
 - **Embedded Layout Mode**: Integrates seamlessly into the main application layout instead of floating overlay
@@ -316,7 +316,7 @@ const MetricDisplay = ({ label, value, unit, icon, color, trend, ... }) => (
 ### **Business Value Features**
 - **🎯 Cache Hit Celebrations** - 3-second animated popups showing "CACHE HIT! Saved $0.002 • 92.1% match"
 - **💰 Running Cost Counter** - Live total in header: "${runningTotal.toFixed(2)} SAVED"
-- **📊 Traditional vs MindChain Comparison** - Side-by-side cost bars with percentage savings
+- **📊 Traditional vs StanceStream Comparison** - Side-by-side cost bars with percentage savings
 - **📈 Enterprise Projections** - Annual savings display for medium enterprise scale
 - **📝 Recent Cache Hits Log** - Scrollable history with timestamps and similarity scores
 - **🎛️ Live Similarity Tracking** - Real-time percentage display with pulse animations
@@ -455,7 +455,7 @@ const iconMap = {
 ```bash
 # 1. Install dependencies
 pnpm install
-cd mindchain-frontend && pnpm install
+cd stancestream-frontend && pnpm install
 
 # 2. Configure environment variables
 cp .env.example .env
@@ -476,13 +476,13 @@ node addReformer.js       # Creates ReformerBot
 node server.js            # Port 3001
 
 # Start frontend development (Terminal 2)
-cd mindchain-frontend && pnpm dev  # Port 5173
+cd stancestream-frontend && pnpm dev  # Port 5173
 ```
 
 ### **Production Deployment**
 ```bash
 # Build frontend for production
-cd mindchain-frontend && pnpm build
+cd stancestream-frontend && pnpm build
 
 # Start production server
 npm run start
@@ -530,4 +530,4 @@ node -e "import('redis').then(({createClient})=>{const c=createClient({url:proce
 
 ---
 
-*This technical documentation covers the core architecture and implementation details of the MindChain system, designed for the Redis AI Challenge contest submission.*
+*This technical documentation covers the core architecture and implementation details of the StanceStream system, designed for the Redis AI Challenge contest submission.*

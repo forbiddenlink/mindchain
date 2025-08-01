@@ -1,16 +1,16 @@
 {
-  "name": "mindchain",
+  "name": "stancestream",
   "type": "module",
   "version": "1.0.0",
-  "description": "",
+  "description": "Real-Time Multi-Agent AI Debate Engine - Production-ready contest submission showcasing all 4 Redis data models",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "node server.js",
-    "setup": "node vectorsearch.js && node index.js && node addReformer.js",
-    "frontend": "cd mindchain-frontend && pnpm dev",
-    "build": "cd mindchain-frontend && pnpm build"
+    "setup": "node vectorsearch.js; node index.js; node addReformer.js",
+    "frontend": "cd stancestream-frontend && pnpm dev",
+    "build": "cd stancestream-frontend && pnpm build"
   },
   "keywords": [],
   "author": "",

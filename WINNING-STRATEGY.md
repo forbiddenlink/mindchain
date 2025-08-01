@@ -1,10 +1,10 @@
-# 🏆 MindChain: Redis AI Challenge Winning Strategy
+# 🏆 StanceStream: Redis AI Challenge Winning Strategy
 
 ## Executive Summary
 
-**MindChain** represents the perfect intersection of technical innovation and real business value. Our Redis-powered AI debate simulation delivers **quantifiable ROI** while showcasing sophisticated multi-modal Redis usage that judges will recognize as genuinely innovative.
+**StanceStream** represents the perfect intersection of technical innovation and real business value. Our Redis-powered AI debate simulation delivers **quantifiable ROI** while showcasing sophisticated multi-modal Redis usage that judges will recognize as genuinely innovative.
 
-### Why MindChain Will Win
+### Why StanceStream Will Win
 
 **1. Genuine Innovation (40% of scoring)**
 - **Semantic Caching Breakthrough**: 66.7% cache hit rates with Redis Vector search
@@ -146,4 +146,4 @@
 
 ---
 
-*MindChain isn't just a contest entry—it's a production-ready system that demonstrates how Redis can power the next generation of intelligent applications with measurable business impact.*
+*StanceStream isn't just a contest entry—it's a production-ready system that demonstrates how Redis can power the next generation of intelligent applications with measurable business impact.*

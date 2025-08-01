@@ -1,10 +1,10 @@
-# MindChain DEV Post Template
+# StanceStream DEV Post Template
 # Redis AI Challenge - Contest-Winning Submission
 
 ## 🏆 **Post Title Options**
 
 ### **Primary (Real-Time AI Innovators):**
-"MindChain: Redis-Powered AI Debate Engine Saving $47/Month with Semantic Vector Caching"
+"StanceStream: Redis-Powered AI Debate Engine Saving $47/Month with Semantic Vector Caching"
 
 ### **Secondary (Beyond the Cache):**
 "How I Built a Multi-Agent AI System Using All 4 Redis Modules (Production-Ready Architecture)"
@@ -12,7 +12,7 @@
 ## 📝 **Post Structure Template**
 
 ### **Opening Hook**
-> 🧠 What if AI applications could cache intelligently, remember everything, and process thousands of concurrent requests? Meet **MindChain** - the Redis-powered debate engine that's currently **saving $47/month in OpenAI API costs** with a **70% cache hit rate**.
+> 🎯 What if AI applications could cache intelligently, remember everything, and process thousands of concurrent requests? Meet **StanceStream** - the Redis-powered debate engine that's currently **saving $47/month in OpenAI API costs** with a **70% cache hit rate**.
 > 
 > This isn't just another chatbot. It's a production-ready multi-agent system that demonstrates what happens when you combine Redis mastery with AI innovation.
 
@@ -22,7 +22,7 @@ AI applications today face three critical challenges:
 - 🐌 **Slow response times** (2-5 seconds per request)
 - 🧠 **Limited memory** (stateless interactions)
 
-Most solutions treat these as separate problems. **MindChain solves all three with Redis as the intelligent data layer.**
+Most solutions treat these as separate problems. **StanceStream solves all three with Redis as the intelligent data layer.**
 
 ### **Demo Video Embed**
 {% embed https://your-demo-video-url %}
@@ -172,7 +172,7 @@ Most submissions focus on simple use cases:
 - Single-purpose recommendation engines
 - Standard analytics dashboards
 
-**MindChain demonstrates Redis mastery** with:
+**StanceStream demonstrates Redis mastery** with:
 - Complex multi-modal data relationships
 - Real-time optimization and monitoring
 - Innovative caching with measurable ROI
