@@ -11,7 +11,7 @@ import KeyMomentsPanel from './components/KeyMomentsPanel';
 import BusinessValueDashboard from './components/BusinessValueDashboard';
 import ContestShowcaseDashboard from './components/ContestShowcaseDashboard';
 import Icon from './components/Icon';
-import { ViewModeSelector, ToastProvider, useNotification } from './components/ui';
+import { ViewModeSelector, ToastProvider, useNotification, Container, Stack, Grid } from './components/ui';
 import useWebSocket from './hooks/useWebSocket';
 import api from './services/api';
 
@@ -328,15 +328,15 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col animate-fade-in-up overflow-x-hidden">
       <Header connectionStatus={connectionStatus} backendHealth={connectionHealth} />
 
       {/* Enhanced Controls Bar - Improved Visual Hierarchy */}
-      <div className="flex-shrink-0 border-b border-slate-700/50 bg-gradient-to-r from-slate-800/40 via-slate-800/30 to-slate-800/40 backdrop-blur-md">
-        <div className="container mx-auto px-4 py-3 max-w-7xl">
-          <div className="flex flex-col gap-4">
+      <div className="flex-shrink-0 border-b border-slate-700/50 bg-gradient-to-r from-slate-800/40 via-slate-800/30 to-slate-800/40 backdrop-blur-md overflow-x-hidden">
+        <Container maxWidth="max-w-7xl" padding="px-2 sm:px-4 py-3">
+          <Stack spacing="space-y-4">
             {/* Top Row: Enhanced Controls - Full Width */}
-            <div className="w-full">
+            <div className="w-full animate-slide-in-left">
               <EnhancedControls
                 viewMode={viewMode}
                 activeDebates={activeDebates}
@@ -362,45 +362,83 @@ export default function App() {
             </div>
 
             {/* Bottom Row: Mode Toggle + Enhanced Quick Stats */}
-            <div className="flex items-center justify-between">
-              {/* Left: Enhanced Quick Stats with Better Visual Design */}
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+              {/* Left: Enhanced Quick Stats with System Health - More Space */}
+              <div className="flex items-center gap-3 flex-1 w-full lg:w-auto overflow-hidden">
                 <div className="flex items-center gap-3 text-sm">
-                  <div className="text-center px-3 py-2 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                  <div className="text-center px-3 py-2 bg-blue-500/10 rounded-lg border border-blue-500/20 flex-shrink-0">
                     <div className="text-lg font-bold text-blue-400">{activeDebates.size}</div>
-                    <div className="text-xs text-gray-400">Active Sessions</div>
+                    <div className="text-xs text-gray-400">Sessions</div>
                   </div>
-                  <div className="text-center px-3 py-2 bg-green-500/10 rounded-lg border border-green-500/20">
+                  <div className="text-center px-3 py-2 bg-green-500/10 rounded-lg border border-green-500/20 flex-shrink-0">
                     <div className="text-lg font-bold text-green-400">{debateMessages.length}</div>
                     <div className="text-xs text-gray-400">Messages</div>
                   </div>
-                  <div className="text-center px-3 py-2 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                  <div className="text-center px-3 py-2 bg-purple-500/10 rounded-lg border border-purple-500/20 flex-shrink-0">
                     <div className="text-lg font-bold text-purple-400">{factChecks.length}</div>
-                    <div className="text-xs text-gray-400">Fact Checks</div>
+                    <div className="text-xs text-gray-400">Facts</div>
                   </div>
-                </div>
-
-                {/* System Health Indicator */}
-                <div className="flex items-center gap-2 px-3 py-2 bg-slate-700/30 rounded-lg border border-slate-600/30">
-                  <div className={`w-2 h-2 rounded-full ${connectionStatus === 'Connected' && connectionHealth === 'healthy'
-                      ? 'bg-emerald-400 animate-pulse'
-                      : 'bg-red-400'
-                    }`}></div>
-                  <span className="text-xs text-gray-400">
-                    {connectionStatus === 'Connected' && connectionHealth === 'healthy' ? 'System Online' : 'System Issues'}
-                  </span>
+                  {/* System Health Indicator - Integrated with stats */}
+                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-700/30 rounded-lg border border-slate-600/30 flex-shrink-0">
+                    <div className={`w-2 h-2 rounded-full ${connectionStatus === 'Connected' && connectionHealth === 'healthy'
+                        ? 'bg-emerald-400 animate-pulse'
+                        : 'bg-red-400'
+                      }`}></div>
+                    <span className="text-xs text-gray-400 whitespace-nowrap">
+                      {connectionStatus === 'Connected' && connectionHealth === 'healthy' ? 'Online' : 'Issues'}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              {/* Right: Professional View Mode Selector */}
-              <ViewModeSelector 
-                currentMode={viewMode}
-                onModeChange={setViewMode}
-                className="ml-auto"
-              />
+              {/* Right: Compact View Mode Selector */}
+              <div className="flex-shrink-0 w-full lg:w-auto mt-2 lg:mt-0">
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setViewMode('standard')}
+                    className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${
+                      viewMode === 'standard'
+                        ? 'bg-blue-600/30 border-blue-500/30 text-blue-200 shadow-lg'
+                        : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-blue-600/20 hover:border-blue-500/20'
+                    }`}
+                  >
+                    Standard
+                  </button>
+                  <button
+                    onClick={() => setViewMode('multi-debate')}
+                    className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${
+                      viewMode === 'multi-debate'
+                        ? 'bg-purple-600/30 border-purple-500/30 text-purple-200 shadow-lg'
+                        : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-purple-600/20 hover:border-purple-500/20'
+                    }`}
+                  >
+                    Multi-Debate
+                  </button>
+                  <button
+                    onClick={() => setViewMode('analytics')}
+                    className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${
+                      viewMode === 'analytics'
+                        ? 'bg-green-600/30 border-green-500/30 text-green-200 shadow-lg'
+                        : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-green-600/20 hover:border-green-500/20'
+                    }`}
+                  >
+                    Analytics
+                  </button>
+                  <button
+                    onClick={() => setViewMode('contest-showcase')}
+                    className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 ${
+                      viewMode === 'contest-showcase'
+                        ? 'bg-gradient-to-r from-yellow-600/30 to-orange-600/30 border-yellow-500/30 text-yellow-200 shadow-lg'
+                        : 'bg-slate-700/30 border-slate-600/30 text-slate-300 hover:bg-gradient-to-r hover:from-yellow-600/20 hover:to-orange-600/20 hover:border-yellow-500/20'
+                    }`}
+                  >
+                    Contest
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </Stack>
+        </Container>
       </div>
 
       {/* Dynamic Main Content Based on View Mode */}

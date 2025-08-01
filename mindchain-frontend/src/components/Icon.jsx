@@ -55,7 +55,9 @@ import {
     Minimize2,
     Award,
     Star,
-    RefreshCw
+    RefreshCw,
+    User,
+    ShieldCheck
 } from 'lucide-react';
 
 // Icon mapping for topics and general use
@@ -72,6 +74,9 @@ const iconMap = {
     
     // Action icons
     'analytics': BarChart3,
+    'bar-chart': BarChart3,  // Add alias for bar-chart
+    'chart': BarChart3,      // Additional alias
+    'stats': BarChart3,      // Additional alias
     'search': Search,
     'loading': Loader2,
     'loader': Loader2,  // Add alias for loading
@@ -116,6 +121,12 @@ const iconMap = {
     'group': Users2,
     'announce': Megaphone,
     'speak': Mic,
+    
+    // Missing icon mappings
+    'user': User,
+    'message-circle': MessageCircle,
+    'shield-check': ShieldCheck,
+    'trending-up': TrendingUp,
     
     // Chart and UI controls
     'maximize2': Maximize2,
