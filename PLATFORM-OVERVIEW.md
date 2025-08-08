@@ -1,6 +1,33 @@
-# 🌟 StanceStream Platform Overview
+# 🌟 StanceStream Platform Overview & Setup Guide
 
 **Next-Generation AI Intelligence Platform for Enterprise Decision Making**
+
+## 📋 Prerequisites & System Requirements
+
+### Technical Requirements
+- **Node.js** 18+ with npm/pnpm package manager
+- **Redis** 6.2+ with all modules enabled (JSON, Streams, TimeSeries, Vector/RediSearch)
+- **OpenAI API Key** for GPT-4 and text-embedding-ada-002
+
+### Environment Setup
+```bash
+# Required environment variables
+REDIS_URL=redis://default:<password>@<host>:<port>
+OPENAI_API_KEY=sk-proj-...
+```
+
+### Quick Start (Automated)
+```powershell
+# Windows PowerShell - Complete setup and optimization
+.\setup-platform.ps1
+```
+
+```bash
+# Linux/Mac - Complete setup and optimization  
+chmod +x setup-platform.sh && ./setup-platform.sh
+```
+
+---
 
 ## 🎯 Platform Vision
 

@@ -7,7 +7,7 @@ import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
 import { WebSocketServer } from 'ws';
 import redisManager from './redisManager.js';
-import { generateMessage, generateMessageOnly, cleanup as generateMessageCleanup } from './generateMessage.js';
+import { generateMessage, generateMessageOnly } from './generateMessage.js';
 import { findClosestFact } from './factChecker.js';
 import { generateEnhancedMessage, generateEnhancedMessageOnly, updateStanceBasedOnDebate } from './enhancedAI.js';
 import { RedisMetricsCollector, generateContestAnalytics } from './advancedMetrics.js';
@@ -1946,7 +1946,7 @@ const gracefulShutdown = async (signal) => {
         // Cleanup services
         await sentimentAnalyzer.cleanup();
         await keyMomentsDetector.disconnect();
-        await generateMessageCleanup(); // Add Redis pool cleanup
+        // Redis cleanup handled by centralized manager below
         if (optimizationCleanup) optimizationCleanup();
         if (contestMetricsCleanup) contestMetricsCleanup();
         if (performanceInterval) clearInterval(performanceInterval);
