@@ -110,23 +110,11 @@ try {
 // Start Redis performance optimization engine - DISABLED FOR MANUAL CONTROL
 let optimizationCleanup = null;
 // Optimization disabled by default to reduce background noise
-// try {
-//     optimizationCleanup = await startOptimization();
-//     console.log('🚀 Redis performance optimizer started');
-// } catch (optimizerError) {
-//     console.log('⚠️ Redis optimizer failed to start, continuing without optimization:', optimizerError.message);
-// }
 console.log('⏸️ Redis optimizer disabled - use API endpoints to enable manually');
 
 // Start platform metrics collection - DISABLED FOR MANUAL CONTROL
 let contestMetricsCleanup = null;
 // Contest metrics disabled by default to reduce background noise
-// try {
-//     contestMetricsCleanup = await startContestMetrics();
-//     console.log('🏆 Contest metrics engine started');
-// } catch (metricsError) {
-//     console.log('⚠️ Contest metrics failed to start, continuing without contest tracking:', metricsError.message);
-// }
 console.log('⏸️ Platform metrics disabled - use Analytics view to enable manually');
 
 // Store active WebSocket connections
@@ -178,7 +166,7 @@ const lastMessageTimestamps = new Map(); // agentId -> timestamp
 
 // Global debate start cooldown to prevent rapid-fire starts
 let lastGlobalDebateStart = 0;
-const DEBATE_START_COOLDOWN = 1000; // 1 second minimum between any debate starts
+const DEBATE_START_COOLDOWN = 100; // Reduced to 100ms for testing
 
 // Enhanced debate metrics for analytics
 const debateMetrics = {
@@ -376,10 +364,33 @@ app.post('/api/agent/:id/update', async (req, res) => {
     }
 });
 
+// Enhanced input sanitization function for XSS prevention
+function sanitizeInput(input) {
+    if (typeof input !== 'string') return input;
+    return input
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;')
+        .replace(/\//g, '&#x2F;')
+        .replace(/javascript:/gi, '') // Remove javascript: protocol
+        .replace(/data:/gi, '') // Remove data: protocol
+        .replace(/vbscript:/gi, '') // Remove vbscript: protocol
+        .replace(/on\w+\s*=/gi, '') // Remove HTML event handlers (onclick, onerror, etc.)
+        .trim()
+        .substring(0, 1000); // Limit length to prevent DoS
+}
+
 // Start a new debate - ENHANCED FOR MULTI-DEBATE SUPPORT
 app.post('/api/debate/start', async (req, res) => {
     try {
         const { debateId = `debate_${Date.now()}`, topic = 'climate change policy', agents = ['senatorbot', 'reformerbot'] } = req.body;
+
+        // Sanitize inputs to prevent XSS attacks
+        const sanitizedTopic = sanitizeInput(topic);
+        const sanitizedDebateId = sanitizeInput(debateId);
+        const sanitizedAgents = Array.isArray(agents) ? agents.map(agent => sanitizeInput(agent)) : ['senatorbot', 'reformerbot'];
 
         // Global cooldown check
         const now = Date.now();
@@ -395,7 +406,7 @@ app.post('/api/debate/start', async (req, res) => {
         lastGlobalDebateStart = now;
 
         // Generate unique debate ID if not provided
-        const uniqueDebateId = debateId === 'live_debate' ? `debate_${Date.now()}` : debateId;
+        const uniqueDebateId = sanitizedDebateId === 'live_debate' ? `debate_${Date.now()}` : sanitizedDebateId;
 
         // Check if specific debate is already running
         if (activeDebates.has(uniqueDebateId)) {
@@ -408,7 +419,7 @@ app.post('/api/debate/start', async (req, res) => {
             });
         }
 
-        console.log(`🎯 Starting debate: ${uniqueDebateId} on topic: ${topic}`);
+        console.log(`🎯 Starting debate: ${uniqueDebateId} on topic: ${sanitizedTopic}`);
 
         // Update metrics
         debateMetrics.totalDebatesStarted++;
@@ -416,8 +427,8 @@ app.post('/api/debate/start', async (req, res) => {
 
         // Mark debate as active
         activeDebates.set(uniqueDebateId, {
-            topic,
-            agents,
+            topic: sanitizedTopic,
+            agents: sanitizedAgents,
             startTime: new Date().toISOString(),
             status: 'running',
             messageCount: 0,
@@ -428,8 +439,8 @@ app.post('/api/debate/start', async (req, res) => {
         broadcast({
             type: 'debate_started',
             debateId: uniqueDebateId,
-            topic,
-            agents,
+            topic: sanitizedTopic,
+            agents: sanitizedAgents,
             timestamp: new Date().toISOString(),
             totalActive: activeDebates.size
         });
@@ -438,7 +449,7 @@ app.post('/api/debate/start', async (req, res) => {
         const debateProcess = { cancelled: false };
         runningDebateProcesses.set(uniqueDebateId, debateProcess);
         
-        runDebateRounds(uniqueDebateId, agents, topic).finally(() => {
+        runDebateRounds(uniqueDebateId, sanitizedAgents, sanitizedTopic).finally(() => {
             // Remove from active debates when finished
             activeDebates.delete(uniqueDebateId);
             runningDebateProcesses.delete(uniqueDebateId);
@@ -457,8 +468,8 @@ app.post('/api/debate/start', async (req, res) => {
         res.json({
             success: true,
             debateId: uniqueDebateId,
-            topic,
-            agents,
+            topic: sanitizedTopic,
+            agents: sanitizedAgents,
             message: 'Debate started successfully',
             activeDebates: activeDebates.size
         });
@@ -702,6 +713,55 @@ app.get('/api/debates/active', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching active debates:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Get debate status (alias for active debates)
+app.get('/api/debate/status', async (req, res) => {
+    try {
+        const activeDebatesList = Array.from(activeDebates.entries()).map(([id, data]) => ({
+            debateId: id,
+            ...data,
+            duration: Math.floor((new Date() - new Date(data.startTime)) / 1000) + 's'
+        }));
+
+        res.json({
+            debates: activeDebatesList,
+            totalActive: activeDebates.size,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Error fetching debate status:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Get all agents list
+app.get('/api/agents', async (req, res) => {
+    try {
+        const agents = [
+            {
+                id: 'senatorbot',
+                name: 'SenatorBot',
+                description: 'Conservative political AI agent',
+                status: 'active'
+            },
+            {
+                id: 'reformerbot', 
+                name: 'ReformerBot',
+                description: 'Progressive reform-focused AI agent',
+                status: 'active'
+            }
+        ];
+
+        res.json({
+            agents,
+            totalAgents: agents.length,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Error fetching agents:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
