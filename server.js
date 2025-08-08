@@ -1147,7 +1147,6 @@ app.get('/api/analytics/performance', async (req, res) => {
         });
     }
 });
-});
 
 // Business intelligence and ROI summary
 app.get('/api/business/summary', async (req, res) => {
