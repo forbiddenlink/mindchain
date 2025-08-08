@@ -207,8 +207,8 @@ class SemanticCache {
                 metrics.cache_misses++;
             }
 
-            // Calculate hit ratio
-            metrics.hit_ratio = (metrics.cache_hits / metrics.total_requests) * 100;
+            // Calculate hit ratio (as decimal for consistency)
+            metrics.hit_ratio = metrics.cache_hits / metrics.total_requests;
             metrics.last_updated = now;
 
             // Store updated metrics
@@ -216,7 +216,7 @@ class SemanticCache {
                 await client.json.set(this.metricsKey, '.', metrics);
             });
 
-            console.log(`📊 Cache metrics updated: ${metrics.cache_hits}/${metrics.total_requests} (${metrics.hit_ratio.toFixed(1)}%)`);
+            console.log(`📊 Cache metrics updated: ${metrics.cache_hits}/${metrics.total_requests} (${(metrics.hit_ratio * 100).toFixed(1)}%)`);
 
         } catch (error) {
             console.error('Error updating cache metrics:', error);

@@ -66,7 +66,11 @@ async function quickTest() {
         try {
             const { generateMessage } = await import('./generateMessage.js');
             const testMessage = await generateMessage('senatorbot', 'quick-test', 'climate policy');
-            console.log(`✅ Message generated: "${testMessage.substring(0, 50)}..."`);
+            if (typeof testMessage === 'string') {
+                console.log(`✅ Message generated: "${testMessage.substring(0, 50)}..."`);
+            } else {
+                console.log(`✅ Message generated: ${JSON.stringify(testMessage).substring(0, 50)}...`);
+            }
         } catch (error) {
             console.log(`❌ Message generation failed: ${error.message}`);
         }
