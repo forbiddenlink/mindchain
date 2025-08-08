@@ -163,7 +163,7 @@ curl -w "%{time_total}s\n" http://localhost:3001/api/optimization/metrics
 ### Contingency Planning
 
 - [ ] **Backup slides** ready if live demo fails
-- [ ] **Video recording** of successful demo as fallback
+- [ ] **Platform screenshots** of successful demo as fallback
 - [ ] **Key metrics documented** to discuss even without live data
 - [ ] **Phone hotspot** configured as internet backup
 

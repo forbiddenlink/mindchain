@@ -6,7 +6,7 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
 import { WebSocketServer } from 'ws';
-import { createClient } from 'redis';
+import redisManager from './redisManager.js';
 import { generateMessage, generateMessageOnly, cleanup as generateMessageCleanup } from './generateMessage.js';
 import { findClosestFact } from './factChecker.js';
 import { generateEnhancedMessage, generateEnhancedMessageOnly, updateStanceBasedOnDebate } from './enhancedAI.js';
@@ -78,45 +78,17 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Enhanced Redis client with error handling
-const client = createClient({ 
-    url: process.env.REDIS_URL,
-    socket: {
-        reconnectDelay: Math.min(1000, 50)
-    }
-});
+const client = await redisManager.getClient();
 
-// Redis connection with error handling
-client.on('error', (err) => {
-    console.error('❌ Redis Client Error:', err);
-});
-
-client.on('connect', () => {
-    console.log('✅ Redis connected successfully');
-});
-
-client.on('reconnecting', () => {
-    console.log('🔄 Redis reconnecting...');
-});
-
-client.on('ready', () => {
-    console.log('✅ Redis ready for operations');
-});
+// Redis connection with error handling - using centralized manager
+console.log('🚀 Redis connection established via centralized manager');
 
 try {
-    await client.connect();
-    console.log('🚀 Redis connection established');
+    // Test Redis connectivity via centralized manager
+    const healthCheck = await redisManager.healthCheck();
+    console.log('🔍 Redis health check:', healthCheck);
     
-    // Startup health check - verify all Redis modules
-    const redisInfo = await client.info();
-    console.log('🔍 Verifying Redis modules...');
-    
-    // Test Redis functionality
-    const testKey = 'startup:health:check';
-    await client.set(testKey, 'ok');
-    const testValue = await client.get(testKey);
-    await client.del(testKey);
-    
-    if (testValue === 'ok') {
+    if (healthCheck.status === 'healthy') {
         console.log('✅ Redis basic operations: OK');
     }
     
@@ -1979,9 +1951,9 @@ const gracefulShutdown = async (signal) => {
         if (contestMetricsCleanup) contestMetricsCleanup();
         if (performanceInterval) clearInterval(performanceInterval);
         
-        // Close Redis connection
-        await client.quit();
-        console.log('✅ Redis connection closed');
+        // Close Redis connection via centralized manager
+        await redisManager.disconnect();
+        console.log('✅ Redis connection closed via centralized manager');
         
         // Close HTTP server
         server.close(() => {

@@ -1,7 +1,7 @@
 // Semantic Cache System - Redis Vector Showcase Feature
 // Caches AI responses based on prompt similarity using OpenAI embeddings
 import 'dotenv/config';
-import { createClient } from 'redis';
+import redisManager from './redisManager.js';
 import OpenAI from 'openai';
 import crypto from 'crypto';
 import { CACHE_CONFIG } from './cacheConfig.js';
@@ -13,26 +13,13 @@ const config = CACHE_CONFIG.getConfig();
 
 class SemanticCache {
     constructor() {
-        this.client = null;
         this.metricsKey = 'cache:metrics';
         this.embeddingCache = new Map(); // In-memory embedding cache
         this.embeddingCacheSize = 0;
         this.maxEmbeddingCacheSize = 1000; // Limit memory usage
     }
 
-    async connect() {
-        if (!this.client) {
-            this.client = createClient({ url: process.env.REDIS_URL });
-            await this.client.connect();
-        }
-    }
-
     async disconnect() {
-        if (this.client) {
-            await this.client.quit();
-            this.client = null;
-        }
-        
         // Clear embedding cache on disconnect
         this.embeddingCache.clear();
         this.embeddingCacheSize = 0;
@@ -90,26 +77,26 @@ class SemanticCache {
     // Search for similar cached prompts with topic awareness
     async findSimilarCachedResponse(prompt, topic = 'general') {
         try {
-            await this.connect();
-
             // Include topic in embedding generation for better context
             const contextualPrompt = `Topic: ${topic}. ${prompt}`;
             const embedding = await this.generateEmbedding(contextualPrompt);
             const vectorBuffer = Buffer.from(new Float32Array(embedding).buffer);
 
             // Search for similar prompts using Redis Vector Search
-            const searchResults = await this.client.ft.search(
-                config.VECTOR_INDEX_NAME,
-                `*=>[KNN ${config.VECTOR_SEARCH_LIMIT} @vector $query_vector AS score]`,
-                {
-                    PARAMS: {
-                        query_vector: vectorBuffer,
-                    },
-                    SORTBY: 'score',
-                    DIALECT: 2,
-                    RETURN: ['content', 'response', 'created_at', 'score'],
-                }
-            );
+            const searchResults = await redisManager.execute(async (client) => {
+                return await client.ft.search(
+                    config.VECTOR_INDEX_NAME,
+                    `*=>[KNN ${config.VECTOR_SEARCH_LIMIT} @vector $query_vector AS score]`,
+                    {
+                        PARAMS: {
+                            query_vector: vectorBuffer,
+                        },
+                        SORTBY: 'score',
+                        DIALECT: 2,
+                        RETURN: ['content', 'response', 'created_at', 'score'],
+                    }
+                );
+            });
 
             if (searchResults.total > 0) {
                 const bestMatch = searchResults.documents[0];
@@ -144,8 +131,6 @@ class SemanticCache {
     // Cache new response with embedding and topic context
     async cacheResponse(prompt, response, metadata = {}) {
         try {
-            await this.connect();
-
             const topic = metadata.topic || 'general';
             const cacheKey = this.createCacheKey(prompt, topic);
             
@@ -166,10 +151,11 @@ class SemanticCache {
                 tokens_saved: this.estimateTokens(response),
             };
 
-            await this.client.hSet(cacheKey, cacheData);
-            
-            // Set TTL
-            await this.client.expire(cacheKey, config.CACHE_TTL);
+            await redisManager.execute(async (client) => {
+                await client.hSet(cacheKey, cacheData);
+                // Set TTL
+                await client.expire(cacheKey, config.CACHE_TTL);
+            });
 
             console.log(`💾 Response cached with key: ${cacheKey}`);
             
@@ -184,12 +170,13 @@ class SemanticCache {
     // Update cache metrics
     async updateMetrics(isHit, similarity = 0) {
         try {
-            await this.connect();
-
             const now = new Date().toISOString();
             
             // Get current metrics or initialize
-            let metrics = await this.client.json.get(this.metricsKey);
+            let metrics = await redisManager.execute(async (client) => {
+                return await client.json.get(this.metricsKey);
+            });
+
             if (!metrics) {
                 metrics = {
                     total_requests: 0,
@@ -225,7 +212,9 @@ class SemanticCache {
             metrics.last_updated = now;
 
             // Store updated metrics
-            await this.client.json.set(this.metricsKey, '.', metrics);
+            await redisManager.execute(async (client) => {
+                await client.json.set(this.metricsKey, '.', metrics);
+            });
 
             console.log(`📊 Cache metrics updated: ${metrics.cache_hits}/${metrics.total_requests} (${metrics.hit_ratio.toFixed(1)}%)`);
 
@@ -237,8 +226,9 @@ class SemanticCache {
     // Get current cache metrics
     async getMetrics() {
         try {
-            await this.connect();
-            const metrics = await this.client.json.get(this.metricsKey);
+            const metrics = await redisManager.execute(async (client) => {
+                return await client.json.get(this.metricsKey);
+            });
             return metrics || {
                 total_requests: 0,
                 cache_hits: 0,
@@ -264,8 +254,6 @@ class SemanticCache {
     // Clean up old cache entries
     async cleanupCache() {
         try {
-            await this.connect();
-            
             // Find expired entries (Redis TTL handles this automatically)
             // This method can be used for additional cleanup logic
             console.log('🧹 Cache cleanup completed');
@@ -278,13 +266,13 @@ class SemanticCache {
     // Get cache statistics
     async getCacheStats() {
         try {
-            await this.connect();
-            
             const metrics = await this.getMetrics();
-            const totalKeys = await this.client.eval(`
-                local keys = redis.call('KEYS', 'cache:prompt:*')
-                return #keys
-            `, 0);
+            const totalKeys = await redisManager.execute(async (client) => {
+                return await client.eval(`
+                    local keys = redis.call('KEYS', 'cache:prompt:*')
+                    return #keys
+                `, 0);
+            });
 
             return {
                 ...metrics,

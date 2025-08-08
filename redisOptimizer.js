@@ -2,12 +2,10 @@
 // Demonstrates enterprise-grade Redis optimization and monitoring
 
 import 'dotenv/config';
-import { createClient } from 'redis';
+import redisManager from './redisManager.js';
 
 class RedisPerformanceOptimizer {
     constructor() {
-        this.client = null;
-        this.metricsClient = null; // Separate client for monitoring
         this.optimizationHistory = [];
         this.performanceThresholds = {
             responseTime: 100, // milliseconds
@@ -19,22 +17,9 @@ class RedisPerformanceOptimizer {
         this.isOptimizing = false;
     }
 
-    async connect() {
-        if (!this.client) {
-            this.client = createClient({ url: process.env.REDIS_URL });
-            await this.client.connect();
-            
-            // Separate monitoring client to avoid interference
-            this.metricsClient = createClient({ url: process.env.REDIS_URL });
-            await this.metricsClient.connect();
-        }
-    }
-
     async disconnect() {
-        if (this.client) await this.client.quit();
-        if (this.metricsClient) await this.metricsClient.quit();
-        this.client = null;
-        this.metricsClient = null;
+        // Cleanup handled by redisManager
+        console.log('🔌 Redis optimizer disconnected');
     }
 
     // 🚀 Main optimization cycle - runs continuously
@@ -104,15 +89,21 @@ class RedisPerformanceOptimizer {
         const startTime = Date.now();
         
         try {
-            // Get Redis INFO
-            const info = await this.metricsClient.info();
+            // Get Redis INFO using redisManager
+            const info = await redisManager.execute(async (client) => {
+                return await client.info();
+            });
             
             // Get database size and key counts
-            const dbSize = await this.metricsClient.dbSize();
+            const dbSize = await redisManager.execute(async (client) => {
+                return await client.dbSize();
+            });
             
             // Test response time with simple operation
             const pingStart = Date.now();
-            await this.metricsClient.ping();
+            await redisManager.execute(async (client) => {
+                await client.ping();
+            });
             const responseTime = Date.now() - pingStart;
             
             // Parse key metrics from INFO
@@ -283,16 +274,21 @@ class RedisPerformanceOptimizer {
             // Optimize connection settings (would be done at connection level in production)
             console.log('🔧 Optimizing connection settings for lower latency...');
             
-            // Pipeline frequently accessed keys for better performance
-            const pipeline = this.client.multi();
-            
             // Pre-warm frequently accessed agent profiles
-            const agentKeys = await this.client.keys('agent:*:profile');
-            agentKeys.slice(0, 5).forEach(key => {
-                pipeline.exists(key); // Touch keys to keep them in memory
+            const agentKeys = await redisManager.execute(async (client) => {
+                return await client.keys('agent:*:profile');
             });
-            
-            await pipeline.exec();
+
+            // Touch keys to keep them in memory using pipeline
+            if (agentKeys.length > 0) {
+                await redisManager.execute(async (client) => {
+                    const pipeline = client.multi();
+                    agentKeys.slice(0, 5).forEach(key => {
+                        pipeline.exists(key); // Touch keys to keep them in memory
+                    });
+                    return await pipeline.exec();
+                });
+            }
             
         } catch (error) {
             console.error('❌ Latency optimization failed:', error);
@@ -306,19 +302,23 @@ class RedisPerformanceOptimizer {
             
             // Clean up expired debate data older than 24 hours
             const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
-            const debateKeys = await this.client.keys('debate:*:messages');
+            const debateKeys = await redisManager.execute(async (client) => {
+                return await client.keys('debate:*:messages');
+            });
             
             for (const key of debateKeys) {
                 try {
-                    // Check if streams have old data
-                    const streamInfo = await this.client.xInfo('stream', key);
-                    if (streamInfo && streamInfo['first-entry'] && streamInfo['first-entry'][0]) {
-                        const firstEntryTime = parseInt(streamInfo['first-entry'][0].split('-')[0]);
-                        if (firstEntryTime < oneDayAgo) {
-                            // Trim old entries but keep recent ones
-                            await this.client.xTrim(key, 'MAXLEN', 100);
+                    // Check if streams have old data and trim if needed
+                    await redisManager.execute(async (client) => {
+                        const streamInfo = await client.xInfo('stream', key);
+                        if (streamInfo && streamInfo['first-entry'] && streamInfo['first-entry'][0]) {
+                            const firstEntryTime = parseInt(streamInfo['first-entry'][0].split('-')[0]);
+                            if (firstEntryTime < oneDayAgo) {
+                                // Trim old entries but keep recent ones
+                                await client.xTrim(key, 'MAXLEN', 100);
+                            }
                         }
-                    }
+                    });
                 } catch (streamError) {
                     // Stream might not exist or be empty
                     continue;
@@ -326,12 +326,17 @@ class RedisPerformanceOptimizer {
             }
             
             // Clean up old cache entries
-            const cacheKeys = await this.client.keys('cache:prompt:*');
+            const cacheKeys = await redisManager.execute(async (client) => {
+                return await client.keys('cache:prompt:*');
+            });
+
             if (cacheKeys.length > 1000) {
                 // Remove oldest cache entries
                 const keysToRemove = cacheKeys.slice(0, Math.floor(cacheKeys.length * 0.1));
                 if (keysToRemove.length > 0) {
-                    await this.client.del(keysToRemove);
+                    await redisManager.execute(async (client) => {
+                        await client.del(keysToRemove);
+                    });
                 }
             }
             
@@ -354,14 +359,20 @@ class RedisPerformanceOptimizer {
             };
             
             for (const [pattern, ttl] of Object.entries(keyPatterns)) {
-                const keys = await this.client.keys(pattern);
+                const keys = await redisManager.execute(async (client) => {
+                    return await client.keys(pattern);
+                });
                 
-                // Set TTL for keys that don't have one
-                const pipeline = this.client.multi();
-                for (const key of keys.slice(0, 10)) { // Limit to avoid overwhelming
-                    pipeline.expire(key, ttl);
+                // Set TTL for keys that don't have one using pipeline
+                if (keys.length > 0) {
+                    await redisManager.execute(async (client) => {
+                        const pipeline = client.multi();
+                        for (const key of keys.slice(0, 10)) { // Limit to avoid overwhelming
+                            pipeline.expire(key, ttl);
+                        }
+                        return await pipeline.exec();
+                    });
                 }
-                await pipeline.exec();
             }
             
         } catch (error) {

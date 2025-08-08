@@ -30,11 +30,11 @@ AI applications today face three critical challenges:
 
 Most solutions treat these as separate problems. **StanceStream solves all three with Redis as the intelligent data layer.**
 
-### **Demo Video Embed**
+### **Interactive Platform Demo**
 
-{% embed https://your-demo-video-url %}
+**[🚀 Try StanceStream Live: https://your-deployed-platform.com]**
 
-_5-minute live demonstration showing all features in action_
+*Experience StanceStream's Redis-powered capabilities firsthand through our interactive platform showcasing all features in real-time*
 
 ### **Technical Innovation Deep Dive**
 
@@ -207,7 +207,7 @@ Most submissions focus on simple use cases:
 
 🌐 **Live Demo**: [stancestream-demo.com](your-demo-link)
 📂 **GitHub Repository**: [github.com/forbiddenlink/stancestream](https://github.com/forbiddenlink/stancestream)
-🎥 **Video Demo**: [5-minute demonstration](your-video-link)
+� **Interactive Platform**: [Try the live system](your-platform-link)
 
 ### **Try It Yourself**
 
@@ -249,7 +249,7 @@ _Built for the Redis AI Challenge 2025. Demonstrating innovation, technical exce
 - Lead with concrete savings numbers ($47/month)
 - Use performance metrics (70% cache hit rate)
 - Include live demo link prominently
-- Embed video for immediate engagement
+- Feature interactive platform for immediate engagement
 - Professional code snippets with syntax highlighting
 
 ### **SEO Keywords:**
@@ -266,7 +266,7 @@ _Built for the Redis AI Challenge 2025. Demonstrating innovation, technical exce
 
 - Live demo link
 - GitHub star request
-- Video view encouragement
+- Interactive platform trial encouragement
 - Comment engagement
 - Social media sharing
 

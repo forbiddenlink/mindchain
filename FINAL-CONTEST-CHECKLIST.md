@@ -12,7 +12,7 @@
 
 ### **Demo Environment**  
 - [ ] Close unnecessary applications (free memory)
-- [ ] Test screen sharing/recording setup
+- [ ] Test live platform demonstration flow
 - [ ] Have backup internet connection ready
 - [ ] Browser clean (clear cache, close extra tabs)
 

@@ -248,7 +248,7 @@ Standard professional code of conduct for open source projects.
 **🔗 Contest Links:**
 
 - 📝 [DEV Post Submission](your-dev-post-link)
-- 🎥 [Demo Video](your-video-link)
+- � [Live Platform Demo](your-platform-link)
 - 🌐 [Live Demo](your-demo-link)
 - 💬 [Community Discussion](discord-link)
 
