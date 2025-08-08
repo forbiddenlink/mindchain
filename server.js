@@ -1085,13 +1085,13 @@ app.get('/api/analytics/performance', async (req, res) => {
             return res.json(cachedResponse);
         }
 
-        const client = createClient({ url: process.env.REDIS_URL });
-        await client.connect();
+        // Use centralized Redis manager instead of creating new client
+        const redisClient = await redisManager.getClient();
 
         // Calculate performance metrics
         const now = Date.now();
-        const startTime = process.uptime() * 1000; // Convert to milliseconds
-        const uptime = now - startTime;
+        const uptimeSeconds = process.uptime();
+        const uptime = uptimeSeconds * 1000; // Convert to milliseconds
         
         // Simulate Redis operations per second (based on request patterns)
         const opsPerSecond = Math.floor(Math.random() * 50) + 100; // 100-150 ops/sec
@@ -1104,9 +1104,7 @@ app.get('/api/analytics/performance', async (req, res) => {
         const uptimePercentage = Math.min(99.9, 98 + (Math.random() * 1.9));
         
         // Redis connection health
-        const redisConnected = client.isReady;
-        
-        await client.quit();
+        const redisConnected = redisClient.isReady;
 
         const performanceMetrics = {
             redis_ops_per_second: opsPerSecond,
@@ -1148,6 +1146,7 @@ app.get('/api/analytics/performance', async (req, res) => {
             }
         });
     }
+});
 });
 
 // Business intelligence and ROI summary

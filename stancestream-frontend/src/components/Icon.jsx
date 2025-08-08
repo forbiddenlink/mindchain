@@ -62,7 +62,10 @@ import {
     ShieldCheck,
     ExternalLink,
     PlayCircle,
-    Trash2
+    Trash2,
+    HelpCircle,
+    ArrowLeft,
+    ArrowRight
 } from 'lucide-react';
 
 // Icon mapping for topics and general use
@@ -147,6 +150,9 @@ const iconMap = {
     'external-link': ExternalLink,
 
     // Missing icons that were causing errors
+    'help-circle': HelpCircle,
+    'arrow-left': ArrowLeft,
+    'arrow-right': ArrowRight,
     'alert-triangle': AlertTriangle,
     'shield': Shield,
     'trash': Trash2,
