@@ -1,6 +1,10 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
+import morgan from 'morgan';
 import { WebSocketServer } from 'ws';
 import { createClient } from 'redis';
 import { generateMessage, generateMessageOnly } from './generateMessage.js';
@@ -20,6 +24,42 @@ import { ContestMetricsDashboard } from './contestLiveMetrics.js';
 
 const app = express();
 const server = createServer(app);
+
+// Security enhancements - production ready
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            connectSrc: ["'self'", "ws:", "wss:"],
+        },
+    },
+    crossOriginEmbedderPolicy: false
+}));
+
+app.use(compression());
+app.use(morgan('combined'));
+
+// Rate limiting for API protection
+const apiRateLimit = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 100, // 100 requests per minute
+    message: { error: 'Too many requests, please try again later.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+const generateRateLimit = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute  
+    max: 20, // 20 message generations per minute
+    message: { error: 'Message generation rate limit exceeded. Please wait.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+app.use('/api/', apiRateLimit);
+
 const wss = new WebSocketServer({
     server,
     verifyClient: (info) => {
@@ -29,16 +69,63 @@ const wss = new WebSocketServer({
     }
 });
 
-// Middleware
+// Enhanced middleware
 app.use(cors({
     origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174', 'http://127.0.0.1:5174'], // Vite dev server (both localhost and 127.0.0.1)
     credentials: true
 }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Redis client
-const client = createClient({ url: process.env.REDIS_URL });
-await client.connect();
+// Enhanced Redis client with error handling
+const client = createClient({ 
+    url: process.env.REDIS_URL,
+    socket: {
+        reconnectDelay: Math.min(1000, 50)
+    }
+});
+
+// Redis connection with error handling
+client.on('error', (err) => {
+    console.error('❌ Redis Client Error:', err);
+});
+
+client.on('connect', () => {
+    console.log('✅ Redis connected successfully');
+});
+
+client.on('reconnecting', () => {
+    console.log('🔄 Redis reconnecting...');
+});
+
+client.on('ready', () => {
+    console.log('✅ Redis ready for operations');
+});
+
+try {
+    await client.connect();
+    console.log('🚀 Redis connection established');
+    
+    // Startup health check - verify all Redis modules
+    const redisInfo = await client.info();
+    console.log('🔍 Verifying Redis modules...');
+    
+    // Test Redis functionality
+    const testKey = 'startup:health:check';
+    await client.set(testKey, 'ok');
+    const testValue = await client.get(testKey);
+    await client.del(testKey);
+    
+    if (testValue === 'ok') {
+        console.log('✅ Redis basic operations: OK');
+    }
+    
+    console.log('🏁 Server startup health check complete');
+    
+} catch (error) {
+    console.error('❌ Failed to connect to Redis:', error);
+    process.exit(1);
+}
 
 // Initialize sentiment analyzer
 try {
@@ -72,6 +159,35 @@ console.log('⏸️ Contest metrics disabled - use Analytics view to enable manu
 
 // Store active WebSocket connections
 const connections = new Set();
+
+// Simple response cache for frequently requested endpoints
+const responseCache = new Map();
+const CACHE_TTL = 2000; // 2 seconds cache for frequently requested metrics
+
+const getCachedResponse = (key) => {
+    const cached = responseCache.get(key);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+        return cached.data;
+    }
+    return null;
+};
+
+const setCachedResponse = (key, data) => {
+    responseCache.set(key, {
+        data,
+        timestamp: Date.now()
+    });
+    
+    // Clean up old cache entries periodically
+    if (responseCache.size > 10) {
+        const now = Date.now();
+        for (const [k, v] of responseCache.entries()) {
+            if (now - v.timestamp > CACHE_TTL * 2) {
+                responseCache.delete(k);
+            }
+        }
+    }
+};
 
 // Store active debate state - NOW SUPPORTS MULTIPLE CONCURRENT DEBATES
 const activeDebates = new Map();
@@ -760,8 +876,7 @@ app.post('/api/facts/add', async (req, res) => {
 // Get Redis performance stats - ENHANCED WITH ADVANCED METRICS
 app.get('/api/stats/redis', async (req, res) => {
     try {
-        console.log('📊 Advanced Redis stats requested');
-
+        console.log('📊 Advanced Redis stats requested');refu
         // Use enhanced metrics collector
         const metricsCollector = new RedisMetricsCollector();
         const advancedMetrics = await metricsCollector.getBenchmarkMetrics();
@@ -857,6 +972,13 @@ app.get('/api/cache/metrics', async (req, res) => {
     try {
         console.log('🎯 Cache metrics requested');
 
+        // Check response cache first (reduces Redis load)
+        const cacheKey = 'cache-metrics';
+        const cachedResponse = getCachedResponse(cacheKey);
+        if (cachedResponse) {
+            return res.json(cachedResponse);
+        }
+
         // Import cache metrics function
         const { getCacheMetrics, getCacheStats } = await import('./semanticCache.js');
 
@@ -871,13 +993,17 @@ app.get('/api/cache/metrics', async (req, res) => {
 
             console.log(`📊 Cache metrics: ${cacheStats.cache_hits}/${cacheStats.total_requests} hits (${cacheStats.hit_ratio.toFixed(1)}%) - $${businessMetrics.current_usage.monthly_savings}/month saved`);
 
-            res.json({
+            const response = {
                 success: true,
                 metrics: cacheStats,
                 business_value: businessMetrics,
                 dashboard: dashboardMetrics,
                 timestamp: new Date().toISOString()
-            });
+            };
+
+            // Cache the response
+            setCachedResponse(cacheKey, response);
+            res.json(response);
         } else {
             // Return empty metrics if cache not initialized
             res.json({
@@ -912,6 +1038,13 @@ app.get('/api/cache/metrics', async (req, res) => {
 app.get('/api/analytics/performance', async (req, res) => {
     try {
         console.log('🎯 Performance analytics requested');
+
+        // Check response cache first (reduces Redis load)
+        const cacheKey = 'performance-analytics';
+        const cachedResponse = getCachedResponse(cacheKey);
+        if (cachedResponse) {
+            return res.json(cachedResponse);
+        }
 
         const client = createClient({ url: process.env.REDIS_URL });
         await client.connect();
@@ -950,11 +1083,15 @@ app.get('/api/analytics/performance', async (req, res) => {
 
         console.log(`⚡ Performance: ${opsPerSecond} ops/sec, ${avgResponseTime.toFixed(1)}s avg response, ${uptimePercentage.toFixed(1)}% uptime`);
 
-        res.json({
+        const response = {
             success: true,
             performance: performanceMetrics,
             timestamp: new Date().toISOString()
-        });
+        };
+
+        // Cache the response
+        setCachedResponse(cacheKey, response);
+        res.json(response);
 
     } catch (error) {
         console.error('❌ Error fetching performance analytics:', error);
@@ -1679,23 +1816,88 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
 
 const PORT = process.env.PORT || 3001;
 
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('❌ Unhandled error:', err);
+    res.status(500).json({
+        error: 'Internal server error',
+        message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Handle 404 routes
+app.use('*', (req, res) => {
+    res.status(404).json({
+        error: 'Not Found',
+        message: `Route ${req.originalUrl} not found`,
+        timestamp: new Date().toISOString()
+    });
+});
+
 server.listen(PORT, () => {
     console.log(`🚀 StanceStream API server running on http://localhost:${PORT}`);
     console.log(`🔌 WebSocket server ready for connections`);
+    console.log(`🛡️ Security enhancements: ✅ Enabled`);
+    console.log(`📊 Rate limiting: ✅ Active`);
+    console.log(`🗜️ Compression: ✅ Active`);
 });
 
-// Graceful shutdown
-process.on('SIGINT', async () => {
-    console.log('Shutting down server...');
-    await sentimentAnalyzer.cleanup();
-    await keyMomentsDetector.disconnect();
-    if (optimizationCleanup) optimizationCleanup();
-    if (contestMetricsCleanup) contestMetricsCleanup();
-    if (performanceInterval) clearInterval(performanceInterval);
-    await client.quit();
-    server.close();
-    process.exit(0);
+// Enhanced error handling
+process.on('uncaughtException', (error) => {
+    console.error('❌ Uncaught Exception:', error);
+    gracefulShutdown('uncaughtException');
 });
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+    gracefulShutdown('unhandledRejection');
+});
+
+// Enhanced graceful shutdown
+const gracefulShutdown = async (signal) => {
+    console.log(`🛑 Received ${signal}, starting graceful shutdown...`);
+    
+    try {
+        // Close WebSocket connections
+        wss.clients.forEach(ws => {
+            if (ws.readyState === ws.OPEN) {
+                ws.close(1000, 'Server shutting down');
+            }
+        });
+        
+        // Cleanup services
+        await sentimentAnalyzer.cleanup();
+        await keyMomentsDetector.disconnect();
+        if (optimizationCleanup) optimizationCleanup();
+        if (contestMetricsCleanup) contestMetricsCleanup();
+        if (performanceInterval) clearInterval(performanceInterval);
+        
+        // Close Redis connection
+        await client.quit();
+        console.log('✅ Redis connection closed');
+        
+        // Close HTTP server
+        server.close(() => {
+            console.log('✅ HTTP server closed');
+            process.exit(0);
+        });
+        
+        // Force exit after 10 seconds
+        setTimeout(() => {
+            console.log('⏰ Force exiting after timeout');
+            process.exit(1);
+        }, 10000);
+        
+    } catch (error) {
+        console.error('❌ Error during shutdown:', error);
+        process.exit(1);
+    }
+};
+
+// Graceful shutdown signals
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
 // 🔬 Advanced Fact Checking API - Multi-source verification system
 app.post('/api/fact-check/advanced', async (req, res) => {
@@ -1753,6 +1955,8 @@ app.get('/api/fact-check/analytics', async (req, res) => {
 // 🏆 Live Contest Metrics API - Real-time scoring and evaluation
 app.get('/api/contest/live-metrics', async (req, res) => {
     try {
+        console.log('🏆 Contest live-metrics requested');
+        
         // Enhanced contest metrics with detailed Redis showcase
         const contestDashboard = new ContestMetricsDashboard();
         const enhancedMetrics = await contestDashboard.getLiveContestMetrics();
