@@ -1,28 +1,16 @@
 // Business Value Dashboard - Real-time ROI and Performance Analytics
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useCallback } from 'react';
 import api from '../services/api';
 import Icon from './Icon';
 
-export default function BusinessValueDashboard() {
+const BusinessValueDashboard = memo(function BusinessValueDashboard() {
     const [businessData, setBusinessData] = useState(null);
     const [cacheMetrics, setCacheMetrics] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [refreshInterval, setRefreshInterval] = useState(null);
 
-    useEffect(() => {
-        fetchBusinessMetrics();
-
-        // Automatic polling disabled to reduce server load
-        // const interval = setInterval(fetchBusinessMetrics, 30000);
-        // setRefreshInterval(interval);
-
-        return () => {
-            // No cleanup needed since polling is disabled
-        };
-    }, []);
-
-    const fetchBusinessMetrics = async () => {
+    const fetchBusinessMetrics = useCallback(async () => {
         try {
             setError(null);
 
@@ -46,7 +34,19 @@ export default function BusinessValueDashboard() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchBusinessMetrics();
+
+        // Automatic polling disabled to reduce server load
+        // const interval = setInterval(fetchBusinessMetrics, 30000);
+        // setRefreshInterval(interval);
+
+        return () => {
+            // No cleanup needed since polling is disabled
+        };
+    }, [fetchBusinessMetrics]);
 
     if (isLoading) {
         return (
@@ -266,4 +266,6 @@ export default function BusinessValueDashboard() {
             </div>
         </div>
     );
-}
+});
+
+export default BusinessValueDashboard;

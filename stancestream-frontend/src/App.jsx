@@ -12,10 +12,11 @@ import BusinessValueDashboard from './components/BusinessValueDashboard';
 import PlatformShowcaseDashboard from './components/PlatformShowcaseDashboard';
 import LivePerformanceOverlay from './components/LivePerformanceOverlay';
 import RedisMatrixModal from './components/RedisMatrixModal';
+import IntroModule from './components/IntroModule';
 import ErrorBoundary from './components/ErrorBoundary';
 import Icon from './components/Icon';
 import { ViewModeSelector, ToastProvider, useNotification, Container, Stack, Grid } from './components/ui';
-import useWebSocket from './hooks/useWebSocket';
+import wsManager from './services/websocketManager';
 import api from './services/api';
 
 export default function App() {
@@ -30,165 +31,265 @@ export default function App() {
   const [stanceData, setStanceData] = useState([]); // Track stance evolution for chart
   const [currentStances, setCurrentStances] = useState({ senatorbot: 0, reformerbot: 0 }); // Track current stance values
   const [showMatrixModal, setShowMatrixModal] = useState(false); // Matrix modal state
+  const [showIntro, setShowIntro] = useState(false); // Intro module state
+  const [connectionStatus, setConnectionStatus] = useState('Disconnected');
 
-  // WebSocket connection
-  const wsUrl = window.location.hostname === '127.0.0.1'
-    ? 'ws://127.0.0.1:3001'
-    : 'ws://localhost:3001';
-  const { connectionStatus, lastMessage, messages } = useWebSocket(wsUrl);
+  // WebSocket connection using centralized manager
+  useEffect(() => {
+    const wsUrl = window.location.hostname === '127.0.0.1'
+      ? 'ws://127.0.0.1:3001'
+      : 'ws://localhost:3001';
+
+    // Set up event listeners
+    const cleanup = [
+      wsManager.addEventListener('connected', () => {
+        setConnectionStatus('Connected');
+        setConnectionHealth('healthy');
+      }),
+      
+      wsManager.addEventListener('disconnected', () => {
+        setConnectionStatus('Disconnected');
+        setConnectionHealth('unhealthy');
+      }),
+      
+      wsManager.addEventListener('error', () => {
+        setConnectionStatus('Error');
+        setConnectionHealth('error');
+      }),
+      
+      wsManager.addEventListener('message', handleWebSocketMessage)
+    ];
+
+    // Connect to WebSocket
+    wsManager.connect(wsUrl);
+
+    // Cleanup on unmount
+    return () => {
+      cleanup.forEach(fn => fn());
+    };
+  }, []);
+
+  // Check for first-time user and show intro
+  useEffect(() => {
+    const hasSeenIntro = localStorage.getItem('stancestream-intro-seen');
+    if (!hasSeenIntro && connectionStatus === 'Connected') {
+      // Delay intro to allow app to load fully
+      setTimeout(() => {
+        setShowIntro(true);
+      }, 2000);
+    }
+  }, [connectionStatus]);
 
   // Handle incoming WebSocket messages
-  useEffect(() => {
-    if (lastMessage) {
-      const { type, ...data } = lastMessage;
+  const handleWebSocketMessage = (data) => {
+    const { type, ...messageData } = data;
 
-      switch (type) {
-        case 'new_message':
-          const newMessage = {
+    switch (type) {
+      case 'new_message':
+        const newMessage = {
+          id: Date.now(),
+          sender: messageData.agentName,
+          agentId: messageData.agentId,
+          text: messageData.message,
+          timestamp: messageData.timestamp,
+          debateId: messageData.debateId, // Include debate ID for proper separation
+          factCheck: messageData.factCheck,
+          sentiment: messageData.sentiment // Add sentiment data from RedisAI
+        };
+
+        setDebateMessages(prev => [...prev, newMessage]);
+
+        // Dispatch custom event for LivePerformanceOverlay
+        window.dispatchEvent(new CustomEvent('websocket-message', {
+          detail: { type: 'new_message', ...messageData }
+        }));
+
+        // Extract stance data from new_message and create stance update
+        if (messageData.stance && messageData.agentId && messageData.debateId) {
+          console.log('📊 Extracting stance from new_message:', messageData.stance);
+
+          // Update current stances state
+          setCurrentStances(prev => {
+            const updated = {
+              ...prev,
+              [messageData.agentId]: (messageData.stance.value - 0.5) * 2 // Convert 0-1 to -1 to 1
+            };
+
+            // Create new stance entry with both agents' current values
+            const newStanceEntry = {
+              timestamp: messageData.timestamp,
+              turn: Date.now(), // Use timestamp as unique turn identifier
+              debateId: messageData.debateId,
+              topic: messageData.stance.topic,
+              senatorbot: updated.senatorbot,
+              reformerbot: updated.reformerbot
+            };
+
+            console.log('📊 Created stance entry from message:', newStanceEntry);
+
+            // Add to stance data with memory management
+            setStanceData(prev => {
+              // Filter to current debate in standard mode
+              if (viewMode === 'standard' && currentDebateId) {
+                return [...prev.filter(entry => entry.debateId === currentDebateId), newStanceEntry];
+              }
+              // In multi-debate mode, keep last 100 entries to prevent memory bloat
+              return [...prev, newStanceEntry].slice(-100);
+            });
+
+            return updated;
+          });
+        }
+
+        // Track active debates
+        if (messageData.debateId) {
+          setActiveDebates(prev => {
+            const updated = new Map(prev);
+            const existing = updated.get(messageData.debateId) || {
+              topic: 'Unknown Topic',
+              messageCount: 0,
+              startTime: new Date().toISOString()
+            };
+            existing.messageCount = (existing.messageCount || 0) + 1;
+            existing.lastActivity = messageData.timestamp;
+            updated.set(messageData.debateId, existing);
+            return updated;
+          });
+        }
+
+        if (messageData.factCheck) {
+          setFactChecks(prev => [...prev.slice(-4), {
             id: Date.now(),
-            sender: data.agentName,
-            agentId: data.agentId,
-            text: data.message,
-            timestamp: data.timestamp,
-            debateId: data.debateId, // Include debate ID for proper separation
-            factCheck: data.factCheck,
-            sentiment: data.sentiment // Add sentiment data from RedisAI
-          };
+            message: messageData.message,
+            fact: messageData.factCheck.fact,
+            score: messageData.factCheck.score,
+            timestamp: messageData.timestamp,
+            debateId: messageData.debateId
+          }]);
+        }
+        break;
 
-          setDebateMessages(prev => [...prev, newMessage]);
+      case 'debate_started':
+        // Track the new debate with proper topic info
+        if (messageData.debateId && messageData.topic) {
+          setActiveDebates(prev => {
+            const updated = new Map(prev);
+            updated.set(messageData.debateId, {
+              topic: messageData.topic,
+              agents: messageData.agents,
+              startTime: messageData.timestamp,
+              messageCount: 0,
+              status: 'running'
+            });
+            return updated;
+          });
+
+          // If this is a single debate (standard mode), set it as current and clear stance data
+          if (viewMode === 'standard') {
+            setCurrentDebateId(messageData.debateId);
+            setStanceData([]); // Clear previous stance data for new debate
+            setCurrentStances({ senatorbot: 0, reformerbot: 0 }); // Reset current stances
+          }
+        }
+        break;
+
+      case 'debate_stopped':
+        if (messageData.debateId) {
+          setActiveDebates(prev => {
+            const updated = new Map(prev);
+            updated.delete(messageData.debateId);
+            return updated;
+          });
+
+          // Don't clear currentDebateId immediately to keep messages visible
+          // The user can manually start a new debate or switch modes
+          console.log(`⏹️ Debate ${messageData.debateId} stopped - messages remain visible`);
+        }
+        break;
+
+      case 'all_debates_stopped':
+        // Handle stopping all debates at once
+        console.log('🛑 All debates stopped');
+        setActiveDebates(new Map());
+        // Keep messages visible for review
+        break;
+
+      case 'debate_ended':
+        if (messageData.debateId) {
+          setActiveDebates(prev => {
+            const updated = new Map(prev);
+            updated.delete(messageData.debateId);
+            return updated;
+          });
+
+          // Don't clear currentDebateId immediately to keep messages visible
+          // The completed debate messages should remain visible
+          console.log(`🏁 Debate ${messageData.debateId} ended - messages remain visible`);
+        }
+        break;
+
+      case 'stance_update':
+        // Handle dedicated stance updates
+        if (messageData.agentId && messageData.stance && messageData.debateId) {
+          console.log('📊 Dedicated stance update:', messageData);
 
           // Dispatch custom event for LivePerformanceOverlay
           window.dispatchEvent(new CustomEvent('websocket-message', {
-            detail: { type: 'new_message', ...data }
+            detail: { type: 'stance_update', ...messageData }
           }));
 
-          // Extract stance data from new_message and create stance update
-          if (data.stance && data.agentId && data.debateId) {
-            console.log('📊 Extracting stance from new_message:', data.stance);
+          // Update current stances
+          setCurrentStances(prev => {
+            const updated = {
+              ...prev,
+              [messageData.agentId]: (messageData.stance.value - 0.5) * 2 // Convert 0-1 to -1 to 1
+            };
 
-            // Update current stances state
-            setCurrentStances(prev => {
-              const updated = {
-                ...prev,
-                [data.agentId]: (data.stance.value - 0.5) * 2 // Convert 0-1 to -1 to 1
-              };
+            // Create new stance entry with both agents' current values
+            const newStanceEntry = {
+              timestamp: messageData.timestamp || new Date().toISOString(),
+              turn: Date.now(),
+              debateId: messageData.debateId,
+              topic: messageData.stance.topic || 'Unknown Topic',
+              senatorbot: updated.senatorbot || 0,
+              reformerbot: updated.reformerbot || 0
+            };
 
-              // Create new stance entry with both agents' current values
-              const newStanceEntry = {
-                timestamp: data.timestamp,
-                turn: Date.now(), // Use timestamp as unique turn identifier
-                debateId: data.debateId,
-                topic: data.stance.topic,
-                senatorbot: updated.senatorbot,
-                reformerbot: updated.reformerbot
-              };
+            console.log('📊 New stance entry:', newStanceEntry); // Debug log
 
-              console.log('📊 Created stance entry from message:', newStanceEntry);
-
-              // Add to stance data with memory management
-              setStanceData(prev => {
-                // Filter to current debate in standard mode
-                if (viewMode === 'standard' && currentDebateId) {
-                  return [...prev.filter(entry => entry.debateId === currentDebateId), newStanceEntry];
-                }
-                // In multi-debate mode, keep last 100 entries to prevent memory bloat
-                return [...prev, newStanceEntry].slice(-100);
-              });
-
-              return updated;
-            });
-          }
-
-          // Track active debates
-          if (data.debateId) {
-            setActiveDebates(prev => {
-              const updated = new Map(prev);
-              const existing = updated.get(data.debateId) || {
-                topic: 'Unknown Topic',
-                messageCount: 0,
-                startTime: new Date().toISOString()
-              };
-              existing.messageCount = (existing.messageCount || 0) + 1;
-              existing.lastActivity = data.timestamp;
-              updated.set(data.debateId, existing);
-              return updated;
-            });
-          }
-
-          if (data.factCheck) {
-            setFactChecks(prev => [...prev.slice(-4), {
-              id: Date.now(),
-              message: data.message,
-              fact: data.factCheck.fact,
-              score: data.factCheck.score,
-              timestamp: data.timestamp,
-              debateId: data.debateId
-            }]);
-          }
-          break;
-
-        case 'debate_started':
-          // Track the new debate with proper topic info
-          if (data.debateId && data.topic) {
-            setActiveDebates(prev => {
-              const updated = new Map(prev);
-              updated.set(data.debateId, {
-                topic: data.topic,
-                agents: data.agents,
-                startTime: data.timestamp,
-                messageCount: 0,
-                status: 'running'
-              });
+            setStanceData(prev => {
+              if (viewMode === 'standard' && currentDebateId) {
+                const filtered = [...prev.filter(entry => entry.debateId === currentDebateId), newStanceEntry];
+                console.log('📊 Filtered stance data for current debate:', filtered);
+                return filtered;
+              }
+              const updated = [...prev, newStanceEntry].slice(-100);
+              console.log('📊 Updated stance data (all debates):', updated);
               return updated;
             });
 
-            // If this is a single debate (standard mode), set it as current and clear stance data
-            if (viewMode === 'standard') {
-              setCurrentDebateId(data.debateId);
-              setStanceData([]); // Clear previous stance data for new debate
-              setCurrentStances({ senatorbot: 0, reformerbot: 0 }); // Reset current stances
-            }
-          }
-          break;
+            return updated;
+          });
+        }
+        break;
 
-        case 'debate_stopped':
-          if (data.debateId) {
-            setActiveDebates(prev => {
-              const updated = new Map(prev);
-              updated.delete(data.debateId);
-              return updated;
-            });
+      case 'error':
+        console.error('WebSocket error:', messageData.message);
+        break;
 
-            // Don't clear currentDebateId immediately to keep messages visible
-            // The user can manually start a new debate or switch modes
-            console.log(`⏹️ Debate ${data.debateId} stopped - messages remain visible`);
-          }
-          break;
+      case 'fact_check':
+        // Handle fact check results
+        console.log('🔍 Fact check result:', messageData);
 
-        case 'all_debates_stopped':
-          // Handle stopping all debates at once
-          console.log('🛑 All debates stopped');
-          setActiveDebates(new Map());
-          // Keep messages visible for review
-          break;
-
-        case 'debate_ended':
-          if (data.debateId) {
-            setActiveDebates(prev => {
-              const updated = new Map(prev);
-              updated.delete(data.debateId);
-              return updated;
-            });
-
-            // Don't clear currentDebateId immediately to keep messages visible
-            // The completed debate messages should remain visible
-            console.log(`🏁 Debate ${data.debateId} ended - messages remain visible`);
-          }
-          break;
+        // Dispatch custom event for LivePerformanceOverlay
+        window.dispatchEvent(new CustomEvent('websocket-message', {
+          detail: { type: 'fact_check', ...messageData }
+        }));
+        break;
 
         case 'multi_debates_started':
           // Visual feedback for multiple debates started
-          console.log(`🚀 Multi-debate session started: ${data.debates.length} debates`);
+          console.log(`🚀 Multi-debate session started: ${messageData.debates.length} debates`);
           break;
 
         case 'metrics_updated':
@@ -197,26 +298,26 @@ export default function App() {
           
           // Dispatch custom event for LivePerformanceOverlay
           window.dispatchEvent(new CustomEvent('websocket-message', {
-            detail: { type: 'metrics_updated', ...data }
+            detail: { type: 'metrics_updated', ...messageData }
           }));
           break;
 
         case 'agent_updated':
           setAgents(prev => ({
             ...prev,
-            [data.agentId]: data.profile
+            [messageData.agentId]: messageData.profile
           }));
           break;
 
         case 'debate:stance_update':
           // Handle real-time stance evolution for election-night style chart
-          console.log('📊 Received stance update:', data); // Debug log
+          console.log('📊 Received stance update:', messageData); // Debug log
 
           // Prevent duplicate stance updates by checking if we already have this turn data
           const isDuplicate = stanceData.some(entry =>
-            entry.debateId === data.debateId &&
-            entry.turn === data.turn &&
-            entry.timestamp === data.timestamp
+            entry.debateId === messageData.debateId &&
+            entry.turn === messageData.turn &&
+            entry.timestamp === messageData.timestamp
           );
 
           if (isDuplicate) {
@@ -225,12 +326,12 @@ export default function App() {
           }
 
           const newStanceEntry = {
-            senatorbot: data.senatorbot,
-            reformerbot: data.reformerbot,
-            timestamp: data.timestamp,
-            turn: data.turn,
-            debateId: data.debateId,
-            topic: data.topic
+            senatorbot: messageData.senatorbot,
+            reformerbot: messageData.reformerbot,
+            timestamp: messageData.timestamp,
+            turn: messageData.turn,
+            debateId: messageData.debateId,
+            topic: messageData.topic
           };
 
           setStanceData(prev => {
@@ -248,35 +349,30 @@ export default function App() {
             return updated;
           });
 
-          console.log(`📊 Stance update: SenatorBot(${data.senatorbot.toFixed(2)}), ReformerBot(${data.reformerbot.toFixed(2)}) - Turn ${data.turn}`);
-          break;
-
-        case 'error':
-          console.error('WebSocket error:', data.message);
+          console.log(`📊 Stance update: SenatorBot(${messageData.senatorbot.toFixed(2)}), ReformerBot(${messageData.reformerbot.toFixed(2)}) - Turn ${messageData.turn}`);
           break;
 
         case 'key_moment_created':
           // Handle new key moment creation
-          console.log('🔍 Key moment created:', data.moment);
+          console.log('🔍 Key moment created:', messageData.moment);
 
           // Dispatch custom event for KeyMomentsPanel to listen to
           window.dispatchEvent(new CustomEvent('websocket-message', {
-            detail: { type: 'key_moment_created', ...data }
+            detail: { type: 'key_moment_created', ...messageData }
           }));
           break;
 
         case 'live_performance_update':
           // Handle live performance metrics for mission control overlay
-          console.log('⚡ Live performance update:', data.metrics);
+          console.log('⚡ Live performance update:', messageData.metrics);
 
           // Dispatch custom event for LivePerformanceOverlay
           window.dispatchEvent(new CustomEvent('websocket-message', {
-            detail: { type: 'live_performance_update', ...data }
+            detail: { type: 'live_performance_update', ...messageData }
           }));
           break;
       }
-    }
-  }, [lastMessage]);
+  };
 
   // Check backend health on mount
   useEffect(() => {
@@ -478,6 +574,14 @@ export default function App() {
                       <Icon name="activity" className="w-4 h-4 inline mr-1" />
                       MATRIX
                     </button>
+                    <button
+                      onClick={() => setShowIntro(true)}
+                      className="px-4 py-2 text-sm rounded-lg border bg-gradient-to-r from-blue-700/70 to-purple-900/70 border-blue-500/30 text-blue-300 hover:from-blue-600/90 hover:to-purple-800/90 transition-all duration-200 hover:scale-105 shadow-lg shadow-blue-500/20 font-mono"
+                      title="Platform Introduction & Feature Tour"
+                    >
+                      <Icon name="help-circle" className="w-4 h-4 inline mr-1" />
+                      INTRO
+                    </button>
                   </div>
                 </div>
               </div>
@@ -648,6 +752,12 @@ export default function App() {
         <RedisMatrixModal 
           isOpen={showMatrixModal} 
           onClose={() => setShowMatrixModal(false)} 
+        />
+
+        {/* Intro Module */}
+        <IntroModule 
+          showIntro={showIntro}
+          onComplete={() => setShowIntro(false)}
         />
         </div>
       </ErrorBoundary>

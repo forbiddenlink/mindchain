@@ -1,8 +1,8 @@
 // System Showcase Dashboard - Premium Analytics and Demonstrations
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useCallback } from 'react';
 import Icon from './Icon';
 
-export default function PlatformShowcaseDashboard() {
+const PlatformShowcaseDashboard = memo(function PlatformShowcaseDashboard() {
     const [showcaseData, setShowcaseData] = useState(null);
     const [systemMetrics, setSystemMetrics] = useState(null);
     const [platformMetrics, setPlatformMetrics] = useState(null);
@@ -12,35 +12,35 @@ export default function PlatformShowcaseDashboard() {
     const [activeDemo, setActiveDemo] = useState(null);
 
     // Fetch showcase data every 5 seconds
-    useEffect(() => {
-        const fetchShowcaseData = async () => {
-            try {
-                // Get Redis modules showcase
-                const showcaseResponse = await fetch('/api/showcase/redis-modules');
-                if (showcaseResponse.ok) {
-                    const data = await showcaseResponse.json();
-                    setShowcaseData(data);
-                }
-
-                // Get platform metrics
-                const metricsResponse = await fetch('/api/analytics/platform-metrics');
-                if (metricsResponse.ok) {
-                    const metrics = await metricsResponse.json();
-                    setPlatformMetrics(metrics);
-                }
-
-                // Get optimization metrics
-                const optimizationResponse = await fetch('/api/optimization/metrics');
-                if (optimizationResponse.ok) {
-                    const optimization = await optimizationResponse.json();
-                    setOptimizationMetrics(optimization);
-                }
-
-            } catch (error) {
-                console.error('Failed to fetch showcase data:', error);
+    const fetchShowcaseData = useCallback(async () => {
+        try {
+            // Get Redis modules showcase
+            const showcaseResponse = await fetch('/api/showcase/redis-modules');
+            if (showcaseResponse.ok) {
+                const data = await showcaseResponse.json();
+                setShowcaseData(data);
             }
-        };
 
+            // Get platform metrics
+            const metricsResponse = await fetch('/api/analytics/platform-metrics');
+            if (metricsResponse.ok) {
+                const metrics = await metricsResponse.json();
+                setPlatformMetrics(metrics);
+            }
+
+            // Get optimization metrics
+            const optimizationResponse = await fetch('/api/optimization/metrics');
+            if (optimizationResponse.ok) {
+                const optimization = await optimizationResponse.json();
+                setOptimizationMetrics(optimization);
+            }
+
+        } catch (error) {
+            console.error('Failed to fetch showcase data:', error);
+        }
+    }, []);
+
+    useEffect(() => {
         fetchShowcaseData();
         // Automatic polling disabled to reduce server load
         // const interval = setInterval(fetchShowcaseData, 15000);
@@ -48,10 +48,10 @@ export default function PlatformShowcaseDashboard() {
 
         // Only update on manual interaction
         return () => { }; // No cleanup needed
-    }, []);
+    }, [fetchShowcaseData]);
 
     // Run demonstration scenario
-    const runDemo = async (scenario) => {
+    const runDemo = useCallback(async (scenario) => {
         setDemoRunning(true);
         setActiveDemo(scenario);
 
@@ -79,7 +79,7 @@ export default function PlatformShowcaseDashboard() {
             setDemoRunning(false);
             setActiveDemo(null);
         }
-    };
+    }, []);
 
     return (
         <div className="min-h-screen bg-black text-green-300 p-6 relative font-mono">
@@ -448,4 +448,6 @@ export default function PlatformShowcaseDashboard() {
             </div>
         </div>
     );
-}
+});
+
+export default PlatformShowcaseDashboard;
