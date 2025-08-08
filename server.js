@@ -19,8 +19,8 @@ import keyMomentsDetector, { processDebateEvent, getKeyMoments, getAllKeyMoments
 import intelligentAgentSystem, { generateIntelligentMessage } from './intelligentAgents.js';
 import redisOptimizer, { startOptimization, getOptimizationMetrics } from './redisOptimizer.js';
 import advancedFactChecker, { checkFactAdvanced, getFactCheckAnalytics } from './advancedFactChecker.js';
-import contestMetricsEngine, { startContestMetrics, getLiveContestMetrics } from './contestMetricsEngine.js';
-import { ContestMetricsDashboard } from './contestLiveMetrics.js';
+import platformMetricsEngine, { startContestMetrics, getLiveContestMetrics } from './platformMetricsEngine.js';
+import { PlatformMetricsDashboard } from './platformLiveMetrics.js';
 
 const app = express();
 const server = createServer(app);
@@ -41,10 +41,10 @@ app.use(helmet({
 app.use(compression());
 app.use(morgan('combined'));
 
-// Rate limiting for API protection - CONTEST-OPTIMIZED
+// Rate limiting for API protection - PRODUCTION-OPTIMIZED
 const apiRateLimit = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 200, // 200 requests per minute (increased from 100 for contest demo)
+    max: 200, // 200 requests per minute (increased for high-performance demos)
     message: { error: 'Too many requests, please try again later.' },
     standardHeaders: true,
     legacyHeaders: false,
@@ -52,7 +52,7 @@ const apiRateLimit = rateLimit({
 
 const generateRateLimit = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute  
-    max: 50, // 50 message generations per minute (increased from 20 for contest demo)
+    max: 50, // 50 message generations per minute (increased for high-performance demos)
     message: { error: 'Message generation rate limit exceeded. Please wait.' },
     standardHeaders: true,
     legacyHeaders: false,
@@ -146,7 +146,7 @@ let optimizationCleanup = null;
 // }
 console.log('⏸️ Redis optimizer disabled - use API endpoints to enable manually');
 
-// Start contest metrics collection - DISABLED FOR MANUAL CONTROL
+// Start platform metrics collection - DISABLED FOR MANUAL CONTROL
 let contestMetricsCleanup = null;
 // Contest metrics disabled by default to reduce background noise
 // try {
@@ -155,7 +155,7 @@ let contestMetricsCleanup = null;
 // } catch (metricsError) {
 //     console.log('⚠️ Contest metrics failed to start, continuing without contest tracking:', metricsError.message);
 // }
-console.log('⏸️ Contest metrics disabled - use Analytics view to enable manually');
+console.log('⏸️ Platform metrics disabled - use Analytics view to enable manually');
 
 // Store active WebSocket connections
 const connections = new Set();
@@ -197,6 +197,9 @@ const runningDebateProcesses = new Map(); // debateId -> { cancelled: boolean }
 
 // Track last speaker per debate to ensure proper alternation
 const lastSpeakerPerDebate = new Map(); // debateId -> agentId
+
+// Track current agent index per debate for proper turn rotation
+const currentAgentIndexPerDebate = new Map(); // debateId -> agentIndex
 
 // Store last message timestamps to prevent duplicate rapid-fire messages
 const lastMessageTimestamps = new Map(); // agentId -> timestamp
@@ -467,6 +470,8 @@ app.post('/api/debate/start', async (req, res) => {
             // Remove from active debates when finished
             activeDebates.delete(uniqueDebateId);
             runningDebateProcesses.delete(uniqueDebateId);
+            currentAgentIndexPerDebate.delete(uniqueDebateId);
+            lastSpeakerPerDebate.delete(uniqueDebateId);
             debateMetrics.concurrentDebates = activeDebates.size;
 
             // Broadcast updated metrics
@@ -683,7 +688,7 @@ app.get('/api/health', async (req, res) => {
 // � Contest Analytics Endpoint
 app.get('/api/contest/analytics', async (req, res) => {
     try {
-        console.log('🏆 Contest analytics requested');
+        console.log('🏆 Platform analytics requested');
 
         const analytics = await generateContestAnalytics();
 
@@ -695,7 +700,7 @@ app.get('/api/contest/analytics', async (req, res) => {
             uptime: Date.now() - new Date(debateMetrics.startTime).getTime()
         };
 
-        console.log('✅ Contest analytics generated');
+        console.log('✅ Platform analytics generated');
         res.json(analytics);
 
     } catch (error) {
@@ -766,6 +771,8 @@ app.post('/api/debates/start-multiple', async (req, res) => {
             runDebateRounds(debateId, agents, topic).finally(() => {
                 activeDebates.delete(debateId);
                 runningDebateProcesses.delete(debateId);
+                currentAgentIndexPerDebate.delete(debateId);
+                lastSpeakerPerDebate.delete(debateId);
                 debateMetrics.concurrentDebates = activeDebates.size;
             });
 
@@ -1377,7 +1384,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
 
     // Alternate between agents for natural conversation flow
     const totalTurns = rounds * agents.length;
-    let currentAgentIndex = 0; // Track which agent should speak next
+    let currentAgentIndex = currentAgentIndexPerDebate.get(debateId) || 0; // Track which agent should speak next for this debate
     let actualTurn = 0; // Track actual successful turns
     
     for (let attemptedTurn = 0; attemptedTurn < totalTurns && actualTurn < totalTurns; attemptedTurn++) {
@@ -1415,6 +1422,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
             if (lastSpeaker === agentId && actualTurn > 0) {
                 console.log(`⚠️ ${agentId} spoke last, this should not happen with proper alternation. Force switching to next agent.`);
                 currentAgentIndex = (currentAgentIndex + 1) % agents.length;
+                currentAgentIndexPerDebate.set(debateId, currentAgentIndex);
                 continue;
             }
 
@@ -1427,6 +1435,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     if (lastMessageAgentId === agentId) {
                         console.log(`🚨 CRITICAL: ${agentId} was the last message sender! Forcing agent switch to prevent consecutive speaking.`);
                         currentAgentIndex = (currentAgentIndex + 1) % agents.length;
+                        currentAgentIndexPerDebate.set(debateId, currentAgentIndex);
                         const newAgentId = agents[currentAgentIndex];
                         console.log(`🔄 Switched from ${agentId} to ${newAgentId} to maintain alternation`);
                         continue;
@@ -1760,6 +1769,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 lastMessageTimestamps.set(agentId, now);
                 lastSpeakerPerDebate.set(debateId, agentId);
                 currentAgentIndex = (currentAgentIndex + 1) % agents.length;
+                currentAgentIndexPerDebate.set(debateId, currentAgentIndex);
                 actualTurn++;
                 
                 console.log(`✅ Turn ${actualTurn} completed by ${agentId}. Next: ${agents[currentAgentIndex]}`);
@@ -1775,6 +1785,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 
                 // Even on error, advance to next agent to prevent stuck loops
                 currentAgentIndex = (currentAgentIndex + 1) % agents.length;
+                currentAgentIndexPerDebate.set(debateId, currentAgentIndex);
             }
     }
 
@@ -2522,6 +2533,51 @@ app.get('/api/analytics/contest-metrics', async (req, res) => {
             success: false,
             error: error.message,
             contestMetrics: { status: 'error' }
+        });
+    }
+});
+
+// 🏢 Platform API Endpoints - Professional aliases for contest endpoints
+// These provide the same functionality with enterprise-friendly naming
+
+app.post('/api/platform/demo/:scenario', async (req, res) => {
+    try {
+        const { scenario } = req.params;
+        const { duration = 30, agents = ['senatorbot', 'reformerbot'] } = req.body;
+
+        let demoResult;
+
+        switch (scenario) {
+            case 'multi-modal-showcase':
+                demoResult = await runMultiModalDemo(agents, duration);
+                break;
+            case 'performance-stress-test':
+                demoResult = await runPerformanceStressTest(duration);
+                break;
+            case 'concurrent-debates':
+                demoResult = await runConcurrentDebatesDemo(agents, duration);
+                break;
+            case 'cache-efficiency':
+                demoResult = await runCacheEfficiencyDemo(agents, duration);
+                break;
+            default:
+                throw new Error(`Unknown demo scenario: ${scenario}`);
+        }
+
+        res.json({
+            success: true,
+            scenario,
+            result: demoResult,
+            platformMetrics: demoResult,
+            timestamp: new Date().toISOString()
+        });
+
+    } catch (error) {
+        console.error('❌ Platform demo error:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message,
+            platformMetrics: { status: 'error' }
         });
     }
 });

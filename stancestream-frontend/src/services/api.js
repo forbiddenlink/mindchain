@@ -137,9 +137,14 @@ class StanceStreamAPI {
         return this.get('/stats/redis', { retry: true });
     }
 
-    // 🏆 Contest Analytics
+    // 🏆 Platform Analytics
     async getContestAnalytics() {
         return this.get('/contest/analytics');
+    }
+
+    // 🏢 Platform Analytics (Professional Alias)
+    async getPlatformAnalytics() {
+        return this.get('/platform/analytics');
     }
 
     // Add fact to knowledge base

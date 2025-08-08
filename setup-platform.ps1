@@ -1,8 +1,8 @@
-# StanceStream Production Demo Setup Script (PowerShell)
-# Optimizes system for maximum performance and impressive metrics
+# StanceStream Platform Setup Script (PowerShell)
+# Optimizes system for maximum performance and business demonstration
 
-Write-Host "🎯 StanceStream Production Demo Setup" -ForegroundColor Cyan
-Write-Host "==================================" -ForegroundColor Cyan
+Write-Host "🎯 StanceStream Platform Setup" -ForegroundColor Cyan
+Write-Host "==========================" -ForegroundColor Cyan
 Write-Host ""
 
 # Check Node.js version
@@ -79,9 +79,9 @@ Write-Host ""
 Write-Host "⚡ Optimizing cache for maximum performance..." -ForegroundColor Yellow
 node presentationOptimizer.js
 
-# Optimize for presentation
+# Optimize for platform presentation
 Write-Host ""
-Write-Host "🎯 Optimizing for presentation impact..." -ForegroundColor Yellow
+Write-Host "🎯 Optimizing for business presentation..." -ForegroundColor Yellow
 node presentationOptimizer.js
 
 # Run quick system test
@@ -107,15 +107,15 @@ import('./semanticCache.js').then(({getCacheStats}) => {
 });"
 
 Write-Host ""
-Write-Host "🚀 StanceStream is ready for production demonstration!" -ForegroundColor Green
+Write-Host "🚀 StanceStream is ready for enterprise deployment!" -ForegroundColor Green
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Cyan
 Write-Host "1. Terminal 1: node server.js" -ForegroundColor White
 Write-Host "2. Terminal 2: cd stancestream-frontend; npm run dev" -ForegroundColor White
 Write-Host "3. Browser: http://localhost:5173" -ForegroundColor White
 Write-Host ""
-Write-Host "💡 For best demo results:" -ForegroundColor Cyan
-Write-Host "   - Start with Business Intelligence view to show ROI" -ForegroundColor White
+Write-Host "💡 For best platform demonstration:" -ForegroundColor Cyan
+Write-Host "   - Start with Executive Showcase view to show business value" -ForegroundColor White
 Write-Host "   - Run multiple debates to demonstrate cache efficiency" -ForegroundColor White
 Write-Host "   - Use Analytics view to show real-time performance" -ForegroundColor White
 Write-Host "   - Highlight semantic caching innovation" -ForegroundColor White

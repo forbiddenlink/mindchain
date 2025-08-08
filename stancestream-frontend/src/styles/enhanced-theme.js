@@ -1,4 +1,4 @@
-// Enhanced Design System - Professional Contest-Grade Styling
+// Enhanced Design System - Professional Enterprise-Grade Styling
 export const enhancedColors = {
     // Primary palette with more sophistication
     primary: {

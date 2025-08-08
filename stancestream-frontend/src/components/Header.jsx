@@ -92,7 +92,7 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
                                 }`}></div>
                             <div className="flex flex-col min-w-0">
                                 <span className="text-green-300 text-xs sm:text-sm font-semibold font-mono">
-                                    CONTEST READY
+                                    PLATFORM READY
                                 </span>
                                 <span className="text-gray-400 text-xs hidden sm:block font-mono">
                                     {connectionStatus === 'Connected' && backendHealth === 'healthy'

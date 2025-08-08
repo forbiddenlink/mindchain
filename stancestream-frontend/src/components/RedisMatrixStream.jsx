@@ -19,7 +19,7 @@ export default function RedisMatrixStream({ position = 'overlay', className = ''
             examples: [
                 'agent:senatorbot:profile → updating stance',
                 'debate:metrics → cache stats',
-                'contest:live_metrics → scoring',
+                'platform:live_metrics → scoring',
                 'agent:intelligence → emotions'
             ]
         },

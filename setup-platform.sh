@@ -1,9 +1,9 @@
 #!/bin/bash
-# StanceStream Production Demo Setup Script
-# Optimizes system for maximum performance and impressive metrics
+# StanceStream Platform Setup Script
+# Optimizes system for maximum performance and business demonstration
 
-echo "🎯 StanceStream Production Demo Setup"
-echo "=================================="
+echo "🎯 StanceStream Platform Setup"
+echo "=========================="
 echo ""
 
 # Check Node.js version
@@ -111,15 +111,15 @@ import('./semanticCache.js').then(({getCacheStats}) => {
 "
 
 echo ""
-echo "🚀 StanceStream is ready for production demonstration!"
+echo "🚀 StanceStream is ready for enterprise deployment!"
 echo ""
 echo "Next steps:"
 echo "1. Terminal 1: node server.js"
 echo "2. Terminal 2: cd stancestream-frontend && npm run dev"
 echo "3. Browser: http://localhost:5173"
 echo ""
-echo "💡 For best demo results:"
-echo "   - Start with Business Intelligence view to show ROI"
+echo "💡 For best platform demonstration:"
+echo "   - Start with Executive Showcase view to show business value"
 echo "   - Run multiple debates to demonstrate cache efficiency"
 echo "   - Use Analytics view to show real-time performance"
 echo "   - Highlight semantic caching innovation"

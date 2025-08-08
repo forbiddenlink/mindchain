@@ -9,7 +9,7 @@ import TrueMultiDebateViewer from './components/TrueMultiDebateViewer';
 import StanceEvolutionChart from './components/StanceEvolutionChart';
 import KeyMomentsPanel from './components/KeyMomentsPanel';
 import BusinessValueDashboard from './components/BusinessValueDashboard';
-import ContestShowcaseDashboard from './components/ContestShowcaseDashboard';
+import PlatformShowcaseDashboard from './components/PlatformShowcaseDashboard';
 import LivePerformanceOverlay from './components/LivePerformanceOverlay';
 import RedisMatrixModal from './components/RedisMatrixModal';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -462,13 +462,13 @@ export default function App() {
                       BUSINESS
                     </button>
                     <button
-                      onClick={() => setViewMode('contest-showcase')}
-                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 font-mono ${viewMode === 'contest-showcase'
+                      onClick={() => setViewMode('platform-showcase')}
+                      className={`px-4 py-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 font-mono ${viewMode === 'platform-showcase'
                                                   ? 'bg-gradient-to-r from-green-600/30 to-emerald-600/30 border-green-500/30 text-green-300 shadow-lg shadow-green-500/20'
                         : 'bg-gray-900/50 border-green-500/30 text-green-300 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-emerald-600/20 hover:border-green-500/30'
                         }`}
                     >
-                      CONTEST
+                      PLATFORM
                     </button>
                     <button
                       onClick={() => setShowMatrixModal(true)}
@@ -561,10 +561,10 @@ export default function App() {
                   <StanceEvolutionChart stanceData={stanceData} />
                 </div>
               </div>
-            ) : viewMode === 'contest-showcase' ? (
-              /* Contest Showcase - Premium Full Screen Experience */
+            ) : viewMode === 'platform-showcase' ? (
+              /* Platform Showcase - Premium Full Screen Experience */
               <div className="animate-fade-in-up">
-                <ContestShowcaseDashboard />
+                <PlatformShowcaseDashboard />
               </div>
             ) : viewMode === 'business' ? (
               /* Business Intelligence Dashboard */

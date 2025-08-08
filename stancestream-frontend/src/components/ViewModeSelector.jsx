@@ -37,7 +37,7 @@ const ViewModeSelector = ({ viewMode, setViewMode, className = '' }) => {
             key: 'showcase',
             label: 'Showcase',
             icon: 'award',
-            description: 'Contest demonstration',
+            description: 'Platform demonstration',
             gradient: 'from-green-600 to-emerald-600'
         }
     ];

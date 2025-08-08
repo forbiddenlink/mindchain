@@ -2,10 +2,10 @@
 import { useState, useEffect } from 'react';
 import Icon from './Icon';
 
-export default function SystemShowcaseDashboard() {
+export default function PlatformShowcaseDashboard() {
     const [showcaseData, setShowcaseData] = useState(null);
     const [systemMetrics, setSystemMetrics] = useState(null);
-    const [contestMetrics, setContestMetrics] = useState(null);
+    const [platformMetrics, setPlatformMetrics] = useState(null);
     const [optimizationMetrics, setOptimizationMetrics] = useState(null);
     const [demoRunning, setDemoRunning] = useState(false);
     const [demoResults, setDemoResults] = useState({});
@@ -22,11 +22,11 @@ export default function SystemShowcaseDashboard() {
                     setShowcaseData(data);
                 }
 
-                // Get contest metrics
-                const metricsResponse = await fetch('/api/analytics/contest-metrics');
+                // Get platform metrics
+                const metricsResponse = await fetch('/api/analytics/platform-metrics');
                 if (metricsResponse.ok) {
                     const metrics = await metricsResponse.json();
-                    setContestMetrics(metrics);
+                    setPlatformMetrics(metrics);
                 }
 
                 // Get optimization metrics
@@ -56,7 +56,7 @@ export default function SystemShowcaseDashboard() {
         setActiveDemo(scenario);
 
         try {
-            const response = await fetch(`/api/contest/demo/${scenario}`, {
+            const response = await fetch(`/api/platform/demo/${scenario}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ duration: 15, agents: ['senatorbot', 'reformerbot'] })
@@ -96,8 +96,8 @@ export default function SystemShowcaseDashboard() {
                 </p>
             </div>
 
-            {/* Contest Metrics Overview */}
-            {contestMetrics && (
+            {/* Platform Metrics Overview */}
+            {platformMetrics && (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-6 shadow-lg">
                         <div className="flex items-center gap-3 mb-2">
@@ -105,7 +105,7 @@ export default function SystemShowcaseDashboard() {
                             <span className="text-lg font-bold text-green-300">ACTIVE DEBATES</span>
                         </div>
                         <div className="text-3xl font-bold text-green-200">
-                            {contestMetrics.contestMetrics?.debateStatistics?.activeDebates || 0}
+                            {platformMetrics.platformMetrics?.debateStatistics?.activeDebates || 0}
                         </div>
                         <div className="text-sm text-green-400/80">REAL-TIME CONCURRENT PROCESSING</div>
                     </div>
@@ -116,7 +116,7 @@ export default function SystemShowcaseDashboard() {
                             <span className="text-lg font-bold text-green-300">TOTAL MESSAGES</span>
                         </div>
                         <div className="text-3xl font-bold text-green-200">
-                            {contestMetrics.contestMetrics?.debateStatistics?.totalMessages || 0}
+                            {platformMetrics.platformMetrics?.debateStatistics?.totalMessages || 0}
                         </div>
                         <div className="text-sm text-green-400/80">REDIS STREAMS THROUGHPUT</div>
                     </div>
@@ -127,7 +127,7 @@ export default function SystemShowcaseDashboard() {
                             <span className="text-lg font-bold text-green-300">CACHE HIT RATE</span>
                         </div>
                         <div className="text-3xl font-bold text-green-200">
-                            {contestMetrics.contestMetrics?.semanticCache?.hit_ratio || 0}%
+                            {platformMetrics.platformMetrics?.semanticCache?.hit_ratio || 0}%
                         </div>
                         <div className="text-sm text-green-400/80">SEMANTIC VECTOR CACHING</div>
                     </div>
@@ -138,7 +138,7 @@ export default function SystemShowcaseDashboard() {
                             <span className="text-lg font-bold text-green-300">SYSTEM HEALTH</span>
                         </div>
                         <div className="text-3xl font-bold text-green-200">
-                            {Math.round((contestMetrics.contestMetrics?.systemHealth?.uptime || 0) / 60)}M
+                            {Math.round((platformMetrics.platformMetrics?.systemHealth?.uptime || 0) / 60)}M
                         </div>
                         <div className="text-sm text-green-400/80">UPTIME & STABILITY</div>
                     </div>
@@ -307,7 +307,7 @@ export default function SystemShowcaseDashboard() {
             <div className="mb-8">
                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-green-400 tracking-wide">
                     <Icon name="play-circle" className="w-6 h-6 text-green-400" />
-                    INTERACTIVE CONTEST DEMONSTRATIONS
+                    INTERACTIVE PLATFORM DEMONSTRATIONS
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -410,11 +410,11 @@ export default function SystemShowcaseDashboard() {
                             </div>
                         )}
 
-                        {contestMetrics && (
+                        {platformMetrics && (
                             <div className="flex items-center gap-3 text-sm">
                                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                                 <span className="text-green-300 font-mono">
-                                    PROCESSING {contestMetrics.contestMetrics?.debateStatistics?.activeDebates || 0} CONCURRENT DEBATES
+                                    PROCESSING {platformMetrics.platformMetrics?.debateStatistics?.activeDebates || 0} CONCURRENT DEBATES
                                 </span>
                                 <span className="text-green-500/60 font-mono">
                                     {new Date().toLocaleTimeString()}
@@ -437,7 +437,7 @@ export default function SystemShowcaseDashboard() {
                         <div className="flex items-center gap-3 text-sm">
                             <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
                             <span className="text-green-300 font-mono">
-                                SEMANTIC CACHE HIT RATE: {contestMetrics?.contestMetrics?.semanticCache?.hit_ratio || 0}%
+                                SEMANTIC CACHE HIT RATE: {platformMetrics?.platformMetrics?.semanticCache?.hit_ratio || 0}%
                             </span>
                             <span className="text-green-500/60 font-mono">
                                 {new Date().toLocaleTimeString()}

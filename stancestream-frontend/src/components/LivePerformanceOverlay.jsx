@@ -72,9 +72,9 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
             const perfResponse = await fetch('http://localhost:3001/api/analytics/performance');
             const perfData = await perfResponse.json();
             
-            // Fetch contest metrics
-            const contestResponse = await fetch('http://localhost:3001/api/contest/live-metrics');
-            const contestData = await contestResponse.json();
+            // Fetch platform metrics
+            const platformResponse = await fetch('http://localhost:3001/api/contest/live-metrics');
+            const platformData = await platformResponse.json();
 
             // Update metrics with real data
             setMetrics(prev => ({
@@ -82,8 +82,8 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
                 cacheHitRate: cacheData?.metrics?.hit_ratio || prev.cacheHitRate,
                 costSavings: cacheData?.business_value?.current_usage?.monthly_savings || prev.costSavings,
                 responseTime: perfData?.average_response_time || prev.responseTime,
-                activeDebates: contestData?.contestMetrics?.debateStatistics?.activeDebates || prev.activeDebates,
-                totalMessages: contestData?.contestMetrics?.debateStatistics?.totalMessages || prev.totalMessages,
+                activeDebates: platformData?.contestMetrics?.debateStatistics?.activeDebates || prev.activeDebates,
+                totalMessages: platformData?.contestMetrics?.debateStatistics?.totalMessages || prev.totalMessages,
                 operationsPerSec: perfData?.redis_ops_per_second || prev.operationsPerSec,
                 redisOpsPerMin: perfData?.redis_ops_per_minute || prev.redisOpsPerMin,
                 systemHealth: perfData?.uptime_percentage || prev.systemHealth

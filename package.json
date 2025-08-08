@@ -2,7 +2,7 @@
   "name": "stancestream",
   "type": "module",
   "version": "1.0.0",
-  "description": "Real-Time Multi-Agent AI Debate Engine - Production-ready contest submission showcasing all 4 Redis data models",
+  "description": "Real-Time Multi-Agent AI Intelligence Platform - Enterprise-grade system showcasing Redis capabilities for intelligent applications",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

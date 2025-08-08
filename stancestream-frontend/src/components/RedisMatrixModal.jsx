@@ -61,7 +61,7 @@ export default function RedisMatrixModal({ isOpen, onClose }) {
                                 <ul className="text-xs text-gray-300 space-y-1">
                                     <li>• Agent profiles & personalities</li>
                                     <li>• Cache metrics & statistics</li>
-                                    <li>• Contest scoring data</li>
+                                    <li>• Platform scoring data</li>
                                     <li>• Intelligence tracking</li>
                                 </ul>
                             </div>
