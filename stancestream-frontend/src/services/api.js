@@ -2,27 +2,95 @@ const API_BASE_URL = window.location.hostname === '127.0.0.1'
     ? 'http://127.0.0.1:3001/api'
     : 'http://localhost:3001/api';
 
-class StanceStreamAPI {
-    async get(endpoint) {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`);
-        if (!response.ok) {
-            throw new Error(`API Error: ${response.statusText}`);
+// Request timeout configuration
+const REQUEST_TIMEOUT = 10000; // 10 seconds
+
+// Helper function to create timeout promise
+const withTimeout = (promise, timeoutMs = REQUEST_TIMEOUT) => {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), timeoutMs)
+        )
+    ]);
+};
+
+// Helper function for retry logic
+const withRetry = async (fn, maxRetries = 2, delay = 1000) => {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (error) {
+            if (attempt === maxRetries) {
+                throw error;
+            }
+            console.warn(`🔄 API call failed (attempt ${attempt}/${maxRetries}), retrying in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            delay *= 1.5; // Exponential backoff
         }
-        return response.json();
+    }
+};
+
+class StanceStreamAPI {
+    async get(endpoint, options = {}) {
+        const { timeout = REQUEST_TIMEOUT, retry = true } = options;
+        
+        const makeRequest = () => {
+            const response = fetch(`${API_BASE_URL}${endpoint}`, {
+                signal: AbortSignal.timeout(timeout)
+            });
+            
+            return withTimeout(response, timeout);
+        };
+
+        try {
+            const response = retry ? await withRetry(makeRequest) : await makeRequest();
+            
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            }
+            return response.json();
+        } catch (error) {
+            if (error.name === 'TimeoutError' || error.message === 'Request timeout') {
+                console.error(`⏰ API request timeout: ${endpoint}`);
+                throw new Error(`Request timeout - please check your connection`);
+            }
+            console.error(`❌ API GET error for ${endpoint}:`, error);
+            throw error;
+        }
     }
 
-    async post(endpoint, data) {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) {
-            throw new Error(`API Error: ${response.statusText}`);
+    async post(endpoint, data, options = {}) {
+        const { timeout = REQUEST_TIMEOUT, retry = false } = options; // POST usually shouldn't retry by default
+        
+        const makeRequest = () => {
+            const response = fetch(`${API_BASE_URL}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+                signal: AbortSignal.timeout(timeout)
+            });
+            
+            return withTimeout(response, timeout);
+        };
+
+        try {
+            const response = retry ? await withRetry(makeRequest) : await makeRequest();
+            
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            }
+            return response.json();
+        } catch (error) {
+            if (error.name === 'TimeoutError' || error.message === 'Request timeout') {
+                console.error(`⏰ API request timeout: ${endpoint}`);
+                throw new Error(`Request timeout - please check your connection`);
+            }
+            console.error(`❌ API POST error for ${endpoint}:`, error);
+            throw error;
         }
-        return response.json();
     }
 
     // Agent methods
@@ -59,14 +127,14 @@ class StanceStreamAPI {
         return this.get(`/debate/${debateId}/messages?limit=${limit}`);
     }
 
-    // Health check
+    // Health check with retry for critical connectivity
     async getHealth() {
-        return this.get('/health');
+        return this.get('/health', { retry: true });
     }
 
-    // Redis performance stats
+    // Redis performance stats with retry
     async getRedisStats() {
-        return this.get('/stats/redis');
+        return this.get('/stats/redis', { retry: true });
     }
 
     // 🏆 Contest Analytics

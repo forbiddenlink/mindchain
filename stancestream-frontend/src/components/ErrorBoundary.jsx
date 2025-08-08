@@ -1,6 +1,5 @@
-// Error Boundary Component - Professional error handling
 import React from 'react';
-import Icon from '../Icon';
+import Icon from './Icon';
 
 class ErrorBoundary extends React.Component {
     constructor(props) {

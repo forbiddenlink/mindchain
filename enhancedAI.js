@@ -170,7 +170,7 @@ export async function generateEnhancedMessageOnly(agentId, debateId, topic = 'ge
         }
 
         // Get recent debate messages for context
-        const debateMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 5 });
+        const debateMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 10 });
         const recentContext = debateMessages.reverse().map(entry => 
             `${entry.message.agent_id}: ${entry.message.message}`
         ).join('\n');
@@ -178,24 +178,47 @@ export async function generateEnhancedMessageOnly(agentId, debateId, topic = 'ge
         // Determine emotional state based on recent context
         const emotionalState = determineEmotionalState(profile, recentContext);
 
-        // Enhanced prompt with emotional context
+        // Get total message count for this debate to add variation
+        const totalMessages = debateMessages.length;
+        const turnIndicator = totalMessages === 0 ? 'opening statement' : 
+                            totalMessages < 3 ? 'early response' :
+                            totalMessages < 6 ? 'mid-debate response' : 'later response';
+
+        // Add variety to prevent cache hits for similar situations
+        const conversationalCues = [
+            "Building on the discussion",
+            "Taking a different perspective", 
+            "Considering the broader implications",
+            "From my experience",
+            "Looking at this pragmatically",
+            "As we move forward in this debate"
+        ];
+        const randomCue = conversationalCues[Math.floor(Math.random() * conversationalCues.length)];
+
+        // Enhanced prompt with more variation to prevent cache collisions
         const enhancedPrompt = `
 You are ${profile.name}, a ${profile.tone} ${profile.role} currently feeling ${emotionalState}.
 You believe in ${profile.biases.join(', ')}.
 Debate topic: ${topic}.
+Current turn: ${turnIndicator} (message #${totalMessages + 1}).
+Conversational approach: ${randomCue}.
 
 Recent debate context:
 ${recentContext || 'This is the start of the debate.'}
 
 Current emotional state: ${emotionalState}
-Respond thoughtfully about ${topic}, incorporating your emotional state. Keep under 200 words.`;
+${randomCue}, respond thoughtfully about ${topic}, incorporating your emotional state and addressing the specific context of this ${turnIndicator}. Keep under 200 words and vary your approach from previous responses.`;
+
+        // Add randomness to temperature based on turn to encourage variation
+        const baseTemperature = 0.7 + (totalMessages * 0.05) + (Math.random() * 0.1);
+        const adjustedTemperature = Math.min(baseTemperature + (emotionalState === 'passionate' ? 0.2 : 0), 1.0);
 
         // Generate response
         const completion = await openai.chat.completions.create({
             model: 'gpt-4',
             messages: [{ role: 'user', content: enhancedPrompt }],
             max_tokens: 300,
-            temperature: 0.7 + (emotionalState === 'passionate' ? 0.2 : 0),
+            temperature: adjustedTemperature,
         });
 
         let message = completion.choices[0].message.content.trim();

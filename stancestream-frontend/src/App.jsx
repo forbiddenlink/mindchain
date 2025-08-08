@@ -12,6 +12,7 @@ import BusinessValueDashboard from './components/BusinessValueDashboard';
 import ContestShowcaseDashboard from './components/ContestShowcaseDashboard';
 import LivePerformanceOverlay from './components/LivePerformanceOverlay';
 import RedisMatrixModal from './components/RedisMatrixModal';
+import ErrorBoundary from './components/ErrorBoundary';
 import Icon from './components/Icon';
 import { ViewModeSelector, ToastProvider, useNotification, Container, Stack, Grid } from './components/ui';
 import useWebSocket from './hooks/useWebSocket';
@@ -84,13 +85,14 @@ export default function App() {
 
               console.log('📊 Created stance entry from message:', newStanceEntry);
 
-              // Add to stance data
+              // Add to stance data with memory management
               setStanceData(prev => {
                 // Filter to current debate in standard mode
                 if (viewMode === 'standard' && currentDebateId) {
                   return [...prev.filter(entry => entry.debateId === currentDebateId), newStanceEntry];
                 }
-                return [...prev, newStanceEntry].slice(-50);
+                // In multi-debate mode, keep last 100 entries to prevent memory bloat
+                return [...prev, newStanceEntry].slice(-100);
               });
 
               return updated;
@@ -240,8 +242,8 @@ export default function App() {
               console.log('📊 Filtered stance data:', filtered); // Debug log
               return filtered;
             }
-            // In multi-debate mode, keep last 50 entries to prevent memory issues
-            const updated = [...prev, newStanceEntry].slice(-50);
+            // In multi-debate mode, keep last 100 entries to prevent memory issues
+            const updated = [...prev, newStanceEntry].slice(-100);
             console.log('📊 Updated stance data:', updated); // Debug log
             return updated;
           });
@@ -351,7 +353,8 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-black text-green-300 flex flex-col animate-fade-in-up overflow-x-hidden font-mono">
+      <ErrorBoundary componentName="StanceStream Main Application">
+        <div className="min-h-screen bg-black text-green-300 flex flex-col animate-fade-in-up overflow-x-hidden font-mono">
         {/* Matrix Rain Background Effect */}
         <div className="fixed inset-0 opacity-5 pointer-events-none z-0">
           <div className="matrix-rain"></div>
@@ -646,7 +649,8 @@ export default function App() {
           isOpen={showMatrixModal} 
           onClose={() => setShowMatrixModal(false)} 
         />
-      </div>
+        </div>
+      </ErrorBoundary>
     </ToastProvider>
   );
 }

@@ -4,22 +4,20 @@ import 'dotenv/config';
 import { createClient } from 'redis';
 import OpenAI from 'openai';
 import crypto from 'crypto';
+import { CACHE_CONFIG } from './cacheConfig.js';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Cache configuration
-const CACHE_CONFIG = {
-    SIMILARITY_THRESHOLD: 0.95, // Increased from 85% to 95% to reduce aggressive caching
-    EMBEDDING_MODEL: 'text-embedding-ada-002',
-    CACHE_TTL: 86400, // 24 hours in seconds
-    MAX_CACHE_ENTRIES: 10000,
-    OPENAI_COST_PER_1K_TOKENS: 0.002, // Approximate GPT-4 cost
-};
+// Get configuration with environment overrides
+const config = CACHE_CONFIG.getConfig();
 
 class SemanticCache {
     constructor() {
         this.client = null;
         this.metricsKey = 'cache:metrics';
+        this.embeddingCache = new Map(); // In-memory embedding cache
+        this.embeddingCacheSize = 0;
+        this.maxEmbeddingCacheSize = 1000; // Limit memory usage
     }
 
     async connect() {
@@ -34,16 +32,48 @@ class SemanticCache {
             await this.client.quit();
             this.client = null;
         }
+        
+        // Clear embedding cache on disconnect
+        this.embeddingCache.clear();
+        this.embeddingCacheSize = 0;
+        console.log('🧹 Embedding cache cleared');
     }
 
-    // Generate embedding for prompt
+    // Generate embedding for prompt with caching
     async generateEmbedding(text) {
         try {
+            // Create cache key from text content
+            const cacheKey = crypto.createHash('sha256').update(text).digest('hex').substring(0, 16);
+            
+            // Check in-memory embedding cache first
+            if (this.embeddingCache.has(cacheKey)) {
+                console.log('🎯 Embedding cache hit - saved OpenAI API call');
+                return this.embeddingCache.get(cacheKey);
+            }
+
             const response = await openai.embeddings.create({
-                model: CACHE_CONFIG.EMBEDDING_MODEL,
-                input: text.substring(0, 8000), // Limit to avoid token limits
+                model: config.EMBEDDING_MODEL,
+                input: text.substring(0, config.MAX_PROMPT_LENGTH), // Use config limit
             });
-            return response.data[0].embedding;
+            
+            const embedding = response.data[0].embedding;
+            
+            // Cache the embedding (with size management)
+            if (this.embeddingCacheSize < this.maxEmbeddingCacheSize) {
+                this.embeddingCache.set(cacheKey, embedding);
+                this.embeddingCacheSize++;
+            } else {
+                // Clean up old entries (simple LRU-like behavior)
+                const firstKey = this.embeddingCache.keys().next().value;
+                if (firstKey) {
+                    this.embeddingCache.delete(firstKey);
+                    this.embeddingCacheSize--;
+                }
+                this.embeddingCache.set(cacheKey, embedding);
+            }
+            
+            console.log(`💾 Embedding cached (${this.embeddingCacheSize}/${this.maxEmbeddingCacheSize})`);
+            return embedding;
         } catch (error) {
             console.error('Error generating embedding:', error);
             throw error;
@@ -69,8 +99,8 @@ class SemanticCache {
 
             // Search for similar prompts using Redis Vector Search
             const searchResults = await this.client.ft.search(
-                'cache-index',
-                '*=>[KNN 5 @vector $query_vector AS score]',
+                config.VECTOR_INDEX_NAME,
+                `*=>[KNN ${config.VECTOR_SEARCH_LIMIT} @vector $query_vector AS score]`,
                 {
                     PARAMS: {
                         query_vector: vectorBuffer,
@@ -85,7 +115,7 @@ class SemanticCache {
                 const bestMatch = searchResults.documents[0];
                 const similarity = 1 - parseFloat(bestMatch.value.score); // Convert distance to similarity
 
-                if (similarity >= CACHE_CONFIG.SIMILARITY_THRESHOLD) {
+                if (similarity >= config.SIMILARITY_THRESHOLD) {
                     console.log(`🎯 Cache HIT! Similarity: ${(similarity * 100).toFixed(1)}%`);
                     
                     // Update hit metrics
@@ -139,7 +169,7 @@ class SemanticCache {
             await this.client.hSet(cacheKey, cacheData);
             
             // Set TTL
-            await this.client.expire(cacheKey, CACHE_CONFIG.CACHE_TTL);
+            await this.client.expire(cacheKey, config.CACHE_TTL);
 
             console.log(`💾 Response cached with key: ${cacheKey}`);
             
@@ -180,9 +210,9 @@ class SemanticCache {
             if (isHit) {
                 metrics.cache_hits++;
                 // Estimate tokens saved (rough calculation)
-                const tokensSaved = 100; // Conservative estimate per cached response
+                const tokensSaved = config.ESTIMATED_TOKENS_PER_RESPONSE; // Use config value
                 metrics.total_tokens_saved += tokensSaved;
-                metrics.estimated_cost_saved = (metrics.total_tokens_saved / 1000) * CACHE_CONFIG.OPENAI_COST_PER_1K_TOKENS;
+                metrics.estimated_cost_saved = (metrics.total_tokens_saved / 1000) * config.OPENAI_COST_PER_1K_TOKENS;
                 
                 // Update average similarity
                 metrics.average_similarity = ((metrics.average_similarity * (metrics.cache_hits - 1)) + similarity) / metrics.cache_hits;
@@ -227,8 +257,8 @@ class SemanticCache {
 
     // Estimate token count (rough approximation)
     estimateTokens(text) {
-        // Rough estimate: 1 token ≈ 4 characters for English text
-        return Math.ceil(text.length / 4);
+        // Use config value for token estimation
+        return Math.ceil(text.length / config.TOKEN_ESTIMATION_RATIO);
     }
 
     // Clean up old cache entries
@@ -260,7 +290,7 @@ class SemanticCache {
                 ...metrics,
                 total_cache_entries: totalKeys,
                 cache_efficiency: metrics.hit_ratio,
-                memory_saved_mb: (metrics.total_tokens_saved * 4) / (1024 * 1024), // Rough calculation
+                memory_saved_mb: (metrics.total_tokens_saved * config.TOKEN_ESTIMATION_RATIO) / config.MEMORY_EFFICIENCY_FACTOR, // Use config values
             };
 
         } catch (error) {

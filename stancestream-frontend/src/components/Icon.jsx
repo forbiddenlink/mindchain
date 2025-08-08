@@ -13,6 +13,7 @@ import {
     Clock,
     CheckCircle,
     X,
+    XCircle,
     Target,
     Square,
     AlertTriangle,
@@ -149,6 +150,7 @@ const iconMap = {
     'alert-triangle': AlertTriangle,
     'shield': Shield,
     'trash': Trash2,
+    'x-circle': XCircle,
 
     // Chart and UI controls
     'maximize2': Maximize2,

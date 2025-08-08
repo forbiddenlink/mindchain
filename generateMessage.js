@@ -5,9 +5,73 @@ import { getCachedResponse, cacheNewResponse } from './semanticCache.js';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Redis connection pool singleton to prevent memory leaks
+class RedisPool {
+    constructor() {
+        this.client = null;
+        this.connectionPromise = null;
+    }
+
+    async getClient() {
+        if (this.client && this.client.isReady) {
+            return this.client;
+        }
+
+        if (this.connectionPromise) {
+            return this.connectionPromise;
+        }
+
+        this.connectionPromise = this.createConnection();
+        return this.connectionPromise;
+    }
+
+    async createConnection() {
+        try {
+            this.client = createClient({ 
+                url: process.env.REDIS_URL,
+                socket: {
+                    reconnectDelay: Math.min(1000, 50),
+                    connectTimeout: 5000
+                }
+            });
+            
+            await this.client.connect();
+            console.log('🔗 Redis connection pool established');
+            
+            // Handle connection errors
+            this.client.on('error', (err) => {
+                console.error('❌ Redis pool client error:', err);
+                this.client = null;
+                this.connectionPromise = null;
+            });
+
+            this.connectionPromise = null;
+            return this.client;
+        } catch (error) {
+            console.error('❌ Failed to create Redis connection:', error);
+            this.connectionPromise = null;
+            throw error;
+        }
+    }
+
+    async disconnect() {
+        if (this.client) {
+            try {
+                await this.client.quit();
+                console.log('🔌 Redis connection pool disconnected');
+            } catch (error) {
+                console.error('❌ Error disconnecting Redis pool:', error);
+            }
+            this.client = null;
+            this.connectionPromise = null;
+        }
+    }
+}
+
+const redisPool = new RedisPool();
+
 export async function generateMessage(agentId, debateId, topic = 'general policy') {
-    const client = createClient({ url: process.env.REDIS_URL });
-    await client.connect();
+    const client = await redisPool.getClient();
 
     const profileKey = `agent:${agentId}:profile`;
     const profile = await client.json.get(profileKey);
@@ -47,7 +111,7 @@ Stay focused on this specific topic and maintain your character's perspective.
         console.log(`🎯 Using cached response (${(cachedResult.similarity * 100).toFixed(1)}% similarity)`);
         console.log(`💰 Saved OpenAI API call - Cache hit!`);
     } else {
-        // �💬 Step 3: Generate AI message (cache miss)
+        // 💬 Step 3: Generate AI message (cache miss)
         console.log('🤖 Generating new AI response...');
         const chatResponse = await openai.chat.completions.create({
             model: 'gpt-4',
@@ -87,7 +151,7 @@ Stay focused on this specific topic and maintain your character's perspective.
         content: message,
     });
 
-    await client.quit();
+    // ✅ No longer calling client.quit() - connection pool manages this
     
     return {
         message,
@@ -99,8 +163,7 @@ Stay focused on this specific topic and maintain your character's perspective.
 
 // Generate message without storing to streams (for server-controlled storage)
 export async function generateMessageOnly(agentId, debateId, topic = 'general policy') {
-    const client = createClient({ url: process.env.REDIS_URL });
-    await client.connect();
+    const client = await redisPool.getClient();
 
     const profileKey = `agent:${agentId}:profile`;
     const profile = await client.json.get(profileKey);
@@ -116,16 +179,38 @@ export async function generateMessageOnly(agentId, debateId, topic = 'general po
         .map((msg, i) => `Memory ${i + 1}: ${msg}`)
         .join('\n');
 
-    // 📊 Step 2: Construct prompt with memory + profile + dynamic topic
+    // 📊 Step 2: Construct enhanced prompt with variety mechanisms to prevent cache collisions
+    const messageStream = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 50 });
+    const totalMessages = messageStream.length;
+    const turnNumber = Math.floor(totalMessages / 2) + 1;
+    
+    // Add randomization elements
+    const randomSeed = Math.floor(Math.random() * 1000);
+    const conversationalCues = [
+        "Let me address this directly:",
+        "I want to emphasize:",
+        "My position is clear:",
+        "Here's what I believe:",
+        "Allow me to explain:",
+        "I must point out:",
+        "Consider this perspective:",
+        "The reality is:"
+    ];
+    const randomCue = conversationalCues[Math.floor(Math.random() * conversationalCues.length)];
+    
     const prompt = `
 You are ${profile.name}, a ${profile.tone} ${profile.role}.
 You believe in ${profile.biases.join(', ')}.
 Debate topic: ${topic}.
+Turn #${turnNumber} | Message Count: ${totalMessages} | Seed: ${randomSeed}
+
+${randomCue}
 
 Your recent memories:
 ${memoryContext || 'This is the start of the debate.'}
 
-Respond with a thoughtful position on ${topic}. Be engaging but stay in character. Keep response under 200 words.`;
+Generate a unique, varied response about ${topic}. Stay in character but ensure this response differs from previous ones. Keep under 200 words.
+IMPORTANT: Even if discussing similar points, phrase them differently and add new angles or examples.`;
 
     // 🎯 Step 3: Check semantic cache for similar prompts
     const cachedResult = await getCachedResponse(prompt, topic);
@@ -137,11 +222,17 @@ Respond with a thoughtful position on ${topic}. Be engaging but stay in characte
     } else {
         console.log('💭 No cache hit, generating new AI response...');
 
+        // Add temperature variation based on turn number and randomness
+        const baseTemperature = 0.7;
+        const turnVariation = (turnNumber % 5) * 0.05; // 0.0 to 0.2
+        const randomVariation = (Math.random() - 0.5) * 0.2; // -0.1 to +0.1
+        const dynamicTemperature = Math.max(0.3, Math.min(1.0, baseTemperature + turnVariation + randomVariation));
+
         const chatResponse = await openai.chat.completions.create({
             model: 'gpt-4',
             messages: [{ role: 'user', content: prompt }],
             max_tokens: 300,
-            temperature: 0.7,
+            temperature: dynamicTemperature,
         });
 
         message = chatResponse.choices[0].message.content.trim();
@@ -157,7 +248,7 @@ Respond with a thoughtful position on ${topic}. Be engaging but stay in characte
     }
     console.log(`${agentId}: ${message}`);
 
-    await client.quit();
+    // ✅ No longer calling client.quit() - connection pool manages this
     
     return {
         message,
@@ -165,4 +256,9 @@ Respond with a thoughtful position on ${topic}. Be engaging but stay in characte
         similarity: cachedResult ? cachedResult.similarity : 0,
         costSaved: cachedResult ? 0.002 : 0
     };
+}
+
+// Export cleanup function for graceful shutdown
+export async function cleanup() {
+    await redisPool.disconnect();
 }

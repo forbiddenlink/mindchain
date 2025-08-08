@@ -65,15 +65,15 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
     const fetchMetrics = async () => {
         try {
             // Fetch cache metrics with business value
-            const cacheResponse = await fetch('/api/cache/metrics');
+            const cacheResponse = await fetch('http://localhost:3001/api/cache/metrics');
             const cacheData = await cacheResponse.json();
             
             // Fetch performance metrics
-            const perfResponse = await fetch('/api/analytics/performance');
+            const perfResponse = await fetch('http://localhost:3001/api/analytics/performance');
             const perfData = await perfResponse.json();
             
             // Fetch contest metrics
-            const contestResponse = await fetch('/api/contest/live-metrics');
+            const contestResponse = await fetch('http://localhost:3001/api/contest/live-metrics');
             const contestData = await contestResponse.json();
 
             // Update metrics with real data
