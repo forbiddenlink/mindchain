@@ -244,6 +244,103 @@ class RedisConnectionManager {
         const match = info.match(regex);
         return match ? match[1].trim() : null;
     }
+
+    /**
+     * Initialize required Redis data structures
+     */
+    async initializeStructures() {
+        const client = await this.getClient();
+        
+        try {
+            // Initialize basic key-value pairs for system state
+            await client.set('system:initialized', 'true');
+            await client.set('system:last_init', new Date().toISOString());
+            
+            // Create Redis Streams if they don't exist
+            const streams = [
+                'debate:events',
+                'system:metrics',
+                'cache:operations'
+            ];
+
+            // Initialize streams with proper error handling
+            for (const stream of streams) {
+                try {
+                    // First ensure streams exist with a dummy message
+                    const streamExists = await client.exists(stream);
+                    if (!streamExists) {
+                        await client.xAdd(stream, '*', {
+                            event: 'stream_created',
+                            timestamp: new Date().toISOString()
+                        });
+                    }
+                    
+                    // Attempt to create consumer group
+                    try {
+                        await client.xGroupCreate(stream, 'stancestream-group', '0', {
+                            MKSTREAM: true
+                        });
+                        console.log(`✅ Consumer group created for ${stream}`);
+                    } catch (groupError) {
+                        // Group might already exist (BUSYGROUP), which is fine
+                        if (!groupError.message.includes('BUSYGROUP')) {
+                            console.warn(`⚠️ Group creation warning for ${stream}:`, groupError.message);
+                        }
+                    }
+                } catch (error) {
+                    console.warn(`⚠️ Stream initialization warning for ${stream}:`, error.message);
+                }
+            }
+            
+            // Initialize TimeSeries if module available
+            try {
+                await client.ts.create('metrics:response_times', {
+                    RETENTION: 24 * 60 * 60 * 1000, // 24 hours
+                    DUPLICATE_POLICY: 'LAST'
+                });
+                await client.ts.create('metrics:cache_hits', {
+                    RETENTION: 24 * 60 * 60 * 1000
+                });
+            } catch (error) {
+                // TimeSeries might already exist or module might not be loaded
+                if (error.message.includes('already exists')) {
+                    console.log('ℹ️ TimeSeries metrics already exist, continuing...');
+                } else {
+                    console.warn('⚠️ TimeSeries initialization warning:', error.message);
+                }
+            }
+
+            // Initialize JSON document for system config if it doesn't exist
+            try {
+                await client.json.set('system:config', '$', {
+                    initialized: true,
+                    timestamp: new Date().toISOString(),
+                    features: {
+                        caching: true,
+                        factChecking: true,
+                        sentiment: true
+                    }
+                }, { NX: true });
+            } catch (error) {
+                // JSON document might already exist or module might not be loaded
+                console.warn('⚠️ JSON initialization warning:', error.message);
+            }
+
+            // Set basic Hash for cache configuration
+            await client.hSet('cache:config', {
+                'hit_threshold': '0.85',
+                'ttl': '3600',
+                'max_size': '1000'
+            });
+
+            console.log('💾 Redis structures initialized successfully');
+            return true;
+
+        } catch (error) {
+            console.error('❌ Failed to initialize Redis structures:', error.message);
+            throw error;
+        }
+    }
 }
 
 // Export singleton instance

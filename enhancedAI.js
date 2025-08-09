@@ -1,7 +1,7 @@
 // Enhanced AI Features for StanceStream - Contest Improvements
 
 import 'dotenv/config';
-import { createClient } from 'redis';
+import redisManager from './redisManager.js';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -46,8 +46,7 @@ function calculateSimilarity(message1, message2) {
 
     // 📊 Enhanced AI generation with emotional state and coalition building
 export async function generateEnhancedMessage(agentId, debateId, topic = 'general policy') {
-    const client = createClient({ url: process.env.REDIS_URL });
-    await client.connect();
+    const client = await redisManager.getClient();
 
     try {
         const profile = await client.json.get(`agent:${agentId}:profile`);
@@ -148,19 +147,17 @@ Instructions:
         });
         */
 
-        await client.quit();
         return message;
 
     } catch (error) {
-        await client.quit();
         throw error;
     }
 }
 
 // Enhanced message generation without storing to streams (for server-controlled storage)
 export async function generateEnhancedMessageOnly(agentId, debateId, topic = 'general policy') {
-    const client = createClient({ url: process.env.REDIS_URL });
-    await client.connect();
+    // Use redisManager instead of creating a new client
+    const client = await redisManager.getClient();
 
     try {
         // Get agent profile and debate context
@@ -246,11 +243,9 @@ ${randomCue}, respond thoughtfully about ${topic}, incorporating your emotional 
             }
         }
 
-        await client.quit();
         return message;
 
     } catch (error) {
-        await client.quit();
         throw error;
     }
 }
@@ -404,8 +399,7 @@ function topicToStanceKey(topic) {
 
 // �📊 Advanced stance evolution based on debate dynamics
 export async function updateStanceBasedOnDebate(agentId, debateId, topic) {
-    const client = createClient({ url: process.env.REDIS_URL });
-    await client.connect();
+    const client = await redisManager.getClient();
     
     try {
         const profile = await client.json.get(`agent:${agentId}:profile`);
@@ -480,11 +474,9 @@ export async function updateStanceBasedOnDebate(agentId, debateId, topic) {
             console.log(`⚠️ TimeSeries add failed: ${tsError.message}`);
         }
         
-        await client.quit();
         return { oldStance: currentStance, newStance, shift: stanceShift };
         
     } catch (error) {
-        await client.quit();
         throw error;
     }
 }
