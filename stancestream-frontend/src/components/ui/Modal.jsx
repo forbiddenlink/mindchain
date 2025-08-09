@@ -15,11 +15,11 @@ export const Modal = ({
     const modalRef = useRef(null);
 
     const sizes = {
-        sm: 'max-w-md',
-        md: 'max-w-lg',
-        lg: 'max-w-2xl',
-        xl: 'max-w-4xl',
-        full: 'max-w-7xl'
+        sm: 'w-full max-w-md',
+        md: 'w-full max-w-lg',
+        lg: 'w-full max-w-2xl',
+        xl: 'w-full max-w-4xl',
+        full: 'w-full max-w-7xl'
     };
 
     useEffect(() => {
@@ -43,16 +43,20 @@ export const Modal = ({
     if (!isOpen) return null;
 
     return (
-        <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={closeOnOverlay ? onClose : undefined}
-        >
-            <div
-                ref={modalRef}
-                className={`glass-panel rounded-2xl ${sizes[size]} w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100 ${className}`}
-                onClick={(e) => e.stopPropagation()}
-            >
-                {children}
+        <div className="fixed inset-0 z-[100]" onClick={closeOnOverlay ? onClose : undefined}>
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+            
+            {/* Modal Container */}
+            <div className="fixed inset-0 overflow-y-auto flex items-start justify-center">
+                {/* Modal Content */}
+                <div
+                    ref={modalRef}
+                    className={`relative glass-panel rounded-2xl ${sizes[size]} w-full mx-auto mt-20 bg-gray-900/95 border border-green-500/30 shadow-2xl shadow-green-500/10 backdrop-blur-sm ${className}`}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {children}
+                </div>
             </div>
         </div>
     );
@@ -96,7 +100,7 @@ export const ModalHeader = ({
 // Modal Content
 export const ModalContent = ({ children, className = '' }) => {
     return (
-        <div className={`p-6 overflow-y-auto ${className}`}>
+        <div className={`p-6 overflow-y-auto max-h-[70vh] ${className}`}>
             {children}
         </div>
     );

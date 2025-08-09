@@ -121,6 +121,8 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
     // Listen for WebSocket metrics updates with cache hit celebrations
     useEffect(() => {
         const handleMetricsUpdate = (event) => {
+            console.log('LivePerformanceOverlay received event:', event.type, event.detail); // Debug logging
+            
             if (event.detail?.type === 'metrics_updated') {
                 fetchMetrics();
             } else if (event.detail?.type === 'live_performance_update') {
@@ -142,13 +144,47 @@ export default function LivePerformanceOverlay({ position = 'top-right', size = 
                 }));
             } else if (event.detail?.type === 'cache_hit') {
                 // Celebrate cache hits with business value!
+                console.log('Cache hit celebration triggered:', event.detail); // Debug logging
                 const { similarity, cost_saved } = event.detail;
                 triggerCelebration(cost_saved || 0.002, similarity || 0.85);
             }
         };
 
+        // Listen for both websocket-message and metrics-update events
         window.addEventListener('websocket-message', handleMetricsUpdate);
-        return () => window.removeEventListener('websocket-message', handleMetricsUpdate);
+        window.addEventListener('metrics-update', handleMetricsUpdate);
+
+        // Add click handler for demo button
+        const handleDemoClick = () => {
+            console.log('Demo cache hit button clicked'); // Debug logging
+            fetch('/api/demo/cache-hit', {
+                method: 'POST',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log('Demo cache hit request successful'); // Debug logging
+            })
+            .catch(error => {
+                console.error('Error triggering demo cache hit:', error);
+            });
+        };
+
+        const demoButton = document.querySelector('#demo-cache-hit');
+        if (demoButton) {
+            console.log('Demo button found, adding click handler'); // Debug logging
+            demoButton.addEventListener('click', handleDemoClick);
+        }
+
+        return () => {
+            window.removeEventListener('websocket-message', handleMetricsUpdate);
+            window.removeEventListener('metrics-update', handleMetricsUpdate);
+            const demoButton = document.querySelector('#demo-cache-hit');
+            if (demoButton) {
+                demoButton.removeEventListener('click', handleDemoClick);
+            }
+        };
     }, [runningTotal]);
 
     // Auto-collapse when idle for better UX

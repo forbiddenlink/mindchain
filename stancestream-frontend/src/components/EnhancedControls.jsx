@@ -72,15 +72,21 @@ export default function EnhancedControls({
             
             const randomScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
             
-            const response = await fetch('/api/demo/cache-hit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(randomScenario)
+            // Use the platform demo endpoint (will be proxied through /api)
+            const response = await api.post('/platform/demo/cache-efficiency', {
+                similarity: randomScenario.similarity,
+                cost_saved: randomScenario.cost_saved
             });
             
-            if (response.ok) {
-                console.log(`🎯 Cache hit demo triggered: ${(randomScenario.similarity * 100).toFixed(1)}% similarity`);
-            }
+            console.log(`🎯 Cache hit demo triggered: ${(randomScenario.similarity * 100).toFixed(1)}% similarity`);
+            // Dispatch event for LivePerformanceOverlay to show the cache hit
+            window.dispatchEvent(new CustomEvent('websocket-message', {
+                detail: {
+                    type: 'cache_hit',
+                    similarity: randomScenario.similarity,
+                    cost_saved: randomScenario.cost_saved
+                }
+            }));
         } catch (error) {
             console.error('Failed to trigger cache hit demo:', error);
         }

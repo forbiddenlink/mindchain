@@ -5,19 +5,21 @@ import { Button, Modal, ModalHeader, ModalContent, Card, CardHeader, CardContent
 
 const IntroModule = ({ onComplete, showIntro = false }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [isVisible, setIsVisible] = useState(showIntro);
+  const [isVisible, setIsVisible] = useState(false);
   const [hasSeenIntro, setHasSeenIntro] = useState(false);
+
+  // Handle both initial render and showIntro prop changes
+  useEffect(() => {
+    setIsVisible(showIntro);
+  }, [showIntro]);
 
   // Check if user has seen intro before
   useEffect(() => {
     const seenIntro = localStorage.getItem('stancestream-intro-seen');
-    if (!seenIntro && showIntro) {
-      setHasSeenIntro(false);
-      setIsVisible(true);
-    } else {
+    if (seenIntro === 'true') {
       setHasSeenIntro(true);
     }
-  }, [showIntro]);
+  }, []);
 
   const steps = [
     {
@@ -235,7 +237,12 @@ const IntroModule = ({ onComplete, showIntro = false }) => {
   const currentStepData = steps[currentStep];
 
   return (
-    <Modal isOpen={isVisible} onClose={handleSkip} className="max-w-4xl">
+    <Modal 
+      isOpen={isVisible} 
+      onClose={handleSkip} 
+      className="max-w-4xl max-h-[90vh]"
+      closeOnOverlay={true}
+    >
       <ModalHeader>
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">

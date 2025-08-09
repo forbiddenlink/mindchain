@@ -1,6 +1,5 @@
-const API_BASE_URL = window.location.hostname === '127.0.0.1'
-    ? 'http://127.0.0.1:3001/api'
-    : 'http://localhost:3001/api';
+// Base URL should be /api for proxy to work correctly
+const API_BASE_URL = '/api';
 
 // Request timeout configuration
 const REQUEST_TIMEOUT = 10000; // 10 seconds

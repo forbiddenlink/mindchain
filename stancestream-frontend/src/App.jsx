@@ -36,9 +36,23 @@ export default function App() {
 
   // WebSocket connection using centralized manager
   useEffect(() => {
-    const wsUrl = window.location.hostname === '127.0.0.1'
-      ? 'ws://127.0.0.1:3001'
-      : 'ws://localhost:3001';
+    // Use current window location's hostname
+    const wsUrl = `ws://${window.location.hostname}:3001`;
+
+    const handleIncomingMessage = (data) => {
+      const message = typeof data === 'string' ? JSON.parse(data) : data;
+
+      // Dispatch to LivePerformanceOverlay for visualization
+      if (['cache_hit', 'metrics_updated', 'live_performance_update'].includes(message.type)) {
+        window.dispatchEvent(new CustomEvent('metrics-update', { 
+          detail: message
+        }));
+        return;
+      }
+
+      // Process other messages for app state
+      handleWebSocketMessage(message);
+    };
 
     // Set up event listeners
     const cleanup = [
@@ -57,7 +71,7 @@ export default function App() {
         setConnectionHealth('error');
       }),
       
-      wsManager.addEventListener('message', handleWebSocketMessage)
+      wsManager.addEventListener('message', handleIncomingMessage)
     ];
 
     // Connect to WebSocket
@@ -72,13 +86,18 @@ export default function App() {
   // Check for first-time user and show intro
   useEffect(() => {
     const hasSeenIntro = localStorage.getItem('stancestream-intro-seen');
-    if (!hasSeenIntro && connectionStatus === 'Connected') {
-      // Delay intro to allow app to load fully
-      setTimeout(() => {
-        setShowIntro(true);
-      }, 2000);
+    // Set showIntro to true by default for first-time users
+    setShowIntro(hasSeenIntro !== 'true');
+  }, []);
+
+  // Set initial state on component mount
+  useEffect(() => {
+    const hasSeenIntro = localStorage.getItem('stancestream-intro-seen');
+    if (!hasSeenIntro) {
+      localStorage.setItem('stancestream-intro-seen', 'false');
+      setShowIntro(true);
     }
-  }, [connectionStatus]);
+  }, []);
 
   // Handle incoming WebSocket messages
   const handleWebSocketMessage = (data) => {
@@ -92,17 +111,12 @@ export default function App() {
           agentId: messageData.agentId,
           text: messageData.message,
           timestamp: messageData.timestamp,
-          debateId: messageData.debateId, // Include debate ID for proper separation
+          debateId: messageData.debateId,
           factCheck: messageData.factCheck,
-          sentiment: messageData.sentiment // Add sentiment data from RedisAI
+          sentiment: messageData.sentiment
         };
 
         setDebateMessages(prev => [...prev, newMessage]);
-
-        // Dispatch custom event for LivePerformanceOverlay
-        window.dispatchEvent(new CustomEvent('websocket-message', {
-          detail: { type: 'new_message', ...messageData }
-        }));
 
         // Extract stance data from new_message and create stance update
         if (messageData.stance && messageData.agentId && messageData.debateId) {
@@ -287,6 +301,15 @@ export default function App() {
         }));
         break;
 
+      case 'cache_hit':
+        // Handle cache hit events
+        console.log('💾 Cache hit event:', messageData);
+        // Dispatch custom event for LivePerformanceOverlay
+        window.dispatchEvent(new CustomEvent('websocket-message', {
+          detail: { type: 'cache_hit', ...messageData }
+        }));
+        break;
+
         case 'multi_debates_started':
           // Visual feedback for multiple debates started
           console.log(`🚀 Multi-debate session started: ${messageData.debates.length} debates`);
@@ -460,6 +483,7 @@ export default function App() {
           connectionStatus={connectionStatus} 
           backendHealth={connectionHealth} 
           onShowIntro={() => {
+            console.log('Opening intro module...');
             localStorage.removeItem('stancestream-intro-seen');
             setShowIntro(true);
           }}
@@ -764,7 +788,10 @@ export default function App() {
         {/* Intro Module */}
         <IntroModule 
           showIntro={showIntro}
-          onComplete={() => setShowIntro(false)}
+          onComplete={() => {
+            setShowIntro(false);
+            localStorage.setItem('stancestream-intro-seen', 'true');
+          }}
         />
         </div>
       </ErrorBoundary>
