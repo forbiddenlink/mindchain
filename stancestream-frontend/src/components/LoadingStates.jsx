@@ -1,6 +1,50 @@
 // Loading States Component - Professional loading indicators
 import Icon from './Icon';
-import { Card, CardContent, Skeleton, Stack } from './ui';
+
+export const DashboardLoader = () => (
+  <div className="w-full h-full min-h-[400px] bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-6 flex items-center justify-center">
+    <div className="text-center">
+      <Icon name="loading" className="w-8 h-8 animate-spin text-green-400 mx-auto mb-4" />
+      <div className="text-green-300 text-sm font-mono">LOADING DASHBOARD...</div>
+    </div>
+  </div>
+);
+
+export const ChartLoader = () => (
+  <div className="w-full h-96 bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-6 flex items-center justify-center">
+    <div className="text-center">
+      <Icon name="loading" className="w-8 h-8 animate-spin text-green-400 mx-auto mb-4" />
+      <div className="text-green-300 text-sm font-mono">LOADING CHART...</div>
+    </div>
+  </div>
+);
+
+export const PanelLoader = () => (
+  <div className="w-full min-h-[300px] bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-6 flex items-center justify-center">
+    <div className="text-center">
+      <Icon name="loading" className="w-8 h-8 animate-spin text-green-400 mx-auto mb-4" />
+      <div className="text-green-300 text-sm font-mono">LOADING...</div>
+    </div>
+  </div>
+);
+
+export const ModalLoader = () => (
+  <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center">
+    <div className="text-center">
+      <Icon name="loading" className="w-12 h-12 animate-spin text-green-400 mx-auto mb-4" />
+      <div className="text-green-300 text-sm font-mono">LOADING MATRIX...</div>
+    </div>
+  </div>
+);
+
+export const OverlayLoader = () => (
+  <div className="w-full bg-gray-900/90 border border-green-500/30 rounded-lg backdrop-blur-sm p-4 flex items-center justify-center min-h-[200px]">
+    <div className="text-center">
+      <Icon name="loading" className="w-6 h-6 animate-spin text-green-400 mx-auto mb-2" />
+      <div className="text-green-300 text-xs font-mono">LOADING METRICS...</div>
+    </div>
+  </div>
+);
 
 export const LoadingSpinner = ({ size = 16, text = "Loading..." }) => (
     <div className="flex items-center justify-center gap-2 text-green-400 animate-fade-in-up">

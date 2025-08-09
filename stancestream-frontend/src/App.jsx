@@ -1,18 +1,22 @@
 // src/App.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import DebatePanel from './components/DebatePanel';
 import FactChecker from './components/FactChecker';
 import EnhancedControls from './components/EnhancedControls';
-import EnhancedPerformanceDashboard from './components/EnhancedPerformanceDashboard';
-import TrueMultiDebateViewer from './components/TrueMultiDebateViewer';
-import StanceEvolutionChart from './components/StanceEvolutionChart';
-import KeyMomentsPanel from './components/KeyMomentsPanel';
-import BusinessValueDashboard from './components/BusinessValueDashboard';
-import PlatformShowcaseDashboard from './components/PlatformShowcaseDashboard';
-import LivePerformanceOverlay from './components/LivePerformanceOverlay';
-import RedisMatrixModal from './components/RedisMatrixModal';
-import IntroModule from './components/IntroModule';
+// Import loading states
+import { DashboardLoader, ChartLoader, PanelLoader, ModalLoader, OverlayLoader } from './components/LoadingStates';
+
+// Lazy-loaded components
+const EnhancedPerformanceDashboard = lazy(() => import('./components/EnhancedPerformanceDashboard'));
+const TrueMultiDebateViewer = lazy(() => import('./components/TrueMultiDebateViewer'));
+const StanceEvolutionChart = lazy(() => import('./components/StanceEvolutionChart'));
+const KeyMomentsPanel = lazy(() => import('./components/KeyMomentsPanel'));
+const BusinessValueDashboard = lazy(() => import('./components/BusinessValueDashboard'));
+const PlatformShowcaseDashboard = lazy(() => import('./components/PlatformShowcaseDashboard'));
+const LivePerformanceOverlay = lazy(() => import('./components/LivePerformanceOverlay'));
+const RedisMatrixModal = lazy(() => import('./components/RedisMatrixModal'));
+const IntroModule = lazy(() => import('./components/IntroModule'));
 import ErrorBoundary from './components/ErrorBoundary';
 import Icon from './components/Icon';
 import { ViewModeSelector, ToastProvider, useNotification, Container, Stack, Grid } from './components/ui';
@@ -637,16 +641,20 @@ export default function App() {
                   <div className="w-full lg:w-[30%] lg:flex-[3] flex-shrink-0 min-h-[800px] flex flex-col">
                     {/* Semantic Cache Engine - Business Value Showcase */}
                     <div className="flex-shrink-0 mb-4 animate-slide-in-right stagger-1">
-                      <LivePerformanceOverlay 
-                        position="embedded" 
-                        size="small"
-                        className="relative w-full"
-                      />
+                      <Suspense fallback={<OverlayLoader />}>
+                        <LivePerformanceOverlay 
+                          position="embedded" 
+                          size="small"
+                          className="relative w-full"
+                        />
+                      </Suspense>
                     </div>
 
                     {/* Key Moments - Matrix Style */}
                     <div className="flex-1 mb-4 min-h-[400px] max-h-[500px] animate-slide-in-right stagger-2">
-                      <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
+                      <Suspense fallback={<PanelLoader />}>
+                        <KeyMomentsPanel debateId={currentDebateId} viewMode="standard" />
+                      </Suspense>
                     </div>
 
                     {/* Fact Checker - Matrix Style */}
