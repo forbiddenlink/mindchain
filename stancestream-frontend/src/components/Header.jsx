@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from './Icon';
 import { Container, Flex } from './ui';
 
-const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }) => {
+const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown', onShowIntro }) => {
     const getStatusColor = (status) => {
         switch (status) {
             case 'Connected':
@@ -55,6 +55,19 @@ const Header = ({ connectionStatus = 'Disconnected', backendHealth = 'unknown' }
 
                     {/* Matrix Status Indicators */}
                     <Flex align="center" gap="gap-2 sm:gap-4 lg:gap-6" className="flex-shrink-0">
+                        {/* Show Intro Button */}
+                        {onShowIntro && (
+                            <button
+                                onClick={onShowIntro}
+                                className="bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 hover:border-green-500/50 text-green-400 hover:text-green-300 px-2 sm:px-3 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold font-mono transition-all duration-300 flex items-center space-x-1 sm:space-x-2"
+                                title="Show platform introduction"
+                            >
+                                <Icon name="play-circle" size={14} className="sm:hidden" />
+                                <Icon name="play-circle" size={16} className="hidden sm:block" />
+                                <span className="hidden sm:inline">INTRO</span>
+                            </button>
+                        )}
+                        
                         {/* Connection Status Grid - Hidden on small screens */}
                         <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
                             {/* WebSocket Status */}

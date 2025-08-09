@@ -456,7 +456,14 @@ export default function App() {
           <div className="matrix-rain"></div>
         </div>
 
-        <Header connectionStatus={connectionStatus} backendHealth={connectionHealth} />
+        <Header 
+          connectionStatus={connectionStatus} 
+          backendHealth={connectionHealth} 
+          onShowIntro={() => {
+            localStorage.removeItem('stancestream-intro-seen');
+            setShowIntro(true);
+          }}
+        />
 
         {/* Enhanced Controls Bar - Matrix Style */}
         <div className="flex-shrink-0 border-b border-green-500/30 bg-gradient-to-r from-black/95 to-gray-900/95 backdrop-blur-md overflow-x-hidden relative z-10">

@@ -1,0 +1,117 @@
+{
+  "core_files": {
+    "server.js": {
+      "exists": true,
+      "size": 111458,
+      "modified": "2025-08-08T19:03:51.043Z"
+    },
+    "semanticCache.js": {
+      "exists": true,
+      "size": 11994,
+      "modified": "2025-08-08T17:02:40.158Z"
+    },
+    "intelligentAgents.js": {
+      "exists": true,
+      "size": 17739,
+      "modified": "2025-08-08T02:38:22.824Z"
+    },
+    "vectorsearch.js": {
+      "exists": true,
+      "size": 1046,
+      "modified": "2025-07-28T16:15:41.520Z"
+    },
+    "setupCacheIndex.js": {
+      "exists": true,
+      "size": 3430,
+      "modified": "2025-08-01T01:52:51.772Z"
+    },
+    "package.json": {
+      "exists": true,
+      "size": 1525,
+      "modified": "2025-08-08T17:11:49.676Z"
+    }
+  },
+  "documentation": {
+    "README.md": {
+      "exists": true,
+      "length": 10214,
+      "has_redis_mention": true,
+      "has_contest_mention": false
+    },
+    "TECHNICAL-DOCS.md": {
+      "exists": true,
+      "length": 23913,
+      "has_redis_mention": true,
+      "has_contest_mention": true
+    },
+    "API-DOCUMENTATION.md": {
+      "exists": true,
+      "length": 9539,
+      "has_redis_mention": true,
+      "has_contest_mention": false
+    },
+    "BUSINESS-VALUE.md": {
+      "exists": true,
+      "length": 11403,
+      "has_redis_mention": true,
+      "has_contest_mention": false
+    },
+    "CONTEST-SUBMISSION-README.md": {
+      "exists": true,
+      "length": 8460,
+      "has_redis_mention": true,
+      "has_contest_mention": true
+    },
+    "FEATURE-OVERVIEW.md": {
+      "exists": true,
+      "length": 12580,
+      "has_redis_mention": true,
+      "has_contest_mention": true
+    }
+  },
+  "demo_materials": {
+    "REDIS-CHALLENGE-DEMO-SCRIPT.md": {
+      "exists": true,
+      "size": 6827
+    },
+    "demo-setup.sh": {
+      "exists": true,
+      "size": 2446
+    },
+    "demo-setup.bat": {
+      "exists": true,
+      "size": 2538
+    },
+    "VIDEO-RECORDING-SCRIPT.md": {
+      "exists": true,
+      "size": 9533
+    },
+    "CONTEST-SUBMISSION-CHECKLIST.md": {
+      "exists": true,
+      "size": 7402
+    }
+  },
+  "frontend_structure": {
+    "stancestream-frontend/package.json": {
+      "exists": true,
+      "isDirectory": false,
+      "size": 785
+    },
+    "stancestream-frontend/src/App.jsx": {
+      "exists": true,
+      "isDirectory": false,
+      "size": 36622
+    },
+    "stancestream-frontend/src/components": {
+      "exists": true,
+      "isDirectory": true,
+      "size": 0
+    },
+    "stancestream-frontend/src/hooks": {
+      "exists": true,
+      "isDirectory": true,
+      "size": 0
+    }
+  },
+  "overall_score": 100
+}
