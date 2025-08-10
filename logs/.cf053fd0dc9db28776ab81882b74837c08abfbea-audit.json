@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.cf053fd0dc9db28776ab81882b74837c08abfbea-audit.json",
+    "files": [
+        {
+            "date": 1754773083219,
+            "name": "logs\\stancestream-2025-08-09.log",
+            "hash": "3294ab719929d5ef02efbf39e2048da20857e0a34a46650207fe30e9a22f6cf1"
+        }
+    ],
+    "hashType": "sha256"
+}

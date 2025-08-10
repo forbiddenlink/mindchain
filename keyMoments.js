@@ -7,31 +7,22 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+import redisManager from './redisManager.js';
+
 class KeyMomentsDetector {
     constructor() {
-        this.client = null;
         this.previousStances = new Map(); // Track stance history for flip detection
         this.debateMemoryThresholds = new Map(); // Track memory significance per debate
     }
 
     async connect() {
-        if (!this.client) {
-            this.client = createClient({ url: process.env.REDIS_URL });
-            await this.client.connect();
-        }
-    }
-
-    async disconnect() {
-        if (this.client) {
-            await this.client.quit();
-            this.client = null;
-        }
+        return await redisManager.getClient();
     }
 
     // Detect if a stance change represents a significant flip (>0.3 change)
     async detectStanceFlip(agentId, debateId, topic, newStance) {
         try {
-            await this.connect();
+            const client = await this.connect();
             
             const stanceKey = `${debateId}:${agentId}:${topic}`;
             const previousStance = this.previousStances.get(stanceKey) || newStance;
@@ -91,6 +82,8 @@ class KeyMomentsDetector {
     // Check if debate has reached memory significance threshold
     async checkMemorySignificance(debateId, messageCount) {
         try {
+            const client = await this.connect();
+            
             // Dynamic thresholds based on debate activity
             const baseThreshold = 10; // Base memory threshold
             const currentThreshold = this.debateMemoryThresholds.get(debateId) || baseThreshold;
@@ -196,7 +189,7 @@ class KeyMomentsDetector {
     // Store key moment in RedisJSON with intelligent data structure
     async storeKeyMoment(debateId, momentData, summary, recentMessages = []) {
         try {
-            await this.connect();
+            const client = await this.connect();
             
             const momentId = `moment_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
             const keyMomentKey = `debate:${debateId}:key_moments`;
@@ -223,7 +216,7 @@ class KeyMomentsDetector {
             };
             
             // Get existing key moments or initialize
-            let existingMoments = await this.client.json.get(keyMomentKey);
+            let existingMoments = await client.json.get(keyMomentKey);
             if (!existingMoments) {
                 existingMoments = {
                     debateId,
@@ -250,7 +243,7 @@ class KeyMomentsDetector {
             }
             
             // Store in RedisJSON
-            await this.client.json.set(keyMomentKey, '.', existingMoments);
+            await client.json.set(keyMomentKey, '.', existingMoments);
             
             console.log(`💾 Key moment stored: ${momentData.type} for debate ${debateId}`);
             
@@ -269,10 +262,10 @@ class KeyMomentsDetector {
     // Get key moments for a debate
     async getKeyMoments(debateId, limit = 10) {
         try {
-            await this.connect();
+            const client = await this.connect();
             
             const keyMomentKey = `debate:${debateId}:key_moments`;
-            const keyMomentsData = await this.client.json.get(keyMomentKey);
+            const keyMomentsData = await client.json.get(keyMomentKey);
             
             if (!keyMomentsData) {
                 return {
@@ -348,14 +341,14 @@ class KeyMomentsDetector {
     // Get aggregated key moments across all debates
     async getAllKeyMoments(limit = 20) {
         try {
-            await this.connect();
+            const client = await this.connect();
             
             // Find all debate key moment keys
-            const keys = await this.client.keys('debate:*:key_moments');
+            const keys = await client.keys('debate:*:key_moments');
             const allMoments = [];
             
             for (const key of keys) {
-                const keyMomentsData = await this.client.json.get(key);
+                const keyMomentsData = await client.json.get(key);
                 if (keyMomentsData && keyMomentsData.moments) {
                     allMoments.push(...keyMomentsData.moments.map(moment => ({
                         ...moment,

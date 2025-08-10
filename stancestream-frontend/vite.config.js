@@ -1,14 +1,15 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { splitVendorChunkPlugin } from 'vite'
-import { compression } from 'vite-plugin-compression2'
+import compression from 'vite-plugin-compression2'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    splitVendorChunkPlugin(),
-    compression()
+    compression({
+      algorithm: 'gzip',
+      threshold: 1024
+    })
   ],
   build: {
     target: 'esnext',
