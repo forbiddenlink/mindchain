@@ -1,4 +1,5 @@
 import { createClient } from 'redis';
+import redisManager from './redisManager.js';
 // Use TensorFlow.js browser version for now due to Node.js binding issues
 // import tf from '@tensorflow/tfjs-node';
 
@@ -46,11 +47,11 @@ class SentimentAnalyzer {
             // Store confidence in Redis for sparkline history (fallback to JSON since TimeSeries might not be available)
             const timestamp = Date.now();
             
-            if (this.client) {
-                // Use JSON storage for reliability
+            try {
+                // Use centralized Redis manager for storage
                 const fallbackKey = `sentiment_history:${debateId}:${agentId}`;
-                try {
-                    const history = await this.client.get(fallbackKey).then(data => 
+                await redisManager.execute(async (client) => {
+                    const history = await client.get(fallbackKey).then(data => 
                         data ? JSON.parse(data) : []
                     ).catch(() => []);
                     
@@ -58,11 +59,11 @@ class SentimentAnalyzer {
                     // Keep only last 20 data points for sparklines
                     if (history.length > 20) history.shift();
                     
-                    await this.client.set(fallbackKey, JSON.stringify(history));
+                    await client.set(fallbackKey, JSON.stringify(history));
                     console.log(`💾 Stored confidence ${confidence.toFixed(3)} in JSON storage: ${fallbackKey}`);
-                } catch (storageError) {
-                    console.log('⚠️ Storage failed, continuing without persistence:', storageError.message);
-                }
+                });
+            } catch (storageError) {
+                console.log('⚠️ Storage failed, continuing without persistence:', storageError.message);
             }
 
             return {
@@ -184,12 +185,13 @@ class SentimentAnalyzer {
     }
 
     async getConfidenceHistory(debateId, agentId, limit = 20) {
-        if (!this.client) return [];
-        
         try {
-            // Use JSON storage (more reliable than TimeSeries)
+            // Use centralized Redis manager
             const fallbackKey = `sentiment_history:${debateId}:${agentId}`;
-            const data = await this.client.get(fallbackKey);
+            const data = await redisManager.execute(async (client) => {
+                return await client.get(fallbackKey);
+            });
+            
             if (data) {
                 const history = JSON.parse(data);
                 return history.slice(-limit); // Get last N entries
