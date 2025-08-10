@@ -209,9 +209,9 @@ node tests/performance-profiler.js     # Run performance tests
 ```
 
 ### Automated Setup Scripts
-- `setup.js` - Cross-platform unified setup
-- `setup-platform.sh` / `setup-platform.ps1` - Platform-specific setup
-- `demo-setup.sh` - Quick demo environment setup
+- `setup.js` - Cross-platform unified setup (main setup script)
+- `setup.sh` - Unix/Linux launcher for setup.js
+- `setup.bat` - Windows launcher for setup.js
 
 Setup scripts will:
 1. Verify environment requirements
