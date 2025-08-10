@@ -115,7 +115,7 @@ router.post('/stance', async (req, res) => {
         }
 
         // Generate a response to analyze stance
-        const result = await generateEnhancedMessageOnly(agentId, debateId || 'test_debate', topic || 'climate_policy');
+        const result = await generateEnhancedMessageOnly(agentId, debateId || 'test_debate', topic || 'space_policy');
         
         // Extract stance from response (simplified for testing)
         const stanceValue = Math.random(); // Simplified stance between 0-1
@@ -126,7 +126,7 @@ router.post('/stance', async (req, res) => {
             stance: {
                 value: stanceValue,
                 change: change,
-                topic: topic || 'climate_policy'
+                topic: topic || 'space_policy'
             },
             confidence: 0.85
         });

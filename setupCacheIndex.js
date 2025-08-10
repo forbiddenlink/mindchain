@@ -70,6 +70,10 @@ async function createCacheIndex() {
                 response: {
                     type: 'TEXT'
                 },
+                topic: {
+                    type: 'TAG',
+                    SORTABLE: true
+                },
                 vector: {
                     type: 'VECTOR',
                     ALGORITHM: 'HNSW',

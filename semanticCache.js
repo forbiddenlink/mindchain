@@ -82,18 +82,18 @@ class SemanticCache {
             const embedding = await this.generateEmbedding(contextualPrompt);
             const vectorBuffer = Buffer.from(new Float32Array(embedding).buffer);
 
-            // Search for similar prompts using Redis Vector Search
+            // Search for similar prompts using Redis Vector Search WITH topic filtering
             const searchResults = await redisManager.execute(async (client) => {
                 return await client.ft.search(
                     config.VECTOR_INDEX_NAME,
-                    `*=>[KNN ${config.VECTOR_SEARCH_LIMIT} @vector $query_vector AS score]`,
+                    `@topic:{${topic.replace(/[^a-zA-Z0-9]/g, '_')}} => [KNN ${config.VECTOR_SEARCH_LIMIT} @vector $query_vector AS score]`,
                     {
                         PARAMS: {
                             query_vector: vectorBuffer,
                         },
                         SORTBY: 'score',
                         DIALECT: 2,
-                        RETURN: ['content', 'response', 'created_at', 'score'],
+                        RETURN: ['content', 'response', 'created_at', 'score', 'topic'],
                     }
                 );
             });

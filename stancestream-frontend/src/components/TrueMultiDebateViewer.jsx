@@ -213,8 +213,10 @@ export default function TrueMultiDebateViewer({ messages, activeDebates, onMetri
 
     const startNewDebate = async () => {
         try {
+            // Use the first available topic instead of hardcoding
+            const defaultTopic = DEBATE_TOPICS[0]?.description || 'General Policy Discussion';
             await api.startDebate({
-                topic: 'Climate Policy',
+                topic: defaultTopic,
                 debateId: `new_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`
             });
             if (onMetricsUpdate) {
