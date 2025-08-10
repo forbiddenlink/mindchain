@@ -4,13 +4,16 @@ import 'dotenv/config';
 import redisManager from './redisManager.js';
 import { generateMessageCore, determineEmotionalState, findPotentialAllies, topicToStanceKey } from './messageGenerationCore.js';
 export async function generateEnhancedMessage(agentId, debateId, topic = 'general policy') {
-    const client = await redisManager.getClient();
-
     try {
-        const profile = await client.json.get(`agent:${agentId}:profile`);
+        const profile = await redisManager.execute(async (client) => {
+            return await client.json.get(`agent:${agentId}:profile`);
+        });
         
         // Get message count and context
-        const debateMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 10 });
+        const debateMessages = await redisManager.execute(async (client) => {
+            return await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 10 });
+        });
+        
         const recentContext = debateMessages
             .reverse()
             .map(entry => `${entry.message.agent_id}: ${entry.message.message}`)
@@ -49,18 +52,20 @@ export async function generateEnhancedMessage(agentId, debateId, topic = 'genera
 
 // Enhanced message generation without storing to streams (for server-controlled storage)
 export async function generateEnhancedMessageOnly(agentId, debateId, topic = 'general policy') {
-    // Use redisManager instead of creating a new client
-    const client = await redisManager.getClient();
-
     try {
-        // Get agent profile and debate context
-        const profile = await client.json.get(`agent:${agentId}:profile`);
+        // Get agent profile and debate context using Redis manager
+        const profile = await redisManager.execute(async (client) => {
+            return await client.json.get(`agent:${agentId}:profile`);
+        });
+        
         if (!profile) {
             throw new Error(`No profile found for agent: ${agentId}`);
         }
 
         // Get recent debate messages for context
-        const debateMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 10 });
+        const debateMessages = await redisManager.execute(async (client) => {
+            return await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 10 });
+        });
         const recentContext = debateMessages.reverse().map(entry => 
             `${entry.message.agent_id}: ${entry.message.message}`
         ).join('\n');
@@ -120,16 +125,21 @@ export function extractReferences(message, recentContext) {
 
 // Advanced stance evolution based on debate dynamics
 export async function updateStanceBasedOnDebate(agentId, debateId, topic) {
-    const client = await redisManager.getClient();
-    
     try {
-        const profile = await client.json.get(`agent:${agentId}:profile`);
+        const [profile, debateMessages] = await Promise.all([
+            redisManager.execute(async (client) => {
+                return await client.json.get(`agent:${agentId}:profile`);
+            }),
+            redisManager.execute(async (client) => {
+                return await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 20 });
+            })
+        ]);
+        
         const stanceKey = topicToStanceKey(topic);
         const currentStance = profile.stance?.[stanceKey] || 0.5;
         
         // Analyze recent messages
-        const recentMessages = await client.xRevRange(`debate:${debateId}:messages`, '+', '-', { COUNT: 10 });
-        let stanceShift = await analyzeMessagesForStanceShift(agentId, recentMessages);
+        let stanceShift = await analyzeMessagesForStanceShift(agentId, debateMessages);
         
         // Apply agent-specific patterns and personality factors
         stanceShift = applyAgentPersonalityModifiers(agentId, profile, stanceShift);
@@ -138,12 +148,16 @@ export async function updateStanceBasedOnDebate(agentId, debateId, topic) {
         
         // Update profile
         profile.stance[stanceKey] = newStance;
-        await client.json.set(`agent:${agentId}:profile`, '$', profile);
+        await redisManager.execute(async (client) => {
+            await client.json.set(`agent:${agentId}:profile`, '$', profile);
+        });
         
         // Store in TimeSeries for tracking
         const tsKey = `debate:${debateId}:agent:${agentId}:stance:${stanceKey}`;
         try {
-            await client.ts.add(tsKey, '*', parseFloat(newStance).toString());
+            await redisManager.execute(async (client) => {
+                await client.ts.add(tsKey, '*', parseFloat(newStance).toString());
+            });
         } catch (tsError) {
             console.log(`⚠️ TimeSeries add failed: ${tsError.message}`);
         }

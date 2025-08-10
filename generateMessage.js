@@ -1,6 +1,10 @@
 import 'dotenv/config';
 import redisManager from './redisManager.js';
 import { generateMessageCore, topicToStanceKey } from './messageGenerationCore.js';
+import { getCachedResponse, cacheNewResponse } from './semanticCache.js';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function generateMessage(agentId, debateId, topic = 'general policy') {
     try {
@@ -38,18 +42,51 @@ export async function generateMessage(agentId, debateId, topic = 'general policy
         const totalMessages = messageStream.length;
         const turnNumber = Math.floor(totalMessages / 2) + 1;
 
-        // Generate message using core functionality
-        const result = await generateMessageCore({
-            agentId,
-            debateId,
-            topic,
-            profile,
-            memoryContext,
-            turnNumber,
-            additionalContext: {}
-        });
+        // Check semantic cache first for similar prompts (agent-specific)
+        console.log(`🔍 Checking semantic cache for similar prompts (${agentId})...`);
+        const agentSpecificTopic = `${agentId}:${topic}:${profile.name}`;
+        
+        // Construct prompt with memory + profile + dynamic topic
+        const prompt = `
+You are ${profile.name}, a ${profile.tone} ${profile.role}.
+You believe in ${profile.biases.join(', ')}.
+Debate topic: ${topic}.
+Turn: ${turnNumber}
 
-        console.log(`${agentId}: ${result.message}`);
+${memoryContext ? `Previously, you said:\n${memoryContext}\n\n` : ''}Reply with a short statement (1–2 sentences) to continue the debate on "${topic}".
+Stay focused on this specific topic and maintain your character's perspective.
+Avoid repeating previous arguments.`;
+
+        const cachedResult = await getCachedResponse(prompt, agentSpecificTopic);
+
+        let message;
+        if (cachedResult) {
+            message = cachedResult.response;
+            console.log(`🎯 Using cached response (${(cachedResult.similarity * 100).toFixed(1)}% similarity)`);
+        } else {
+            // Generate message using core functionality  
+            const result = await generateMessageCore({
+                agentId,
+                debateId,
+                topic,
+                profile,
+                memoryContext,
+                turnNumber,
+                additionalContext: {}
+            });
+            
+            message = result.message;
+            
+            // Cache the new response
+            await cacheNewResponse(prompt, message, {
+                agentId,
+                debateId,
+                topic: agentSpecificTopic,
+                timestamp: new Date().toISOString(),
+            });
+        }
+
+        console.log(`${agentId}: ${message}`);
 
         // Save to full debate stream and agent's memory stream
         await redisManager.execute(async (client) => {
