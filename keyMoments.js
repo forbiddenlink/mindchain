@@ -13,10 +13,26 @@ class KeyMomentsDetector {
     constructor() {
         this.previousStances = new Map(); // Track stance history for flip detection
         this.debateMemoryThresholds = new Map(); // Track memory significance per debate
+        this.isConnected = false;
     }
 
     async connect() {
-        return await redisManager.getClient();
+        const client = await redisManager.getClient();
+        this.isConnected = true;
+        return client;
+    }
+
+    async cleanup() {
+        try {
+            if (this.isConnected) {
+                this.previousStances.clear();
+                this.debateMemoryThresholds.clear();
+                this.isConnected = false;
+                console.log('🔌 KeyMomentsDetector cleanup complete');
+            }
+        } catch (error) {
+            console.error('Error during KeyMomentsDetector cleanup:', error);
+        }
     }
 
     // Detect if a stance change represents a significant flip (>0.3 change)
@@ -338,6 +354,19 @@ class KeyMomentsDetector {
         }
     }
 
+    // Add disconnect method for proper cleanup
+    async disconnect() {
+        try {
+            const client = await this.connect();
+            // Clear in-memory data
+            this.previousStances.clear();
+            this.debateMemoryThresholds.clear();
+            console.log('🔌 KeyMomentsDetector cleanup complete');
+        } catch (error) {
+            console.error('Error during KeyMomentsDetector cleanup:', error);
+        }
+    }
+
     // Get aggregated key moments across all debates
     async getAllKeyMoments(limit = 20) {
         try {
@@ -372,8 +401,6 @@ class KeyMomentsDetector {
 // Export singleton instance
 const keyMomentsDetector = new KeyMomentsDetector();
 
-export default keyMomentsDetector;
-
 // Helper functions for easy integration
 export async function processDebateEvent(eventData) {
     return await keyMomentsDetector.processDebateEvent(eventData);
@@ -386,3 +413,9 @@ export async function getKeyMoments(debateId, limit = 10) {
 export async function getAllKeyMoments(limit = 20) {
     return await keyMomentsDetector.getAllKeyMoments(limit);
 }
+
+export async function disconnect() {
+    return await keyMomentsDetector.cleanup();
+}
+
+export default keyMomentsDetector;

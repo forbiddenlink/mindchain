@@ -22,6 +22,7 @@ import redisOptimizer, { startOptimization, getOptimizationMetrics } from './red
 import advancedFactChecker, { checkFactAdvanced, getFactCheckAnalytics } from './advancedFactChecker.js';
 import platformMetricsEngine, { startContestMetrics, getLiveContestMetrics } from './platformMetricsEngine.js';
 import { PlatformMetricsDashboard } from './platformLiveMetrics.js';
+import testEndpoints from './src/routes/test-endpoints.js';
 
 const app = express();
 const server = createServer(app);
@@ -99,8 +100,49 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Enhanced Redis client with error handling
+// Mount test endpoints router with its own rate limit and error handling
+app.use('/api/test', 
+    // Custom rate limit for test endpoints
+    rateLimit({
+        windowMs: 1 * 60 * 1000, // 1 minute
+        max: 50, // 50 requests per minute for test endpoints
+        message: { error: 'Test endpoint rate limit exceeded. Please wait.' }
+    }),
+    // Error handling middleware for test endpoints
+    (err, req, res, next) => {
+        console.error('Test endpoint error:', err);
+        res.status(err.status || 500).json({ 
+            error: err.message || 'Internal server error',
+            path: req.path
+        });
+    },
+    // Mount the router
+    testEndpoints
+);
+
+// Enhanced Redis client with error handling and reconnection
 const client = await redisManager.getClient();
+
+// Set up Redis error monitoring
+client.on('error', (err) => {
+    console.error('❌ Redis Error:', err);
+    global.redisStatus = 'disconnected';
+});
+
+client.on('connect', () => {
+    console.log('🔌 Redis Connected');
+    global.redisStatus = 'connected';
+});
+
+client.on('reconnecting', () => {
+    console.log('🔄 Redis Reconnecting...');
+    global.redisStatus = 'reconnecting';
+});
+
+client.on('end', () => {
+    console.log('🔌 Redis Connection Ended');
+    global.redisStatus = 'disconnected';
+});
 
 // Redis connection with error handling - using centralized manager
 console.log('🚀 Redis connection established via centralized manager');
@@ -112,6 +154,7 @@ try {
     
     if (healthCheck.status === 'healthy') {
         console.log('✅ Redis basic operations: OK');
+        global.redisStatus = 'healthy';
     }
     
     console.log('🏁 Server startup health check complete');
