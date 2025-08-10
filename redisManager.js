@@ -269,29 +269,77 @@ class RedisConnectionManager {
     }
 
     /**
-     * Graceful shutdown
+     * Graceful shutdown with enhanced cleanup and connection state verification
      */
     async disconnect() {
+        // Stop health check immediately
         if (this.healthCheckInterval) {
             clearInterval(this.healthCheckInterval);
             this.healthCheckInterval = null;
+            console.log('✅ Health check stopped');
         }
 
-        if (this.client) {
-            try {
-                console.log('🔌 Closing Redis connection...');
-                await this.client.quit();
-                console.log('✅ Redis connection closed gracefully');
-            } catch (error) {
-                console.error('❌ Error during Redis disconnect:', error.message);
-                if (this.client.disconnect) {
-                    this.client.disconnect();
-                }
-            } finally {
+        // Early return if already fully disconnected
+        if (!this.client) {
+            console.log('ℹ️ Redis already disconnected');
+            return;
+        }
+
+        try {
+            // Mark as disconnecting to prevent new operations
+            this.isConnected = false;
+            this.connectionPromise = null;
+
+            if (!this.client.isOpen) {
+                console.log('ℹ️ Redis connection already closed');
                 this.client = null;
-                this.isConnected = false;
-                this.connectionPromise = null;
+                return;
             }
+
+            // Clean shutdown sequence
+            try {
+                console.log('🔌 Attempting graceful Redis disconnect...');
+                
+                // Try quit first with timeout
+                const quitPromise = this.client.quit();
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Quit timeout')), 3000)
+                );
+                
+                await Promise.race([quitPromise, timeoutPromise]);
+                console.log('✅ Redis quit successful');
+                
+            } catch (quitError) {
+                console.warn('⚠️ Graceful quit failed:', quitError.message);
+                
+                try {
+                    // Force disconnect if quit fails
+                    console.log('🔌 Attempting force disconnect...');
+                    await this.client.disconnect(false);
+                    console.log('✅ Force disconnect successful');
+                } catch (disconnectError) {
+                    // Last resort: Destroy client
+                    console.warn('⚠️ Force disconnect failed:', disconnectError.message);
+                    try {
+                        console.log('🔌 Destroying client...');
+                        await this.client.destroy();
+                        console.log('✅ Client destroyed');
+                    } catch (destroyError) {
+                        throw new Error(`Complete disconnect failure: ${destroyError.message}`);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('❌ Redis disconnect error:', error.message);
+            throw error; // Let caller handle final error
+        } finally {
+            // Ensure complete cleanup of internal state
+            this.client = null;
+            this.isConnected = false;
+            this.connectionPromise = null;
+            this.connectionAttempts = 0;
+            this.lastPingTime = 0;
+            console.log('✅ Redis manager state reset');
         }
     }
 
@@ -420,20 +468,11 @@ class RedisConnectionManager {
 // Export singleton instance
 const redisManager = new RedisConnectionManager();
 
-// Graceful shutdown handling
-const gracefulShutdown = async (signal) => {
-    console.log(`📤 Received ${signal}, closing Redis connection...`);
-    await redisManager.disconnect();
-    process.exit(0);
-};
-
-process.on('SIGINT', gracefulShutdown);
-process.on('SIGTERM', gracefulShutdown);
-process.on('SIGQUIT', gracefulShutdown);
-
-// Unhandled rejection handling
+// Enhanced error handling for Redis-specific issues
 process.on('unhandledRejection', (reason, promise) => {
-    console.error('🚨 Unhandled Redis promise rejection:', reason);
+    if (reason?.message?.includes('Redis')) {
+        console.error('🚨 Unhandled Redis promise rejection:', reason);
+    }
 });
 
 export default redisManager;

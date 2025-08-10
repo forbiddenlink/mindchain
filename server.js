@@ -2112,42 +2112,86 @@ process.on('unhandledRejection', (reason, promise) => {
     gracefulShutdown('unhandledRejection');
 });
 
-// Enhanced graceful shutdown
+// Enhanced graceful shutdown with proper Redis cleanup
 const gracefulShutdown = async (signal) => {
     console.log(`🛑 Received ${signal}, starting graceful shutdown...`);
     
     try {
-        // Close WebSocket connections
+        // Stop all active services first
+        if (optimizationCleanup) {
+            optimizationCleanup();
+            console.log('✅ Optimization service stopped');
+        }
+        if (contestMetricsCleanup) {
+            contestMetricsCleanup();
+            console.log('✅ Contest metrics service stopped');
+        }
+        if (performanceInterval) {
+            clearInterval(performanceInterval);
+            console.log('✅ Performance broadcasting stopped');
+        }
+        
+        // Notify all WebSocket clients about shutdown
         wss.clients.forEach(ws => {
             if (ws.readyState === ws.OPEN) {
+                ws.send(JSON.stringify({
+                    type: 'server_shutdown',
+                    message: 'Server is shutting down gracefully',
+                    timestamp: new Date().toISOString()
+                }));
                 ws.close(1000, 'Server shutting down');
             }
         });
-        
-        // Cleanup services
-        await sentimentAnalyzer.cleanup();
-        await keyMomentsDetector.disconnect();
-        // Redis cleanup handled by centralized manager below
-        if (optimizationCleanup) optimizationCleanup();
-        if (contestMetricsCleanup) contestMetricsCleanup();
-        if (performanceInterval) clearInterval(performanceInterval);
-        
-        // Close Redis connection via centralized manager
-        await redisManager.disconnect();
-        console.log('✅ Redis connection closed via centralized manager');
-        
-        // Close HTTP server
-        server.close(() => {
-            console.log('✅ HTTP server closed');
-            process.exit(0);
+        console.log('✅ WebSocket clients notified and disconnected');
+
+        // Clean up auxiliary services
+        try {
+            await sentimentAnalyzer.cleanup();
+            console.log('✅ Sentiment analyzer cleaned up');
+        } catch (e) {
+            console.warn('⚠️ Sentiment analyzer cleanup error:', e.message);
+        }
+
+        try {
+            await keyMomentsDetector.disconnect();
+            console.log('✅ Key moments detector disconnected');
+        } catch (e) {
+            console.warn('⚠️ Key moments detector disconnect error:', e.message);
+        }
+
+        // Redis cleanup with multiple retries
+        let redisDisconnected = false;
+        for (let attempt = 1; attempt <= 3 && !redisDisconnected; attempt++) {
+            try {
+                console.log(`🔌 Attempting Redis disconnect (attempt ${attempt})...`);
+                await redisManager.disconnect();
+                redisDisconnected = true;
+                console.log('✅ Redis connection closed cleanly');
+            } catch (e) {
+                console.warn(`⚠️ Redis disconnect attempt ${attempt} failed:`, e.message);
+                if (attempt < 3) await new Promise(r => setTimeout(r, 1000)); // Wait 1s before retry
+            }
+        }
+
+        // Final cleanup and server close
+        return new Promise((resolve, reject) => {
+            server.close((err) => {
+                if (err) {
+                    console.error('❌ Error closing HTTP server:', err);
+                    reject(err);
+                } else {
+                    console.log('✅ HTTP server closed');
+                    resolve();
+                }
+            });
+
+            // Give connections time to close gracefully
+            setTimeout(() => {
+                console.log('⏰ Shutdown timeout reached, forcing exit');
+                process.exit(redisDisconnected ? 0 : 1);
+            }, 5000);
         });
-        
-        // Force exit after 10 seconds
-        setTimeout(() => {
-            console.log('⏰ Force exiting after timeout');
-            process.exit(1);
-        }, 10000);
-        
+
     } catch (error) {
         console.error('❌ Error during shutdown:', error);
         process.exit(1);
