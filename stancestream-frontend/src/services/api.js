@@ -1,5 +1,5 @@
-// Base URL should be /api for proxy to work correctly
-const API_BASE_URL = '/api';
+// Base URL from environment variable
+const API_BASE_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api';
 
 // Request timeout configuration
 const REQUEST_TIMEOUT = 10000; // 10 seconds

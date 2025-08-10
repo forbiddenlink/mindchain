@@ -1,4 +1,5 @@
 // src/App.jsx
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL); // Log env variable
 import { useState, useEffect, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import DebatePanel from './components/DebatePanel';
@@ -40,8 +41,10 @@ export default function App() {
 
   // WebSocket connection using centralized manager
   useEffect(() => {
-    // Use current window location's hostname
-    const wsUrl = `ws://${window.location.hostname}:3001`;
+    // Use deployed backend URL for WebSocket (with wss:// for HTTPS)
+    const wsUrl = import.meta.env.VITE_API_URL 
+      ? `wss://${new URL(import.meta.env.VITE_API_URL).host}`
+      : `ws://${window.location.hostname}:3001`;
 
     const handleIncomingMessage = (data) => {
       const message = typeof data === 'string' ? JSON.parse(data) : data;
