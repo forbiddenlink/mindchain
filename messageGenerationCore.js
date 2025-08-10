@@ -23,40 +23,64 @@ export function calculateSimilarity(message1, message2) {
 // Enhanced prompt generation with randomization and context
 export function generateEnhancedPrompt(profile, memoryContext, topic, turnNumber, additionalContext = {}) {
     const conversationalCues = [
-        "Let me address this directly:",
-        "I want to emphasize:",
-        "My position is clear:",
-        "Here's what I believe:",
-        "From my perspective:",
-        "Building on the discussion",
-        "Taking a different perspective", 
-        "Considering the broader implications",
-        "From my experience",
-        "Looking at this pragmatically",
+        `Let me address this directly as a ${profile.tone} ${profile.role}:`,
+        `I want to emphasize from my perspective as ${profile.name}:`,
+        `My position as a ${profile.role} is clear:`,
+        `Here's what I believe as ${profile.name}:`,
+        `From my ${profile.tone} perspective:`,
+        `Building on the discussion as ${profile.name}:`,
+        `Taking a different perspective as a ${profile.role}:`, 
+        `Considering the broader implications as ${profile.name}:`,
+        `From my experience as a ${profile.tone} ${profile.role}:`,
+        `Looking at this pragmatically as ${profile.name}:`,
     ];
     
     const randomSeed = Math.floor(Math.random() * 1000);
     const randomCue = conversationalCues[randomSeed % conversationalCues.length];
     const emotionalState = additionalContext.emotionalState || 'neutral';
     
+    // Include agent-specific stance data for uniqueness
+    const agentStances = Object.entries(profile.stance || {})
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(', ');
+    
+    // Create agent-specific behavioral instructions
+    let behavioralInstructions = '';
+    if (profile.name === 'SenatorBot') {
+        behavioralInstructions = `As a moderate senator focused on fiscal responsibility and bipartisan compromise, emphasize pragmatic solutions, cost-benefit analysis, and finding middle ground. Your tone should be measured and diplomatic.`;
+    } else if (profile.name === 'ReformerBot') {
+        behavioralInstructions = `As a passionate progressive advocate for climate justice and rapid decarbonization, emphasize urgent action, moral imperatives, and transformative change. Your tone should be energetic and conviction-driven.`;
+    } else {
+        behavioralInstructions = `Maintain your distinctive perspective as a ${profile.tone} ${profile.role}.`;
+    }
+    
     return `
-You are ${profile.name}, a ${profile.tone} ${profile.role} currently feeling ${emotionalState}.
-You believe in ${profile.biases.join(', ')}.
-Debate topic: ${topic}
-Turn: ${turnNumber}
-Conversational style: ${randomCue}
+AGENT: ${profile.name}
+ROLE: ${profile.tone} ${profile.role} 
+EMOTIONAL STATE: ${emotionalState}
+CORE BELIEFS: ${profile.biases.join(', ')}
+POLITICAL STANCES: ${agentStances}
+AGENT_ID: ${profile.name}_${profile.role.replace(/\s+/g, '_')}_${randomSeed}
+TOPIC: ${topic}
+TURN: ${turnNumber}
+STYLE: ${randomCue}
+SEED: ${randomSeed}
 
-${memoryContext ? `Previous context:\n${memoryContext}\n\n` : ''}
+${behavioralInstructions}
 
-Instructions:
+${memoryContext ? `PREVIOUS CONTEXT:\n${memoryContext}\n\n` : ''}
+
+SPECIFIC INSTRUCTIONS FOR ${profile.name}:
 - Keep responses concise (1-2 sentences)
 - Stay focused on ${topic}
-- Maintain your character's unique perspective
-- Add variety to your responses
+- Maintain your character's unique perspective as ${profile.name}
+- Add variety to your responses with your ${profile.tone} approach
 - Consider your emotional state: ${emotionalState}
 ${additionalContext.allies?.length > 0 ? `- Consider building on arguments from potential allies: ${additionalContext.allies.join(', ')}` : ''}
+- Express your distinctive viewpoint as a ${profile.tone} ${profile.role}
+- DO NOT repeat generic statements - be specific to your character
 
-Seed: ${randomSeed}
+UNIQUE_AGENT_SEED: ${profile.name}_${randomSeed}_${Date.now() % 1000}
 `;
 }
 
@@ -74,12 +98,18 @@ export async function generateMessageCore({
 }) {
     try {
         const prompt = generateEnhancedPrompt(profile, memoryContext, topic, turnNumber, additionalContext);
-        const agentSpecificTopic = `${agentId}:${topic}:${profile.name}`;
         
-        // Check semantic cache
+        // Create highly specific agent topic key to prevent cross-contamination
+        const agentStanceSignature = Object.entries(profile.stance || {})
+            .map(([key, value]) => `${key}:${value}`)
+            .join('|');
+        const timestamp = Date.now() % 10000; // Add time component for uniqueness
+        const agentSpecificTopic = `${agentId}:${profile.name}:${profile.role}:${topic}:${agentStanceSignature}:turn${turnNumber}:${timestamp}`;
+        
+        // Check semantic cache with much lower similarity threshold to prevent identical responses
         const cachedResult = await getCachedResponse(prompt, agentSpecificTopic);
         
-        if (cachedResult && cachedResult.similarity > 0.85) { // High similarity threshold
+        if (cachedResult && cachedResult.similarity > 0.50) { // Very low threshold - only cache truly identical prompts
             console.log(`🎯 Using cached response (${(cachedResult.similarity * 100).toFixed(1)}% similarity)`);
             return {
                 message: cachedResult.response,

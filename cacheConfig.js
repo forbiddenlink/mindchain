@@ -2,8 +2,8 @@
 // Single source of truth for all semantic cache settings
 
 export const CACHE_CONFIG = {
-    // Similarity threshold for cache hits (0.95 = 95% similarity required)
-    SIMILARITY_THRESHOLD: 0.95,
+    // Similarity threshold for cache hits (0.50 = 50% similarity required - very low to prevent cross-agent contamination)
+    SIMILARITY_THRESHOLD: 0.50,
     
     // OpenAI settings
     EMBEDDING_MODEL: 'text-embedding-ada-002',

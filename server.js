@@ -1662,14 +1662,22 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 
                 const result = await generateEnhancedMessageOnly(agentId, debateId, topic);
                 
-                // Handle both new format (object) and old format (string)
+                // Handle enhanced result format with all metadata
                 if (typeof result === 'object' && result.message) {
                     message = result.message;
                     cacheHit = result.cacheHit || false;
                     similarity = result.similarity || 0;
                     costSaved = result.costSaved || 0;
+                    
+                    // Extract additional metadata from enhanced result
+                    var factCheck = result.factCheck || { fact: null, score: 0, confidence: 0 };
+                    var sentiment = result.sentiment || { sentiment: 'neutral', confidence: 0.5, model: 'fallback' };
+                    var enhancedMetadata = result.metadata || {};
                 } else {
                     message = result; // Backwards compatibility
+                    var factCheck = { fact: null, score: 0, confidence: 0 };
+                    var sentiment = { sentiment: 'neutral', confidence: 0.5, model: 'fallback' };
+                    var enhancedMetadata = {};
                 }
                 
                 console.log(`✨ Enhanced AI message generated for ${agentId}`);
@@ -1684,14 +1692,22 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 
                 const result = await generateMessageOnly(agentId, debateId, topic);
                 
-                // Handle both new format (object) and old format (string)
+                // Handle fallback result format
                 if (typeof result === 'object' && result.message) {
                     message = result.message;
                     cacheHit = result.cacheHit || false;
                     similarity = result.similarity || 0;
                     costSaved = result.costSaved || 0;
+                    
+                    // Set default values for missing enhanced features
+                    var factCheck = { fact: null, score: 0, confidence: 0 };
+                    var sentiment = { sentiment: 'neutral', confidence: 0.5, model: 'fallback' };
+                    var enhancedMetadata = {};
                 } else {
                     message = result; // Backwards compatibility
+                    var factCheck = { fact: null, score: 0, confidence: 0 };
+                    var sentiment = { sentiment: 'neutral', confidence: 0.5, model: 'fallback' };
+                    var enhancedMetadata = {};
                 }
             }
 
@@ -1862,7 +1878,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     return;
                 }
 
-                // Broadcast the new message to all clients
+                // Broadcast the new message to all clients with enhanced metadata
                 broadcast({
                     type: 'new_message',
                     debateId,
@@ -1870,11 +1886,20 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                     agentName: profile.name,
                     message,
                     timestamp: new Date().toISOString(),
-                    factCheck: factResult?.content ? {
+                    factCheck: factCheck.fact ? {
+                        fact: factCheck.fact,
+                        score: factCheck.score,
+                        confidence: factCheck.confidence
+                    } : factResult?.content ? {
                         fact: factResult.content,
-                        score: factResult.score
+                        score: factResult.score,
+                        confidence: Math.round((1 - factResult.score) * 100)
                     } : null,
-                    sentiment: {
+                    sentiment: sentiment.sentiment ? {
+                        sentiment: sentiment.sentiment,
+                        confidence: sentiment.confidence,
+                        model: sentiment.model
+                    } : {
                         sentiment: sentimentResult.sentiment,
                         confidence: sentimentResult.confidence,
                         model: sentimentResult.model
@@ -1884,12 +1909,25 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                         value: stanceData.newStance,
                         change: stanceData.change
                     },
-                    // 📊 Include current metrics
+                    // 📊 Include current metrics and enhanced metadata
                     metrics: {
                         totalMessages: debateMetrics.messagesGenerated,
                         activeDebates: activeDebates.size,
                         thisDebateMessages: activeDebates.get(debateId)?.messageCount || 0
-                    }
+                    },
+                    // 🎯 Cache and AI metadata
+                    cacheInfo: {
+                        cacheHit,
+                        similarity: Math.round(similarity * 100),
+                        costSaved: Math.round(costSaved * 1000) / 1000
+                    },
+                    // 🤖 Enhanced AI metadata
+                    aiMetadata: enhancedMetadata.emotionalState ? {
+                        emotionalState: enhancedMetadata.emotionalState,
+                        allies: enhancedMetadata.allies,
+                        turnNumber: enhancedMetadata.turnNumber,
+                        temperature: Math.round(enhancedMetadata.temperature * 100) / 100
+                    } : null
                 });
 
                 // �📊 INDIVIDUAL STANCE UPDATE BROADCAST - Send after each agent speaks

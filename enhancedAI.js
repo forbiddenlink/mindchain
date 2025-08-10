@@ -3,6 +3,27 @@
 import 'dotenv/config';
 import redisManager from './redisManager.js';
 import { generateMessageCore, determineEmotionalState, findPotentialAllies, topicToStanceKey } from './messageGenerationCore.js';
+
+// Import fact-checking and sentiment analysis
+async function findClosestFact(messageText) {
+    try {
+        const { findClosestFact } = await import('./factChecker.js');
+        return await findClosestFact(messageText);
+    } catch (error) {
+        console.warn('⚠️ Fact checker not available:', error.message);
+        return { content: null, score: 1.0 };
+    }
+}
+
+async function analyzeSentiment(messageText) {
+    try {
+        const { analyzeSentiment } = await import('./sentimentAnalysis.js');
+        return await analyzeSentiment(messageText);
+    } catch (error) {
+        console.warn('⚠️ Sentiment analyzer not available:', error.message);
+        return { sentiment: 'neutral', confidence: 0.5, model: 'fallback' };
+    }
+}
 export async function generateEnhancedMessage(agentId, debateId, topic = 'general policy') {
     try {
         const profile = await redisManager.execute(async (client) => {
@@ -43,7 +64,23 @@ export async function generateEnhancedMessage(agentId, debateId, topic = 'genera
             maxTokens: 150
         });
 
-        return result.message;
+        // Return consistent object format
+        return {
+            message: result.message,
+            cacheHit: result.cacheHit || false,
+            similarity: result.similarity || 0,
+            costSaved: result.costSaved || 0,
+            metadata: {
+                emotionalState,
+                allies: allies.join(', '),
+                turnNumber,
+                temperature: 0.9,
+                agentId,
+                debateId,
+                topic,
+                timestamp: new Date().toISOString()
+            }
+        };
 
     } catch (error) {
         throw error;
@@ -98,7 +135,48 @@ export async function generateEnhancedMessageOnly(agentId, debateId, topic = 'ge
             maxTokens: 200
         });
 
-        return result.message;
+        // Integrate fact-checking and sentiment analysis
+        const [factCheck, sentiment] = await Promise.all([
+            findClosestFact(result.message).catch(err => {
+                console.warn('⚠️ Fact check failed:', err.message);
+                return { content: null, score: 1.0 };
+            }),
+            analyzeSentiment(result.message).catch(err => {
+                console.warn('⚠️ Sentiment analysis failed:', err.message);
+                return { sentiment: 'neutral', confidence: 0.5, model: 'fallback' };
+            })
+        ]);
+
+        // Calculate fact check confidence (inverse of distance score)
+        const factCheckConfidence = factCheck.content ? (1 - factCheck.score) : 0;
+
+        // Return consistent object format with all metadata
+        return {
+            message: result.message,
+            cacheHit: result.cacheHit || false,
+            similarity: result.similarity || 0,
+            costSaved: result.costSaved || 0,
+            factCheck: {
+                fact: factCheck.content,
+                score: factCheckConfidence,
+                confidence: Math.round(factCheckConfidence * 100)
+            },
+            sentiment: {
+                sentiment: sentiment.sentiment || 'neutral',
+                confidence: sentiment.confidence || 0.5,
+                model: sentiment.model || 'enhanced'
+            },
+            metadata: {
+                emotionalState,
+                allies: allies.join(', '),
+                turnNumber,
+                temperature: adjustedTemperature,
+                agentId,
+                debateId,
+                topic,
+                timestamp: new Date().toISOString()
+            }
+        };
 
     } catch (error) {
         throw error;

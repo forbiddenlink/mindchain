@@ -44,18 +44,25 @@ export async function generateMessage(agentId, debateId, topic = 'general policy
 
         // Check semantic cache first for similar prompts (agent-specific)
         console.log(`🔍 Checking semantic cache for similar prompts (${agentId})...`);
-        const agentSpecificTopic = `${agentId}:${topic}:${profile.name}`;
+        const agentSpecificTopic = `${agentId}:${topic}:${profile.name}:turn${turnNumber}`;
         
-        // Construct prompt with memory + profile + dynamic topic
+        // Construct prompt with memory + profile + dynamic topic + unique agent characteristics
+        const agentUniqueStances = Object.entries(profile.stance || {})
+            .map(([key, value]) => `${key}: ${value}`)
+            .join(', ');
+            
         const prompt = `
-You are ${profile.name}, a ${profile.tone} ${profile.role}.
-You believe in ${profile.biases.join(', ')}.
+You are ${profile.name}, a uniquely ${profile.tone} ${profile.role}.
+Core beliefs: ${profile.biases.join(', ')}.
+Current stances: ${agentUniqueStances}
+Agent ID: ${agentId}
 Debate topic: ${topic}.
 Turn: ${turnNumber}
+Unique perspective: ${profile.role} with ${profile.tone} approach
 
 ${memoryContext ? `Previously, you said:\n${memoryContext}\n\n` : ''}Reply with a short statement (1–2 sentences) to continue the debate on "${topic}".
-Stay focused on this specific topic and maintain your character's perspective.
-Avoid repeating previous arguments.`;
+Stay focused on this specific topic and maintain your character's unique perspective as ${profile.name}.
+Avoid repeating previous arguments. Express your distinctive viewpoint as a ${profile.tone} ${profile.role}.`;
 
         const cachedResult = await getCachedResponse(prompt, agentSpecificTopic);
 
@@ -158,36 +165,45 @@ export async function generateMessageOnly(agentId, debateId, topic = 'general po
         const totalMessages = messageStream.length;
         const turnNumber = Math.floor(totalMessages / 2) + 1;
 
-        // Add randomization elements
+        // Add randomization elements for unique agent responses
         const randomSeed = Math.floor(Math.random() * 1000);
         const conversationalCues = [
-            "Let me address this directly:",
-            "I want to emphasize:",
-            "My position is clear:",
-            "Here's what I believe:",
-            "From my perspective:",
+            `Let me address this directly as a ${profile.tone} ${profile.role}:`,
+            `I want to emphasize from my perspective as ${profile.name}:`,
+            `My position as a ${profile.role} is clear:`,
+            `Here's what I believe as ${profile.name}:`,
+            `From my ${profile.tone} perspective:`,
         ];
         const randomCue = conversationalCues[randomSeed % conversationalCues.length];
 
-        // Construct prompt with memory + profile + dynamic topic
+        // Get agent's unique stance signature
+        const agentStanceSignature = Object.entries(profile.stance || {})
+            .map(([key, value]) => `${key}:${value}`)
+            .join('|');
+
+        // Construct prompt with memory + profile + dynamic topic + unique identifiers
         const prompt = `
-You are ${profile.name}, a ${profile.tone} ${profile.role}.
-You believe in ${profile.biases.join(', ')}.
+You are ${profile.name}, a distinctively ${profile.tone} ${profile.role}.
+Core beliefs: ${profile.biases.join(', ')}.
+Stance signature: ${agentStanceSignature}
+Agent identifier: ${agentId}
 Debate topic: ${topic}.
 Turn: ${turnNumber}
 Conversational style: ${randomCue}
+Unique seed: ${randomSeed}
 
 ${memoryContext
                 ? `Previously, you said:\n${memoryContext}\n\n`
                 : ''
             }Reply with a short statement (1–2 sentences) to continue the debate on "${topic}".
-Stay focused on this specific topic and maintain your character's perspective.
-Avoid repeating previous arguments. Seed: ${randomSeed}
+Stay focused on this specific topic and maintain your character's unique perspective as ${profile.name}.
+Avoid repeating previous arguments. Express your distinctive ${profile.tone} viewpoint.
+Seed: ${randomSeed}
 `;
 
-        // Check semantic cache for similar prompts (agent-specific)
+        // Check semantic cache for similar prompts (agent-specific with unique identifiers)
         console.log(`🔍 Checking semantic cache for similar prompts (${agentId})...`);
-        const agentSpecificTopic = `${agentId}:${topic}:${profile.name}`;
+        const agentSpecificTopic = `${agentId}:${topic}:${profile.name}:${agentStanceSignature}:${randomSeed}`;
         const cachedResult = await getCachedResponse(prompt, agentSpecificTopic);
 
         let message;
