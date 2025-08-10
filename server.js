@@ -69,11 +69,15 @@ wss.on('headers', (headers, req) => {
     console.log(`🔌 WebSocket headers received, origin: ${req.headers.origin}`);
 });
 
-// Enhanced middleware with dynamic CORS for development
+// Enhanced middleware with dynamic CORS for development and production
 app.use(cors({
     origin: (origin, callback) => {
         const allowedHosts = ['localhost', '127.0.0.1'];
         const allowedPorts = ['5173', '5174'];
+        const allowedDomains = [
+            'stancestream.vercel.app',
+            'stancestream.onrender.com'
+        ];
 
         if (!origin) {
             // Allow requests with no origin (like mobile apps or curl requests)
@@ -83,15 +87,22 @@ app.use(cors({
 
         try {
             const url = new URL(origin);
+            
+            // Check for localhost/127.0.0.1 with allowed ports
             const isAllowedHost = allowedHosts.includes(url.hostname);
             const isAllowedPort = allowedPorts.includes(url.port);
+            
+            // Check for allowed production domains (HTTPS only)
+            const isAllowedDomain = allowedDomains.includes(url.hostname) && url.protocol === 'https:';
 
-            if (isAllowedHost && isAllowedPort) {
+            if ((isAllowedHost && isAllowedPort) || isAllowedDomain) {
                 callback(null, true);
             } else {
+                console.log(`❌ CORS blocked origin: ${origin}`);
                 callback(new Error('CORS not allowed'));
             }
         } catch (err) {
+            console.log(`❌ CORS invalid origin: ${origin}`);
             callback(new Error('Invalid origin'));
         }
     },
