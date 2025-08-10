@@ -160,6 +160,7 @@ export async function generateMessageCore({
 
 // Convert debate topic to stance key for profile lookup
 export function topicToStanceKey(topic) {
+    console.log(`🔍 topicToStanceKey called with topic: "${topic}"`);
     const topicMappings = {
         'environmental regulations and green energy': 'climate_policy',
         'climate policy': 'climate_policy',
@@ -194,9 +195,11 @@ export function topicToStanceKey(topic) {
     };
     
     const lowerTopic = topic.toLowerCase();
+    console.log(`🔍 lowerTopic: "${lowerTopic}"`);
     
     // Direct match
     if (topicMappings[lowerTopic]) {
+        console.log(`✅ Direct match found: "${lowerTopic}" → "${topicMappings[lowerTopic]}"`);
         return topicMappings[lowerTopic];
     }
     
@@ -223,6 +226,7 @@ export function topicToStanceKey(topic) {
         return 'privacy_policy';
     }
     if (lowerTopic.includes('space')) {
+        console.log(`✅ Partial match found: "${lowerTopic}" includes 'space' → "space_policy"`);
         return 'space_policy';
     }
     

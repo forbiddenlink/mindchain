@@ -1817,20 +1817,28 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 } catch (stanceError) {
                     console.log(`⚠️ Stance evolution failed, using fallback: ${stanceError.message}`);
 
-                    // Fallback to simple stance evolution
-                    const currentStance = profile.stance?.climate_policy || 0.5;
+                    // Import topic mapping utility
+                    const { topicToStanceKey } = await import('./messageGenerationCore.js');
+                    
+                    // Fallback to simple stance evolution with correct topic
+                    const stanceKey = topicToStanceKey(topic);
+                    const currentStance = profile.stance?.[stanceKey] || 0.5;
                     const stanceShift = (Math.random() - 0.5) * 0.1;
                     const newStance = Math.max(0, Math.min(1, currentStance + stanceShift));
                     stanceData = { oldStance: currentStance, newStance, change: stanceShift };
 
-                    // Store stance in TimeSeries
-                    const stanceKey = `debate:${debateId}:agent:${agentId}:stance:climate_policy`;
+                    // Store stance in TimeSeries with correct topic
+                    const timesSeriesKey = `debate:${debateId}:agent:${agentId}:stance:${stanceKey}`;
                     try {
-                        await client.ts.add(stanceKey, '*', parseFloat(stanceData.newStance).toString());
+                        await client.ts.add(timesSeriesKey, '*', parseFloat(stanceData.newStance).toString());
                     } catch (tsError) {
-                        console.log(`⚠️ TimeSeries not available for ${stanceKey}`);
+                        console.log(`⚠️ TimeSeries not available for ${timesSeriesKey}`);
                     }
                 }
+
+                // Import topic mapping utility for consistent use below
+                const { topicToStanceKey } = await import('./messageGenerationCore.js');
+                const stanceKey = topicToStanceKey(topic);
 
                 // 🔍 KEY MOMENTS DETECTION - Process debate event for significant moments
                 try {
@@ -1842,6 +1850,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                         timestamp: new Date(parseInt(entry.id.split('-')[0])).toISOString()
                     }));
 
+                    console.log(`🐛 DEBUG: Creating stance object with topic="${topic}" for debateId=${debateId}`);
                     const keyMomentResult = await processDebateEvent({
                         type: 'new_message',
                         debateId,
@@ -1849,7 +1858,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                         message,
                         factCheckScore: factResult?.score,
                         stance: {
-                            topic: 'climate_policy',
+                            topic: topic,
                             value: stanceData.newStance,
                             change: stanceData.change
                         },
@@ -1879,6 +1888,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 }
 
                 // Broadcast the new message to all clients with enhanced metadata
+                console.log(`🐛 DEBUG: Broadcasting stance with topic="${topic}" for debateId=${debateId}`);
                 broadcast({
                     type: 'new_message',
                     debateId,
@@ -1905,7 +1915,7 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                         model: sentimentResult.model
                     },
                     stance: {
-                        topic: 'climate_policy',
+                        topic: topic,
                         value: stanceData.newStance,
                         change: stanceData.change
                     },
@@ -1940,10 +1950,9 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                         try {
                             const otherProfile = await client.json.get(`agent:${otherAgentId}:profile`);
                             if (otherProfile && otherProfile.stance) {
-                                // Map topic to stance key
-                                const stanceKey = topic.includes('climate') ? 'climate_policy' :
-                                    topic.includes('ai') ? 'ai_policy' :
-                                        topic.includes('healthcare') ? 'healthcare_policy' : 'climate_policy';
+                                // Map topic to stance key using the utility function
+                                const { topicToStanceKey } = await import('./messageGenerationCore.js');
+                                const stanceKey = topicToStanceKey(topic);
 
                                 // Convert 0-1 range to -1 to 1 for better visualization
                                 const stanceValue = otherProfile.stance[stanceKey] || 0.5;
@@ -2039,10 +2048,9 @@ async function runDebateRounds(debateId, agents, topic, rounds = 5) {
                 try {
                     const profile = await client.json.get(`agent:${agentId}:profile`);
                     if (profile && profile.stance) {
-                        // Map topic to stance key (from the project instructions)
-                        const stanceKey = topic.includes('climate') ? 'climate_policy' :
-                            topic.includes('ai') ? 'ai_policy' :
-                                topic.includes('healthcare') ? 'healthcare_policy' : 'climate_policy';
+                        // Map topic to stance key using the utility function
+                        const { topicToStanceKey } = await import('./messageGenerationCore.js');
+                        const stanceKey = topicToStanceKey(topic);
 
                         // Convert 0-1 range to -1 to 1 for better visualization
                         const stanceValue = profile.stance[stanceKey] || 0.5;
@@ -2650,9 +2658,13 @@ app.post('/api/demo/redis-matrix', async (req, res) => {
         }, 1500);
         
         // Simulate TimeSeries operations
-        setTimeout(() => {
-            broadcastRedisOperation('timeseries', 'stance:climate_policy → +0.3', {
-                topic: 'climate_policy',
+        setTimeout(async () => {
+            // For demo purposes, use a general topic since no specific debate is active
+            const currentTopic = 'general policy';
+            const { topicToStanceKey } = await import('./messageGenerationCore.js');
+            const stanceKey = topicToStanceKey(currentTopic);
+            broadcastRedisOperation('timeseries', `stance:${stanceKey} → +0.3`, {
+                topic: currentTopic, // Use actual topic, not stanceKey
                 change: 0.3,
                 agentId: 'reformerbot'
             });

@@ -378,23 +378,76 @@ Generate a thoughtful, contextually-aware response that reflects your current em
         return patterns;
     }
 
-    // 🗝️ Convert topic to stance key
+    // 🗝️ Convert topic to stance key - SYNCHRONIZED with messageGenerationCore.js
     topicToStanceKey(topic) {
         const mappings = {
-            'environmental regulations': 'climate_policy',
+            'environmental regulations and green energy': 'climate_policy',
             'climate policy': 'climate_policy',
-            'artificial intelligence governance': 'ai_policy',
+            'climate change': 'climate_policy',
+            
+            'artificial intelligence governance and ethics': 'ai_policy',
             'ai regulation': 'ai_policy',
-            'universal healthcare': 'healthcare_policy',
+            
+            'universal healthcare and medical access': 'healthcare_policy',
             'healthcare reform': 'healthcare_policy',
+            'healthcare': 'healthcare_policy',
+            
+            'border security and refugee assistance': 'immigration_policy',
             'immigration policy': 'immigration_policy',
-            'education funding': 'education_policy',
-            'tax reform': 'tax_policy',
-            'social media regulation': 'tech_policy',
-            'space exploration funding': 'science_policy'
+            'immigration': 'immigration_policy',
+            
+            'public education and student debt': 'education_policy',
+            'education reform': 'education_policy',
+            'education': 'education_policy',
+            
+            'progressive taxation and wealth redistribution': 'tax_policy',
+            'tax policy': 'tax_policy',
+            'taxation': 'tax_policy',
+            
+            'data protection and surveillance': 'privacy_policy',
+            'digital privacy': 'privacy_policy',
+            'privacy': 'privacy_policy',
+            
+            'space colonization and research funding': 'space_policy',
+            'space exploration': 'space_policy',
+            'space exploration funding': 'space_policy',
+            'space': 'space_policy'
         };
         
-        return mappings[topic.toLowerCase()] || 'general_policy';
+        const lowerTopic = topic.toLowerCase();
+        
+        // Direct match
+        if (mappings[lowerTopic]) {
+            return mappings[lowerTopic];
+        }
+        
+        // Partial match for key words
+        if (lowerTopic.includes('climate') || lowerTopic.includes('environment')) {
+            return 'climate_policy';
+        }
+        if (lowerTopic.includes('healthcare') || lowerTopic.includes('medical')) {
+            return 'healthcare_policy';
+        }
+        if (lowerTopic.includes('education') || lowerTopic.includes('school')) {
+            return 'education_policy';
+        }
+        if (lowerTopic.includes('immigration') || lowerTopic.includes('border')) {
+            return 'immigration_policy';
+        }
+        if (lowerTopic.includes('tax') || lowerTopic.includes('wealth')) {
+            return 'tax_policy';
+        }
+        if (lowerTopic.includes('ai') || lowerTopic.includes('artificial')) {
+            return 'ai_policy';
+        }
+        if (lowerTopic.includes('privacy') || lowerTopic.includes('data')) {
+            return 'privacy_policy';
+        }
+        if (lowerTopic.includes('space')) {
+            return 'space_policy';
+        }
+        
+        return 'general_policy';
     }
 }
 
