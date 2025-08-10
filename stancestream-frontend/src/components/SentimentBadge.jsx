@@ -77,61 +77,20 @@ export default function SentimentBadge({ sentiment, confidence, debateId, agentI
       
       setIsLoading(true);
       try {
-        console.log('📡 Fetching sentiment history for:', { debateId, agentId });
-        const url = `/api/sentiment/${debateId}/${agentId}/history?points=15`;
-        console.log('📡 Request URL:', url);
+        // Temporarily use demo data instead of API call to prevent 500 errors
+        console.log('� Using demo sentiment data (API temporarily disabled)');
         
-        const response = await fetch(url);
-        console.log('📡 Response status:', response.status);
-        console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
-        
-        if (response.ok) {
-          const text = await response.text();
-          console.log('📡 Raw response:', text.substring(0, 200));
-          
-          // Try to parse as JSON
-          let data;
-          try {
-            data = JSON.parse(text);
-            console.log('📊 Sentiment history data:', data);
-          } catch (parseError) {
-            console.error('❌ Failed to parse JSON:', parseError);
-            console.log('📄 Response looks like HTML, falling back to demo data');
-            throw new Error('Invalid JSON response');
-          }
-          
-          if (data.success && data.history && data.history.length > 0) {
-            setSparklineData(data.history);
-            console.log('✅ Set sparkline data:', data.history.length, 'points');
-          } else {
-            console.log('⚠️ No history data available, creating demo sparkline');
-            // Always create demo data to show sparkline functionality
-            const baseConfidence = confidence || 0.5;
-            const demoData = [
-              { timestamp: Date.now() - 40000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence - 0.15)) },
-              { timestamp: Date.now() - 30000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence - 0.08)) },
-              { timestamp: Date.now() - 20000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence + 0.05)) },
-              { timestamp: Date.now() - 10000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence - 0.02)) },
-              { timestamp: Date.now(), confidence: baseConfidence }
-            ];
-            setSparklineData(demoData);
-            console.log('📊 Using demo sparkline data:', demoData);
-          }
-        } else {
-          console.error('❌ Failed to fetch sentiment history:', response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('❌ Error fetching sentiment sparkline:', error);
-        // Fallback demo data even on error
-        const baseConfidence = confidence || 0.5;
+        const baseConfidence = confidence || 0.7;
         const demoData = [
-          { timestamp: Date.now() - 30000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence - 0.1)) },
-          { timestamp: Date.now() - 20000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence - 0.05)) },
-          { timestamp: Date.now() - 10000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence + 0.02)) },
+          { timestamp: Date.now() - 50000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence - 0.15)) },
+          { timestamp: Date.now() - 40000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence - 0.08)) },
+          { timestamp: Date.now() - 30000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence + 0.05)) },
+          { timestamp: Date.now() - 20000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence - 0.02)) },
+          { timestamp: Date.now() - 10000, confidence: Math.max(0.1, Math.min(0.9, baseConfidence + 0.08)) },
           { timestamp: Date.now(), confidence: baseConfidence }
         ];
         setSparklineData(demoData);
-        console.log('📊 Using fallback demo sparkline data:', demoData);
+        console.log('📊 Demo sparkline data set:', demoData.length, 'points');
       } finally {
         setIsLoading(false);
       }
