@@ -5,6 +5,7 @@ services:
     plan: starter
     buildCommand: |
       npm install
+      npm install openai@5.10.2
       node setupCacheIndex.js
       node initCache.js
     startCommand: node server.js
@@ -13,6 +14,24 @@ services:
         sync: false
       - key: OPENAI_API_KEY
         sync: false
+      - key: NODE_ENV
+        value: production
+      - key: OPENAI_API_BASE
+        value: "https://api.openai.com/v1"
+      - key: OPENAI_MODEL
+        value: "gpt-4"
+      - key: SIMILARITY_THRESHOLD
+        value: "0.85"
+      - key: CACHE_TTL
+        value: "86400"
       - key: PORT
-        value: 3000
+        value: "3000"
+    healthCheckPath: /api/health
+    buildFilter:
+      paths:
+        - server.js
+        - package.json
+        - setupCacheIndex.js
+        - initCache.js
+        - .env
     healthCheckPath: /api/health

@@ -14,14 +14,22 @@ class WebSocketManager {
 
     // Connect to WebSocket with automatic retry logic
     connect(url) {
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-            console.log('🔗 WebSocket already connected');
+        // If already connected and the URL is the same, just return
+        if (this.socket && this.socket.readyState === WebSocket.OPEN && this.url === url) {
+            console.log('🔗 WebSocket already connected to correct URL');
             return Promise.resolve();
         }
 
-        if (this.isConnecting) {
-            console.log('🔄 WebSocket connection already in progress');
+        // If connecting and the URL is the same, wait for that connection
+        if (this.isConnecting && this.url === url) {
+            console.log('🔄 WebSocket connection in progress');
             return Promise.resolve();
+        }
+
+        // If we have an existing socket, clean it up first
+        if (this.socket) {
+            console.log('🧹 Cleaning up existing WebSocket connection');
+            this.disconnect();
         }
 
         this.url = url;
