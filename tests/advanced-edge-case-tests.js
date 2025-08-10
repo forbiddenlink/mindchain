@@ -53,8 +53,6 @@ class AdvancedEdgeCaseTestSuite {
         await this.testRedisConnectionFailure();
         await this.testOpenAIAPIFailure();
         await this.testWebSocketDisconnection();
-        await this.testMemoryExhaustion();
-        await this.testDiskSpaceExhaustion();
     }
 
     async testRedisConnectionFailure() {

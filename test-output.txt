@@ -1,0 +1,3868 @@
+🔍 Running minimal test orchestrator...
+
+🔬 Starting Edge Case Tests
+============================================================
+🔬 Starting Advanced Edge Case Testing Suite
+============================================================
+
+🚨 Testing Failure Modes
+----------------------------------------
+Testing Redis connection failure handling...
+✅ Redis connection failure properly caught
+2025-08-10T03:01:24.098Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/health',
+  method: 'GET',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'User-Agent': 'axios/1.11.0',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+⚠️ WARNING: Server may not properly detect Redis disconnection
+Testing OpenAI API failure handling...
+2025-08-10T03:01:24.180Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:29.210Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/debate_1754794884195/messages',
+  method: 'GET',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'User-Agent': 'axios/1.11.0',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+⚠️ WARNING: System may not properly handle OpenAI API failures
+Testing WebSocket disconnection handling...
+✅ WebSocket connected
+✅ WebSocket reconnection successful
+
+🔒 Testing Security Vulnerabilities
+----------------------------------------
+Testing XSS prevention...
+2025-08-10T03:01:30.276Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '81',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ XSS input properly handled: <script>alert("XSS")...
+2025-08-10T03:01:30.284Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '84',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Malicious input rejected: "><script>alert("XSS...
+2025-08-10T03:01:30.292Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '75',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Malicious input rejected: javascript:alert("XS...
+2025-08-10T03:01:30.297Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '84',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Malicious input rejected: <img src=x onerror=a...
+2025-08-10T03:01:30.303Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '77',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Malicious input rejected: <svg onload=alert("X...
+2025-08-10T03:01:30.310Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '69',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Malicious input rejected: ';alert("XSS");//...
+Testing SQL/NoSQL injection prevention...
+2025-08-10T03:01:30.316Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '73',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Injection attempt rejected: '; DROP TABLE users;...
+2025-08-10T03:01:30.322Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '61',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Injection attempt rejected: ' OR '1'='1...
+2025-08-10T03:01:30.330Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '65',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Injection attempt rejected: {"$ne": null}...
+2025-08-10T03:01:30.336Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '95',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Injection attempt rejected: {"$where": "function...
+2025-08-10T03:01:30.342Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '65',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Injection attempt rejected: 1; SHUTDOWN; --...
+Testing rate limiting effectiveness...
+2025-08-10T03:01:30.353Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.354Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.356Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.358Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.360Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.363Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.364Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.364Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.365Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.366Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '67',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.367Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.367Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.368Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.369Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.369Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.370Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.370Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.371Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.372Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.373Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.374Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.374Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.375Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.375Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.376Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.376Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.377Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.378Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.379Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.379Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.380Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.380Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.381Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.381Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.382Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.382Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.383Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.383Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.384Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.384Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.385Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.386Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.386Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.387Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.388Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.393Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.394Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.395Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.395Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.396Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.396Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.397Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.397Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.397Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.398Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.398Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.399Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.399Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.400Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+2025-08-10T03:01:30.400Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/debate/start',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '68',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ Rate limiting active: 55/60 requests limited
+Testing CORS policy enforcement...
+2025-08-10T03:01:30.821Z follow-redirects options {
+  maxRedirects: 21,
+  maxBodyLength: Infinity,
+  protocol: 'http:',
+  path: '/api/health',
+  method: 'POST',
+  headers: [Object: null prototype] {
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json',
+    Origin: 'http://malicious-site.com',
+    'User-Agent': 'axios/1.11.0',
+    'Content-Length': '2',
+    'Accept-Encoding': 'gzip, compress, deflate, br'
+  },
+  agents: { http: undefined, https: undefined },
+  auth: undefined,
+  family: undefined,
+  beforeRedirect: [Function: dispatchBeforeRedirect],
+  beforeRedirects: { proxy: [Function: beforeRedirect] },
+  hostname: 'localhost',
+  port: '3001',
+  agent: undefined,
+  nativeProtocols: {
+    'http:': {
+      _connectionListener: [Function: connectionListener],
+      METHODS: [Array],
+      STATUS_CODES: [Object],
+      Agent: [Function],
+      ClientRequest: [Function: ClientRequest],
+      IncomingMessage: [Function: IncomingMessage],
+      OutgoingMessage: [Function: OutgoingMessage],
+      Server: [Function: Server],
+      ServerResponse: [Function: ServerResponse],
+      createServer: [Function: createServer],
+      validateHeaderName: [Function],
+      validateHeaderValue: [Function],
+      get: [Function: get],
+      request: [Function: request],
+      setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+      maxHeaderSize: [Getter],
+      globalAgent: [Getter/Setter]
+    },
+    'https:': {
+      Agent: [Function: Agent],
+      globalAgent: [Agent],
+      Server: [Function: Server],
+      createServer: [Function: createServer],
+      get: [Function: get],
+      request: [Function: request]
+    }
+  }
+}
+✅ CORS policy properly enforces origin restrictions
+
+❌ Edge case testing failed: this.testInputSanitization is not a function
+
+Error stack:
+TypeError: this.testInputSanitization is not a function
+    at AdvancedEdgeCaseTestSuite.testSecurityVulnerabilities (file:///C:/Users/purpl/OneDrive/Desktop/dev/stancestream/tests/advanced-edge-case-tests.js:186:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async AdvancedEdgeCaseTestSuite.runAllTests (file:///C:/Users/purpl/OneDrive/Desktop/dev/stancestream/tests/advanced-edge-case-tests.js:37:9)
+    at async runEdgeCaseTests (file:///C:/Users/purpl/OneDrive/Desktop/dev/stancestream/tests/edge-case-test.js:13:9)

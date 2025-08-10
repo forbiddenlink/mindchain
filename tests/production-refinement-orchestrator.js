@@ -1,13 +1,26 @@
 // Master Test Orchestrator for StanceStream Production Refinement
 // Coordinates all advanced testing suites and generates comprehensive production readiness report
 
+console.log('🔍 Starting production refinement orchestrator...');
+
 import 'dotenv/config';
+console.log('✅ Loaded environment configuration');
+
 import AdvancedEdgeCaseTestSuite from './advanced-edge-case-tests.js';
+console.log('✅ Loaded edge case test suite');
+
 import PerformanceProfiler from './performance-profiler.js';
+console.log('✅ Loaded performance profiler');
 import AccessibilityUXTestSuite from './accessibility-ux-audit.js';
+console.log('✅ Loaded accessibility test suite');
 import ProductionMonitoringSystem from './production-monitoring.js';
+console.log('✅ Loaded production monitoring system');
+
 import fs from 'fs/promises';
+console.log('✅ Loaded file system module');
+
 import axios from 'axios';
+console.log('✅ Loaded axios');
 
 class ProductionRefinementOrchestrator {
     constructor() {
@@ -536,11 +549,14 @@ export default ProductionRefinementOrchestrator;
 
 // CLI interface
 if (import.meta.url === `file://${process.argv[1]}`) {
-    const orchestrator = new ProductionRefinementOrchestrator();
-    
     console.log('🚀 StanceStream Production Refinement Orchestrator');
     console.log('🎯 Comprehensive Enterprise Quality Assurance');
     console.log('⏰ Estimated duration: 10-15 minutes\n');
+
+    try {
+        console.log('📦 Initializing test orchestrator...');
+        const orchestrator = new ProductionRefinementOrchestrator();
+        console.log('✅ Test orchestrator initialized');
     
     // Handle graceful shutdown
     process.on('SIGINT', async () => {

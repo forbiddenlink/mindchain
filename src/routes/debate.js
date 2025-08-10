@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { asyncHandler, createError } from '../middleware/errorHandler.js';
 import { aiRateLimit, debateValidation, validateRequest } from '../middleware/security.js';
+import { validateOpenAI } from '../middleware/openai.js';
 import redisService from '../services/redis.js';
 import { config } from '../config/index.js';
 
@@ -21,8 +22,9 @@ let lastGlobalDebateStart = 0;
  */
 router.post('/start', 
   aiRateLimit, 
-  debateValidation, 
+  debateValidation,
   validateRequest,
+  validateOpenAI, // Add OpenAI validation middleware
   asyncHandler(async (req, res) => {
     const { 
       debateId = `debate_${Date.now()}`, 

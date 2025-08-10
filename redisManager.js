@@ -1,6 +1,7 @@
 // Centralized Redis Connection Manager - Production Ready
 import 'dotenv/config';
 import { createClient } from 'redis';
+import healthMonitor from './src/services/healthMonitor.js';
 
 /**
  * Singleton Redis Connection Manager
@@ -15,6 +16,8 @@ class RedisConnectionManager {
         this.maxRetries = 5;
         this.retryDelay = 1000;
         this.reconnectStrategy = this.exponentialBackoff.bind(this);
+        this.lastPingTime = Date.now();
+        this.healthCheckInterval = null;
     }
 
     /**
@@ -72,6 +75,7 @@ class RedisConnectionManager {
             this.isConnected = true;
             this.connectionAttempts = 0;
             this.connectionPromise = null;
+            this.startHealthCheck();
 
             console.log('✅ Redis connection established successfully');
             return this.client;
@@ -103,13 +107,8 @@ class RedisConnectionManager {
             console.error('🔴 Redis client error:', error.message);
             this.isConnected = false;
             
-            // Attempt automatic recovery for connection errors
             if (error.code === 'CONNECTION_BROKEN' || error.code === 'ECONNRESET') {
-                setTimeout(() => {
-                    this.getClient().catch(err => {
-                        console.error('❌ Redis auto-recovery failed:', err.message);
-                    });
-                }, 5000);
+                this.handleDisconnection(error);
             }
         });
 
@@ -117,27 +116,81 @@ class RedisConnectionManager {
             console.log('🔗 Redis client connected');
             this.isConnected = true;
             this.connectionAttempts = 0;
+            this.lastPingTime = Date.now();
         });
 
         this.client.on('ready', () => {
             console.log('✅ Redis client ready for operations');
             this.isConnected = true;
+            this.lastPingTime = Date.now();
         });
 
         this.client.on('reconnecting', () => {
             console.log('🔄 Redis client reconnecting...');
+            this.notifyHealthStatus('reconnecting');
         });
 
         this.client.on('disconnect', () => {
             console.log('🔌 Redis client disconnected');
             this.isConnected = false;
+            this.handleDisconnection();
         });
 
         this.client.on('end', () => {
             console.log('📤 Redis connection ended');
             this.isConnected = false;
             this.client = null;
+            this.handleDisconnection();
         });
+    }
+
+    handleDisconnection(error = null) {
+        this.isConnected = false;
+        this.notifyHealthStatus('disconnected', error);
+        
+        // Attempt recovery after a delay
+        setTimeout(() => {
+            if (!this.isConnected) {
+                this.getClient().catch(err => {
+                    console.error('❌ Redis auto-recovery failed:', err.message);
+                });
+            }
+        }, 5000);
+    }
+
+    notifyHealthStatus(status, error = null) {
+        const healthStatus = {
+            type: 'redis',
+            status,
+            timestamp: new Date().toISOString(),
+            error: error?.message
+        };
+        
+        // Notify health monitor
+        if (healthMonitor) {
+            healthMonitor.notifyListeners(healthStatus);
+        }
+    }
+
+    startHealthCheck() {
+        if (this.healthCheckInterval) {
+            clearInterval(this.healthCheckInterval);
+        }
+
+        this.healthCheckInterval = setInterval(async () => {
+            try {
+                if (this.client?.isReady) {
+                    const ping = await this.client.ping();
+                    if (ping === 'PONG') {
+                        this.lastPingTime = Date.now();
+                        this.notifyHealthStatus('connected');
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Redis health check failed:', error.message);
+                this.handleDisconnection(error);
+            }
+        }, 5000);
     }
 
     /**
@@ -179,25 +232,39 @@ class RedisConnectionManager {
     async healthCheck() {
         try {
             const client = await this.getClient();
+            if (!client?.isReady) {
+                throw new Error('Redis client not ready');
+            }
+
             const ping = await client.ping();
             const info = await client.info('server');
+            const timeSinceLastPing = Date.now() - this.lastPingTime;
             
-            return {
-                status: 'healthy',
+            const status = {
+                status: ping === 'PONG' && timeSinceLastPing < 30000 ? 'healthy' : 'degraded',
                 connected: this.isConnected,
                 ping,
+                lastPingAge: timeSinceLastPing,
                 uptime: this.parseInfoValue(info, 'uptime_in_seconds'),
                 version: this.parseInfoValue(info, 'redis_version'),
                 memory: this.parseInfoValue(info, 'used_memory_human'),
                 timestamp: new Date().toISOString()
             };
+
+            // Update health monitor
+            this.notifyHealthStatus(status.status);
+            return status;
+
         } catch (error) {
-            return {
+            const unhealthyStatus = {
                 status: 'unhealthy',
                 connected: false,
                 error: error.message,
                 timestamp: new Date().toISOString()
             };
+            
+            this.notifyHealthStatus('unhealthy', error);
+            return unhealthyStatus;
         }
     }
 
@@ -205,6 +272,11 @@ class RedisConnectionManager {
      * Graceful shutdown
      */
     async disconnect() {
+        if (this.healthCheckInterval) {
+            clearInterval(this.healthCheckInterval);
+            this.healthCheckInterval = null;
+        }
+
         if (this.client) {
             try {
                 console.log('🔌 Closing Redis connection...');
@@ -212,7 +284,6 @@ class RedisConnectionManager {
                 console.log('✅ Redis connection closed gracefully');
             } catch (error) {
                 console.error('❌ Error during Redis disconnect:', error.message);
-                // Force close if graceful quit fails
                 if (this.client.disconnect) {
                     this.client.disconnect();
                 }
@@ -228,11 +299,14 @@ class RedisConnectionManager {
      * Get connection status
      */
     getStatus() {
+        const timeSinceLastPing = Date.now() - this.lastPingTime;
         return {
             connected: this.isConnected,
             client: !!this.client,
             ready: this.client?.isReady || false,
-            attempts: this.connectionAttempts
+            attempts: this.connectionAttempts,
+            lastPingAge: timeSinceLastPing,
+            healthy: timeSinceLastPing < 30000
         };
     }
 

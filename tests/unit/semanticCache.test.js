@@ -1,10 +1,7 @@
 /**
  * Semantic Cache System Tests
  */
-
-import { expect } from 'chai';
-import sinon from 'sinon';
-import { createClient } from 'redis';
+import { expect, sinon, redis, TEST_CONFIG } from '../test-env.js';
 import { 
     findSimilarPrompt, 
     addToCache, 
@@ -12,17 +9,20 @@ import {
     clearCache,
     optimizeCache,
     validateCacheEntry
-} from '../semanticCache.js';
+} from '../../semanticCache.js';
 
 describe('Semantic Cache System', () => {
     let redisClient;
     let sandbox;
 
     before(async () => {
-        // Create Redis client
-        redisClient = createClient({ url: process.env.REDIS_URL });
+        // Create Redis client for testing
+        redisClient = redis.createClient({ url: TEST_CONFIG.REDIS_URL });
         await redisClient.connect();
         sandbox = sinon.createSandbox();
+        
+        // Setup test environment
+        await clearCache();
     });
 
     after(async () => {
