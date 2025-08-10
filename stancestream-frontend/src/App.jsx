@@ -120,7 +120,11 @@ export default function App() {
           sentiment: messageData.sentiment
         };
 
-        setDebateMessages(prev => [...prev, newMessage]);
+        // Keep last 100 messages to prevent memory issues
+        setDebateMessages(prev => {
+            const messages = [...prev, newMessage];
+            return messages.slice(-100); // FIFO with 100 message cap
+        });
 
         // Extract stance data from new_message and create stance update
         if (messageData.stance && messageData.agentId && messageData.debateId) {

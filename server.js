@@ -11,8 +11,6 @@ import { generateMessage, generateMessageOnly } from './generateMessage.js';
 import { findClosestFact } from './factChecker.js';
 import { generateEnhancedMessage, generateEnhancedMessageOnly, updateStanceBasedOnDebate } from './enhancedAI.js';
 import { RedisMetricsCollector, generateContestAnalytics } from './advancedMetrics.js';
-// import { addFactToDatabase } from './addFactsEnhanced.js';
-// import { summarizeDebate } from './summarizeDebateEnhanced.js';
 import { createServer } from 'http';
 import sentimentAnalyzer from './sentimentAnalysis.js';
 import keyMomentsDetector, { processDebateEvent, getKeyMoments, getAllKeyMoments } from './keyMoments.js';
@@ -43,13 +41,15 @@ app.use(helmet({
 app.use(compression());
 app.use(morgan('combined'));
 
-// Rate limiting for API protection - PRODUCTION-OPTIMIZED
+// Rate limiting for API protection - PRODUCTION-HARDENED
 const apiRateLimit = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 200, // 200 requests per minute (increased for high-performance demos)
+    max: process.env.API_RATE_LIMIT || 60, // 1 request per second by default
     message: { error: 'Too many requests, please try again later.' },
     standardHeaders: true,
     legacyHeaders: false,
+    keyGenerator: (req) => req.ip, // IP-based tracking
+    skip: (req) => req.path.startsWith('/api/health'), // Don't rate limit health checks
 });
 
 const generateRateLimit = rateLimit({
@@ -1084,15 +1084,8 @@ app.get('/api/cache/metrics', async (req, res) => {
     try {
         console.log('🎯 Cache metrics requested');
 
-        // Check response cache first (reduces Redis load)
-        const cacheKey = 'cache-metrics';
-        const cachedResponse = getCachedResponse(cacheKey);
-        if (cachedResponse) {
-            return res.json(cachedResponse);
-        }
-
-        // Import cache metrics function
-        const { getCacheMetrics, getCacheStats } = await import('./semanticCache.js');
+        // Get cache metrics directly from Redis
+        const { getCacheStats } = await import('./semanticCache.js');
 
         // Get comprehensive cache statistics
         const cacheStats = await getCacheStats();
@@ -2024,55 +2017,7 @@ app.get('/api/contest/live-metrics', async (req, res) => {
     }
 });
 
-// Demo cache efficiency endpoint
-app.post('/api/platform/demo/cache-efficiency', async (req, res) => {
-    try {
-        console.log('🎯 Running cache efficiency demo...');
-        
-        // Import cache modules
-        const { runCacheDemo } = await import('./demoCache.js');
-        const { getCacheStats } = await import('./semanticCache.js');
 
-        // Run the demo
-        const demoResults = await runCacheDemo();
-
-        // Get updated cache stats after demo
-        const cacheStats = await getCacheStats();
-        
-        // Broadcast cache metrics update
-        broadcast({
-            type: 'metrics_updated',
-            metrics: {
-                cache: cacheStats,
-                demo: demoResults
-            },
-            timestamp: new Date().toISOString()
-        });
-
-        res.json({
-            success: true,
-            result: {
-                metrics: {
-                    totalOperations: demoResults.totalOperations,
-                    cacheHits: demoResults.cacheHits,
-                    cacheMisses: demoResults.cacheMisses,
-                    hitRatio: demoResults.hitRatio,
-                    costSaved: demoResults.costSaved
-                },
-                cache_stats: cacheStats,
-                duration: demoResults.duration
-            }
-        });
-
-    } catch (error) {
-        console.error('❌ Error running cache demo:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to run cache demo',
-            message: error.message
-        });
-    }
-});
 
 // Global error handler
 app.use((err, req, res, next) => {
