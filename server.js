@@ -1093,16 +1093,65 @@ app.get('/api/cache/metrics', async (req, res) => {
     try {
         console.log('🎯 Cache metrics requested');
 
+        // Return fallback metrics if Redis isn't ready
+        if (!client.isReady) {
+            console.log('⚠️ Redis not ready, returning fallback metrics');
+            return res.json({
+                success: true,
+                metrics: {
+                    total_requests: 0,
+                    cache_hits: 0,
+                    cache_misses: 0,
+                    hit_ratio: 0,
+                    total_tokens_saved: 0,
+                    estimated_cost_saved: 0,
+                    average_similarity: 0,
+                    total_cache_entries: 0,
+                    cache_efficiency: 0,
+                    memory_saved_mb: 0,
+                    last_updated: new Date().toISOString()
+                }
+            });
+        }
+
         // Get cache metrics directly from Redis
         const { getCacheStats } = await import('./semanticCache.js');
 
         // Initialize cache if needed
         const metricsKey = 'cache:metrics';
-        const metricsExist = await client.json.get(metricsKey);
+        let metricsExist;
+        try {
+            metricsExist = await client.json.get(metricsKey);
+        } catch (error) {
+            console.log('⚠️ Error checking metrics, attempting initialization:', error);
+            metricsExist = null;
+        }
+
         if (!metricsExist) {
             console.log('⚠️ Cache metrics not found, initializing...');
-            const initializeCache = (await import('./initCache.js')).default;
-            await initializeCache();
+            try {
+                const initializeCache = (await import('./initCache.js')).default;
+                await initializeCache();
+            } catch (initError) {
+                console.error('❌ Failed to initialize cache:', initError);
+                // Return empty metrics rather than failing
+                return res.json({
+                    success: true,
+                    metrics: {
+                        total_requests: 0,
+                        cache_hits: 0,
+                        cache_misses: 0,
+                        hit_ratio: 0,
+                        total_tokens_saved: 0,
+                        estimated_cost_saved: 0,
+                        average_similarity: 0,
+                        total_cache_entries: 0,
+                        cache_efficiency: 0,
+                        memory_saved_mb: 0,
+                        last_updated: new Date().toISOString()
+                    }
+                });
+            }
         }
 
         // Get comprehensive cache statistics

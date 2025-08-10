@@ -4,11 +4,52 @@ import 'dotenv/config';
 import { createClient } from 'redis';
 
 async function createCacheIndex() {
-    const client = createClient({ url: process.env.REDIS_URL });
+    console.log('🚀 Starting cache index setup...');
+    
+    if (!process.env.REDIS_URL) {
+        console.error('❌ REDIS_URL environment variable not set');
+        process.exit(1);
+    }
+
+    const client = createClient({ 
+        url: process.env.REDIS_URL,
+        socket: {
+            reconnectStrategy: (retries) => {
+                if (retries > 20) {
+                    console.error('❌ Max reconnection attempts reached');
+                    process.exit(1);
+                }
+                return Math.min(retries * 100, 3000);
+            }
+        }
+    });
+
+    // Handle Redis errors
+    client.on('error', (err) => {
+        console.error('❌ Redis Error:', err);
+    });
+
+    client.on('reconnecting', () => {
+        console.log('🔄 Reconnecting to Redis...');
+    });
     
     try {
+        console.log('🔌 Connecting to Redis...');
         await client.connect();
-        console.log('🔌 Connected to Redis');
+        console.log('✅ Connected to Redis');
+
+        // Verify Redis modules
+        const modules = await client.moduleList();
+        const hasSearch = modules.some(m => m.name === 'search');
+        const hasJson = modules.some(m => m.name === 'ReJSON');
+
+        if (!hasSearch || !hasJson) {
+            console.error('❌ Required Redis modules not found:');
+            console.error(`   - RediSearch: ${hasSearch ? '✅' : '❌'}`);
+            console.error(`   - RedisJSON: ${hasJson ? '✅' : '❌'}`);
+            process.exit(1);
+        }
+        console.log('✅ Required Redis modules verified');
 
         // Drop existing index if it exists
         try {
