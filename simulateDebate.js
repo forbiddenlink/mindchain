@@ -21,14 +21,21 @@ async function simulateDebate() {
             console.log(`🤖 Generating message for ${agent}...`);
             
             // Generate message (will use semantic cache if available)
-            const message = await generateMessage(agent, debateId, testTopic);
+            const result = await generateMessage(agent, debateId, testTopic);
+            const message = result.message;
 
             console.log(`🗣️ ${agent}: ${message}`);
+            if (result.cacheHit) {
+                console.log(`💾 Cache hit! Similarity: ${(result.similarity * 100).toFixed(1)}%`);
+                console.log(`💰 Cost saved: $${result.costSaved.toFixed(4)}`);
+            }
 
             // Save to shared stream
             await client.xAdd(`debate:${debateId}:messages`, '*', {
                 agent_id: agent,
-                message,
+                message: message,
+                cached: result.cacheHit ? 'true' : 'false',
+                similarity: result.similarity.toString(),
                 timestamp: new Date().toISOString()
             });
 

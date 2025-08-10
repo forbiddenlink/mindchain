@@ -6,6 +6,22 @@
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import fs from 'fs/promises';
+
+// Convert URL to path for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Create logs directory
+const createLogsDir = async (dir) => {
+    try {
+        await fs.mkdir(dir, { recursive: true });
+    } catch (error) {
+        console.warn(`Warning: Could not create logs directory: ${error.message}`);
+    }
+};
 
 // Log levels with colors
 const levels = {
@@ -62,11 +78,16 @@ class Logger {
             ...options
         };
 
+        // Initialize the logging system
+        this.initialize();
+    }
+
+    /**
+     * Initialize the logging system by creating directories and setting up transports
+     */
+    async initialize() {
         // Create logs directory if it doesn't exist
-        const fs = require('fs');
-        if (!fs.existsSync(this.options.logsDir)) {
-            fs.mkdirSync(this.options.logsDir);
-        }
+        await createLogsDir(this.options.logsDir);
 
         // Create Winston logger instance
         this.logger = winston.createLogger({

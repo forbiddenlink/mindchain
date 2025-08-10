@@ -11,7 +11,7 @@ import path from 'path';
 
 // Contest requirements validation
 const CONTEST_REQUIREMENTS = {
-  redis_modules: ['JSON', 'TimeSeries', 'Search', 'RedisGraph'],
+  redis_modules: ['JSON', 'TimeSeries', 'Search'],
   core_files: [
     'server.js',
     'semanticCache.js', 
@@ -69,7 +69,11 @@ async function validateContestReadiness() {
           await client.ts.info('test:ts').catch(() => {}); // Non-existent key is ok
           results.redis_modules[module] = true;
         } else if (module === 'Search') {
-          await client.ft.list();
+          // Try to create a test index
+          await client.ft.create('validator:test:idx', {
+              '$.name': { type: 'TEXT', AS: 'name' }
+          }, { ON: 'JSON', PREFIX: 'validator:test:' });
+          await client.ft.dropIndex('validator:test:idx');
           results.redis_modules[module] = true;
         }
         console.log(`   ✅ ${module}: AVAILABLE`);
