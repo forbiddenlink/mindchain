@@ -10,23 +10,24 @@ class WebSocketManager {
         this.reconnectDelay = 1000;
         this.isConnecting = false;
         this.url = null;
+        this.connectionPromise = null;
     }
 
     // Connect to WebSocket with automatic retry logic
     connect(url) {
-        // If already connected and the URL is the same, just return
-        if (this.socket && this.socket.readyState === WebSocket.OPEN && this.url === url) {
+        // If already connected to the correct URL, return existing connection
+        if (this.socket?.readyState === WebSocket.OPEN && this.url === url) {
             console.log('🔗 WebSocket already connected to correct URL');
             return Promise.resolve();
         }
 
-        // If connecting and the URL is the same, wait for that connection
-        if (this.isConnecting && this.url === url) {
+        // If a connection attempt is in progress, return the existing promise
+        if (this.isConnecting && this.url === url && this.connectionPromise) {
             console.log('🔄 WebSocket connection in progress');
-            return Promise.resolve();
+            return this.connectionPromise;
         }
 
-        // If we have an existing socket, clean it up first
+        // Clean up any existing connection before starting a new one
         if (this.socket) {
             console.log('🧹 Cleaning up existing WebSocket connection');
             this.disconnect();
@@ -35,7 +36,7 @@ class WebSocketManager {
         this.url = url;
         this.isConnecting = true;
 
-        return new Promise((resolve, reject) => {
+        this.connectionPromise = new Promise((resolve, reject) => {
             try {
                 this.socket = new WebSocket(url);
 
@@ -65,6 +66,7 @@ class WebSocketManager {
                 this.socket.onclose = (event) => {
                     console.log('🔌 WebSocket disconnected:', event.code, event.reason);
                     this.isConnecting = false;
+                    this.connectionPromise = null;
                     this.notifyListeners('disconnected', { code: event.code, reason: event.reason });
                     
                     // Attempt reconnection if not intentional
@@ -76,6 +78,7 @@ class WebSocketManager {
                 this.socket.onerror = (error) => {
                     console.error('❌ WebSocket error:', error);
                     this.isConnecting = false;
+                    this.connectionPromise = null;
                     this.notifyListeners('error', { error: 'Connection error' });
                     reject(error);
                 };
@@ -83,6 +86,7 @@ class WebSocketManager {
             } catch (error) {
                 console.error('❌ Failed to create WebSocket connection:', error);
                 this.isConnecting = false;
+                this.connectionPromise = null;
                 reject(error);
             }
         });
@@ -90,8 +94,15 @@ class WebSocketManager {
 
     // Schedule reconnection attempt
     scheduleReconnect() {
+        if (this.isConnecting) {
+            return; // Don't schedule reconnect if already connecting
+        }
+
         this.connectionAttempts++;
-        const delay = this.reconnectDelay * Math.pow(2, this.connectionAttempts - 1); // Exponential backoff
+        const delay = Math.min(
+            this.reconnectDelay * Math.pow(2, this.connectionAttempts - 1),
+            30000 // Max 30 second delay
+        );
         
         console.log(`🔄 Scheduling reconnection attempt ${this.connectionAttempts}/${this.maxReconnectAttempts} in ${delay}ms`);
         
@@ -104,7 +115,7 @@ class WebSocketManager {
 
     // Send message through WebSocket
     send(data) {
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+        if (this.socket?.readyState === WebSocket.OPEN) {
             try {
                 this.socket.send(JSON.stringify(data));
                 return true;
@@ -182,6 +193,7 @@ class WebSocketManager {
         this.listeners.clear();
         this.connectionAttempts = 0;
         this.isConnecting = false;
+        this.connectionPromise = null;
     }
 
     // Get connection stats
