@@ -155,6 +155,15 @@ try {
     if (healthCheck.status === 'healthy') {
         console.log('✅ Redis basic operations: OK');
         global.redisStatus = 'healthy';
+
+        // Initialize cache system
+        const initializeCache = (await import('./initCache.js')).default;
+        const cacheInitialized = await initializeCache();
+        if (!cacheInitialized) {
+            console.error('❌ Failed to initialize cache system');
+            process.exit(1);
+        }
+        console.log('✅ Cache system initialized successfully');
     }
     
     console.log('🏁 Server startup health check complete');
@@ -1086,6 +1095,15 @@ app.get('/api/cache/metrics', async (req, res) => {
 
         // Get cache metrics directly from Redis
         const { getCacheStats } = await import('./semanticCache.js');
+
+        // Initialize cache if needed
+        const metricsKey = 'cache:metrics';
+        const metricsExist = await client.json.get(metricsKey);
+        if (!metricsExist) {
+            console.log('⚠️ Cache metrics not found, initializing...');
+            const initializeCache = (await import('./initCache.js')).default;
+            await initializeCache();
+        }
 
         // Get comprehensive cache statistics
         const cacheStats = await getCacheStats();
